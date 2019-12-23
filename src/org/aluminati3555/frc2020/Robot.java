@@ -27,8 +27,12 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoSelector.Entry;
 import org.aluminati3555.lib.data.AluminatiData;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
+import org.aluminati3555.lib.drivers.AluminatiDisplay;
+import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
 import org.aluminati3555.lib.drivers.AluminatiDualGyro;
 import org.aluminati3555.lib.drivers.AluminatiJoystick;
+import org.aluminati3555.lib.drivers.AluminatiLEDDriver;
+import org.aluminati3555.lib.drivers.AluminatiLEDDriver.Mode;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
 import org.aluminati3555.lib.loops.Loop;
 import org.aluminati3555.lib.loops.Looper;
@@ -75,6 +79,13 @@ public class Robot extends AluminatiRobot {
 
   // Power distribution
   private PowerDistributionPanel pdp;
+
+  // LED driver
+  private AluminatiLEDDriver ledDriver;
+
+  // Digit display
+  private DisplayMode displayMode;
+  private AluminatiDisplay display;
 
   // Joysticks
   private AluminatiJoystick driverJoystick;
@@ -131,6 +142,13 @@ public class Robot extends AluminatiRobot {
     pdp = new PowerDistributionPanel();
     pdp.clearStickyFaults();
 
+    // Setup led driver
+    ledDriver = new AluminatiLEDDriver(0);
+
+    // Setup digit display
+    displayMode = DisplayMode.BATTERY_VOLTAGE;
+    display = new AluminatiDisplay();
+
     // Setup joysticks
     driverJoystick = new AluminatiJoystick(1);
     operatorJoystick = new AluminatiJoystick(0);
@@ -156,7 +174,17 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void robotPeriodic() {
+    if (display.getButton(Button.BUTTON_A)) {
+      displayMode = DisplayMode.BATTERY_VOLTAGE;
+    } else if (display.getButton(Button.BUTTON_B)) {
+      displayMode = DisplayMode.LOOP_TIME;
+    }
 
+    if (displayMode == DisplayMode.BATTERY_VOLTAGE) {
+      display.display(pdp.getVoltage());
+    } else {
+      display.display(this.getLastDT());
+    }
   }
 
   @Override
@@ -210,8 +238,13 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void autonomousPeriodic() {
+    boolean enabled = (robotMode == RobotMode.OPERATOR_CONTROL);
+
     // Set brake mode
     driveSystem.brake();
+
+    // Update leds
+    updateLEDS(enabled, true);
 
     double timestamp = Timer.getFPGATimestamp();
 
@@ -231,16 +264,19 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void teleopPeriodic() {
+    boolean enabled = (robotMode == RobotMode.OPERATOR_CONTROL);
+
     // Set brake mode
     driveSystem.brake();
+
+    // Update leds
+    updateLEDS(enabled, false);
 
     double timestamp = Timer.getFPGATimestamp();
 
     autoControl(timestamp);
 
     // Update systems
-    boolean enabled = (robotMode == RobotMode.OPERATOR_CONTROL);
-
     driveSystem.update(timestamp, enabled);
   }
 
@@ -288,6 +324,21 @@ public class Robot extends AluminatiRobot {
   }
 
   /**
+   * Updates the LED driver
+   */
+  private void updateLEDS(boolean operatorControl, boolean auto) {
+    if (!operatorControl && auto) {
+      ledDriver.setMode(Mode.BLUE);
+    } else if (operatorControl && !auto) {
+      ledDriver.setMode(Mode.VIOLET);
+    } else if (!operatorControl && !auto) {
+      ledDriver.setMode(Mode.SCANNER);
+    } else {
+      ledDriver.setMode(Mode.OFF);
+    }
+  }
+
+  /**
    * Controls the robot during auto
    */
   private void autoControl(double timestamp) {
@@ -310,6 +361,10 @@ public class Robot extends AluminatiRobot {
 
   private enum RobotMode {
     AUTONOMOUS, OPERATOR_CONTROL
+  }
+
+  private enum DisplayMode {
+    BATTERY_VOLTAGE, LOOP_TIME
   }
 
   private class DataReporter implements Loop {
