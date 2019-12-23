@@ -94,7 +94,7 @@ public abstract class AluminatiTunable extends Thread {
         try {
             this.socket = new DatagramSocket(port);
         } catch (SocketException e) {
-            DriverStation.reportError("Unable to start UDP listener on port " + port, false);
+            DriverStation.reportError("Unable to start UDP listener for Tunable on port " + port, false);
             return;
         }
         this.packet = new DatagramPacket(new byte[PACKET_LENGTH], PACKET_LENGTH);

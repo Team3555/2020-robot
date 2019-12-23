@@ -150,8 +150,8 @@ public class Robot extends AluminatiRobot {
     display = new AluminatiDisplay();
 
     // Setup joysticks
-    driverJoystick = new AluminatiJoystick(1);
-    operatorJoystick = new AluminatiJoystick(0);
+    driverJoystick = new AluminatiJoystick(0);
+    operatorJoystick = new AluminatiJoystick(1);
 
     // Configure systems
     configureSystems();
@@ -183,7 +183,7 @@ public class Robot extends AluminatiRobot {
     if (displayMode == DisplayMode.BATTERY_VOLTAGE) {
       display.display(pdp.getVoltage());
     } else {
-      display.display(this.getLastDT());
+      display.display(this.getLastDT() * 100);
     }
   }
 
@@ -282,12 +282,16 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void testInit() {
-
+    // Set coast mode
+    driveSystem.coast();
   }
 
   @Override
   public void testPeriodic() {
+    // Set coast mode
+    driveSystem.coast();
 
+    updateLEDS(true, false);
   }
 
   /**

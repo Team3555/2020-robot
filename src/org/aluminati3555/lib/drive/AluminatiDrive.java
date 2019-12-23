@@ -379,8 +379,8 @@ public class AluminatiDrive implements AluminatiCriticalDevice {
      * coefficient, or drive inversion
      */
     public void manualArcadeDrive(double x, double y) {
-        left.getMaster().set(ControlMode.PercentOutput, -y + x);
-        right.getMaster().set(ControlMode.PercentOutput, -y - x);
+        left.getMaster().set(ControlMode.PercentOutput, y + x);
+        right.getMaster().set(ControlMode.PercentOutput, y - x);
     }
 
     /**
