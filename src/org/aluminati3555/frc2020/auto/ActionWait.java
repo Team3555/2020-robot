@@ -47,10 +47,6 @@ public class ActionWait implements AluminatiAutoTask {
 
     }
 
-    public void advanceState() {
-
-    }
-
     public boolean isComplete() {
         return complete;
     }

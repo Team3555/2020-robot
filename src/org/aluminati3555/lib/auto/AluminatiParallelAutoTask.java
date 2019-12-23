@@ -73,10 +73,6 @@ public class AluminatiParallelAutoTask implements AluminatiAutoTask {
         }
     }
 
-    public void advanceState() {
-
-    }
-
     public AluminatiParallelAutoTask(AluminatiAutoTask... tasks) {
         this.tasks = tasks;
     }

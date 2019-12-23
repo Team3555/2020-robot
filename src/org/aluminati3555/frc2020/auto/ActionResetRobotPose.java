@@ -50,10 +50,6 @@ public class ActionResetRobotPose implements AluminatiAutoTask {
 
     }
 
-    public void advanceState() {
-
-    }
-
     public boolean isComplete() {
         return true;
     }

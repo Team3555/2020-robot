@@ -42,10 +42,6 @@ public class ModeDoNothing implements AluminatiAutoTask {
 
     }
 
-    public void advanceState() {
-
-    }
-
     public boolean isComplete() {
         return false;
     }

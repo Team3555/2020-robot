@@ -77,13 +77,6 @@ public class AluminatiAutoTaskList implements AluminatiAutoTask {
     }
 
     /**
-     * Does nothing
-     */
-    public void advanceState() {
-
-    }
-
-    /**
      * Clears the task list
      */
     public void clear() {

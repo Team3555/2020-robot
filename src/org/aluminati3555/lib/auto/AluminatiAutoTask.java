@@ -47,9 +47,4 @@ public interface AluminatiAutoTask {
      * Stops the auto task
      */
     public void stop();
-
-    /**
-     * Advances the state of the autonomous action
-     */
-    public void advanceState();
 }

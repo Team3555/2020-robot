@@ -22,66 +22,45 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import java.util.ArrayList;
-
-import com.team254.lib.physics.DriveCharacterization;
-import com.team254.lib.physics.DriveCharacterization.CharacterizationConstants;
-import com.team254.lib.physics.DriveCharacterization.DataPoint;
+import com.team254.lib.geometry.Rotation2d;
 
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
 
 /**
- * This auto mode characterizes the drivetrain
+ * This action turns the robot to a heading
  * 
  * @author Caleb Heydon
  */
-public class ModeCharacterizeDrive implements AluminatiAutoTask {
-    private DriveSystem driveSystem;
-    private ArrayList<DataPoint> points;
+public class ActionTurnToHeading implements AluminatiAutoTask {
+    private static final AluminatiTunablePIDController controller = new AluminatiTunablePIDController(5805, 0.1, 0, 0,
+            400, 1, 1, 0);
 
-    private boolean done;
-    private double startTime;
-    private double power;
+    private DriveSystem driveSystem;
+    private Rotation2d setpoint;
 
     public void start(double timestamp) {
-        done = false;
-        startTime = timestamp;
-        power = 0;
+        controller.reset(timestamp);
     }
 
     public void update(double timestamp) {
-        if (power < 1) {
-            power += 0.005;
-        }
-        driveSystem.manualArcadeDrive(0, -power);
+        double output = controller.update(setpoint.getDegrees(), driveSystem.getGyro().getHeading().getDegrees(),
+                timestamp);
 
-        points.add(new DataPoint(
-                (driveSystem.getLeftVelocityInchesPerSecond() + driveSystem.getRightVelocityInchesPerSecond()) / 2,
-                power * 12, timestamp - startTime));
-
-        if (power >= 1) {
-            done = true;
-        }
+        driveSystem.manualArcadeDrive(output, 0);
     }
 
     public void stop() {
         driveSystem.manualArcadeDrive(0, 0);
-
-        CharacterizationConstants output = DriveCharacterization.characterizeDrive(points, points);
-        SmartDashboard.putNumber("kV", output.kv);
-        SmartDashboard.putNumber("kS", output.ks);
     }
 
     public boolean isComplete() {
-        return done;
+        return controller.isComplete();
     }
 
-    public ModeCharacterizeDrive(DriveSystem driveSystem) {
+    public ActionTurnToHeading(DriveSystem driveSystem, Rotation2d setpoint) {
         this.driveSystem = driveSystem;
-
-        this.points = new ArrayList<DataPoint>();
+        this.setpoint = setpoint;
     }
 }

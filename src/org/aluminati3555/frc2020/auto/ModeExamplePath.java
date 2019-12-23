@@ -49,10 +49,6 @@ public class ModeExamplePath implements AluminatiAutoTask {
         taskList.stop();
     }
 
-    public void advanceState() {
-
-    }
-
     public boolean isComplete() {
         return taskList.isComplete();
     }
