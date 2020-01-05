@@ -39,6 +39,7 @@ import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
 import org.aluminati3555.lib.pneumatics.AluminatiCompressor;
+import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
 import org.aluminati3555.lib.robot.AluminatiRobot;
 import org.aluminati3555.lib.trajectoryfollowingmotion.AluminatiRobotStateEstimator;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
@@ -57,6 +58,7 @@ import org.aluminati3555.frc2020.auto.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.ModeExamplePath;
 import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.SpinnerSystem;
 
 /**
  * This is the main class of the robot
@@ -93,6 +95,7 @@ public class Robot extends AluminatiRobot {
 
   // Systems
   private DriveSystem driveSystem;
+  private SpinnerSystem spinnerSystem;
 
   // Pneumatics
   private AluminatiCompressor compressor;
@@ -217,6 +220,7 @@ public class Robot extends AluminatiRobot {
     // Update systems
     double timestamp = Timer.getFPGATimestamp();
     driveSystem.update(timestamp, false);
+    spinnerSystem.update(timestamp, false);
   }
 
   @Override
@@ -245,13 +249,11 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void autonomousPeriodic() {
-    boolean enabled = (robotMode == RobotMode.OPERATOR_CONTROL);
-
     // Set brake mode
     driveSystem.brake();
 
     // Update leds
-    updateLEDS(enabled, true);
+    updateLEDS(false, true);
 
     double timestamp = Timer.getFPGATimestamp();
 
@@ -259,6 +261,7 @@ public class Robot extends AluminatiRobot {
 
     // Update systems
     driveSystem.update(timestamp, false);
+    spinnerSystem.update(timestamp, false);
   }
 
   @Override
@@ -285,6 +288,7 @@ public class Robot extends AluminatiRobot {
 
     // Update systems
     driveSystem.update(timestamp, enabled);
+    spinnerSystem.update(timestamp, enabled);
   }
 
   @Override
@@ -318,6 +322,8 @@ public class Robot extends AluminatiRobot {
     left.getMaster().setSensorPhase(true);
     right.getMaster().setSensorPhase(true);
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
+
+    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1));
   }
 
   /**

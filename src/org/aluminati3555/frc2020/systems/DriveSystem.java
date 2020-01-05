@@ -42,13 +42,13 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     private static final int DRIVE_CURRENT_LIMIT_1 = 80;
 
     private AluminatiJoystick driverJoystick;
-    private boolean usingLimelight;
+    private boolean visionTracking;
 
     /**
      * Sets this to true to disable normal driving while using the limelight
      */
-    public void setUsingLimelight(boolean usingLimelight) {
-        this.usingLimelight = usingLimelight;
+    public void setVisionTracking(boolean visionTracking) {
+        this.visionTracking = visionTracking;
     }
 
     public void update(double timestamp, boolean enabled) {
@@ -74,15 +74,7 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
         }
 
         if (enabled) {
-            if (driverJoystick.getRawButtonPressed(2)) {
-                if (!this.isInverted()) {
-                    this.setInverted(true);
-                } else {
-                    this.setInverted(false);
-                }
-            }
-
-            if (!usingLimelight && getDriveState() == DriveState.OPEN_LOOP) {
+            if (!visionTracking && getDriveState() == DriveState.OPEN_LOOP) {
                 this.arcadeDrive(driverJoystick);
             }
         }

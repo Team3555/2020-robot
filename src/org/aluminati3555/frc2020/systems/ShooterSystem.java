@@ -22,11 +22,39 @@
 
 package org.aluminati3555.frc2020.systems;
 
+import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
+import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
+import org.aluminati3555.lib.system.AluminatiSystem;
+
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This class controls the shooter flywheel and retractable hood
  * 
  * @author Caleb Heydon
  */
-public class ShooterSystem {
+public class ShooterSystem implements AluminatiSystem {
+    // Constants
 
+    private AluminatiTalonSRX flywheelMotor;
+    private AluminatiDoubleSolenoid hoodSolenoid;
+
+    public void update(double timestamp, boolean enabled) {
+        if (!flywheelMotor.isOK()) {
+            DriverStation.reportError("Fault detected in shooter", false);
+        }
+
+        if (!flywheelMotor.isEncoderOK()) {
+            DriverStation.reportError("Encoder failure detected in shooter", false);
+        }
+
+        if (enabled) {
+            // Add manual controls here
+        }
+    }
+
+    public ShooterSystem(AluminatiTalonSRX flywheelMotor, AluminatiDoubleSolenoid hoodSolenoid) {
+        this.flywheelMotor = flywheelMotor;
+        this.hoodSolenoid = hoodSolenoid;
+    }
 }
