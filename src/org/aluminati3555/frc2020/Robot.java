@@ -58,6 +58,7 @@ import org.aluminati3555.frc2020.auto.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.ModeExamplePath;
 import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.frc2020.systems.SpinnerSystem;
 
 /**
@@ -72,6 +73,8 @@ public class Robot extends AluminatiRobot {
   private AluminatiAutoTask autoTask;
 
   private boolean matchStarted;
+
+  private ControlPanelColor controlPanelColor;
 
   // Looper
   private Looper looper;
@@ -96,6 +99,7 @@ public class Robot extends AluminatiRobot {
   // Systems
   private DriveSystem driveSystem;
   private SpinnerSystem spinnerSystem;
+  private ShooterSystem shooterSystem;
 
   // Pneumatics
   private AluminatiCompressor compressor;
@@ -136,6 +140,12 @@ public class Robot extends AluminatiRobot {
     // Set default robot state and mode
     robotState = new RobotState();
     robotMode = RobotMode.OPERATOR_CONTROL;
+
+    // Make it clear that matchStarted is false
+    matchStarted = false;
+
+    // Set control panel color to unkown
+    controlPanelColor = ControlPanelColor.UNKOWN;
 
     // Setup looper
     looper = new Looper();
@@ -282,6 +292,11 @@ public class Robot extends AluminatiRobot {
     // Update leds
     updateLEDS(enabled, false);
 
+    // Fetch control panel color if we do not already have it
+    if (controlPanelColor == ControlPanelColor.UNKOWN) {
+      fetchControlPanelColor();
+    }
+
     double timestamp = Timer.getFPGATimestamp();
 
     autoControl(timestamp);
@@ -324,6 +339,7 @@ public class Robot extends AluminatiRobot {
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1));
+    shooterSystem = new ShooterSystem(new AluminatiTalonSRX(70), new AluminatiDoubleSolenoid(2, 3));
   }
 
   /**
@@ -372,12 +388,51 @@ public class Robot extends AluminatiRobot {
     }
   }
 
+  /**
+   * Fetches the control panel target color
+   */
+  private void fetchControlPanelColor() {
+    String dataString = DriverStation.getInstance().getGameSpecificMessage();
+
+    // Stop if the string is empty or null
+    if (dataString == null || dataString.length() < 1) {
+      return;
+    }
+
+    char color = dataString.charAt(0);
+
+    // Synchronized to make this thread-safe when accessing from vision thread
+    synchronized (controlPanelColor) {
+      switch (color) {
+      case 'B':
+        controlPanelColor = ControlPanelColor.BLUE;
+        break;
+      case 'G':
+        controlPanelColor = ControlPanelColor.GREEN;
+        break;
+      case 'R':
+        controlPanelColor = ControlPanelColor.RED;
+        break;
+      case 'Y':
+        controlPanelColor = ControlPanelColor.YELLOW;
+        break;
+      default:
+        controlPanelColor = ControlPanelColor.UNKOWN;
+        break;
+      }
+    }
+  }
+
   private enum RobotMode {
     AUTONOMOUS, OPERATOR_CONTROL
   }
 
   private enum DisplayMode {
     BATTERY_VOLTAGE, LOOP_TIME
+  }
+
+  private enum ControlPanelColor {
+    UNKOWN, BLUE, GREEN, RED, YELLOW
   }
 
   private class DataReporter implements Loop {
