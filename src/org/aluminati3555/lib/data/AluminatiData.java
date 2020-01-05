@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ package org.aluminati3555.lib.data;
  */
 public final class AluminatiData {
     // Library
-    public static final int LIBRARY_VERSION = 5;
+    public static final int LIBRARY_VERSION = 6;
 
     // Robot delay
     public static double robotDelay = 0.02; // Seconds
@@ -53,10 +53,13 @@ public final class AluminatiData {
     public static int encoderUnitsPerRotation = 4096;
 
     // TalonSRX minimum firmware version
-    public static int minTalonSRXFirmareVersion = 0;
+    public static int minTalonSRXFirmwareVersion = 0;
 
     // VictorSPX minimum firmware version
     public static int minVictorSPXFirmwareVersion = 0;
+
+    // TalonFX minimum firmware version
+    public static int minTalonFXFirmwareVersion = 0;
 
     // Tipping detection
     public static double minTippingAngle = 10; // Degrees

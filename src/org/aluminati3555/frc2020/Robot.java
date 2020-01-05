@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,6 +93,8 @@ public class Robot extends AluminatiRobot {
 
   // Systems
   private DriveSystem driveSystem;
+
+  // Pneumatics
   private AluminatiCompressor compressor;
 
   // Auto selector
@@ -112,8 +114,8 @@ public class Robot extends AluminatiRobot {
     AluminatiData.pathFollowingProfileKV = 0.007;
     AluminatiData.pathFollowingProfileKS = 0.076;
 
-    AluminatiData.pathFollowingMaxVel = 113;
-    AluminatiData.pathFollowingMaxAccel = 108;
+    AluminatiData.pathFollowingMaxVel = 140;
+    AluminatiData.pathFollowingMaxAccel = 100;
 
     AluminatiUtil.generatePathFollowingFeedforwardValues();
 
@@ -121,7 +123,7 @@ public class Robot extends AluminatiRobot {
     AluminatiData.encoderUnitsPerRotation = 4096;
 
     // Set robot physical constants
-    AluminatiData.wheelDiamater = 4;
+    AluminatiData.wheelDiamater = 6;
     AluminatiData.driveWidth = 21;
 
     // Set thread priority
@@ -156,6 +158,10 @@ public class Robot extends AluminatiRobot {
     // Configure systems
     configureSystems();
 
+    // Setup compressor
+    compressor = new AluminatiCompressor();
+    compressor.start();
+
     // Setup robot state estimator
     robotStateEstimator = new AluminatiRobotStateEstimator(robotState, driveSystem);
     looper.register(robotStateEstimator);
@@ -169,7 +175,8 @@ public class Robot extends AluminatiRobot {
     // Setup auto selector
     autoSelector = new AluminatiAutoSelector(5810, new Entry("DoNothing", new ModeDoNothing()),
         new Entry("CharacterizeDrive", new ModeCharacterizeDrive(driveSystem)),
-        new Entry("ExamplePath", new ModeExamplePath(robotState, driveSystem)));
+        new Entry("ExamplePath", new ModeExamplePath(robotState, driveSystem)),
+        new Entry("Right6PowerCellTrench", null));
   }
 
   @Override
@@ -311,10 +318,6 @@ public class Robot extends AluminatiRobot {
     left.getMaster().setSensorPhase(true);
     right.getMaster().setSensorPhase(true);
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
-
-    // Setup compressor
-    compressor = new AluminatiCompressor();
-    compressor.start();
   }
 
   /**

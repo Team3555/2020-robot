@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,83 @@
 
 package org.aluminati3555.lib.drivers;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.Faults;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+import org.aluminati3555.lib.data.AluminatiData;
+
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * A wrapper class for the Talon FX
  * 
  * @author Caleb Heydon
  */
-public class AluminatiTalonFX extends AluminatiTalonSRX {
+public class AluminatiTalonFX extends TalonFX implements AluminatiPoweredDevice, AluminatiCriticalDevice {
+    // Fault buffer
+    private Faults faults;
+
+    private boolean versionOK;
+
     /**
-     * Returns a useful string
+     * Provides a useful string about the motor controller
      */
     @Override
     public String toString() {
         return "[TalonFX:" + this.getDeviceID() + "]";
     }
 
-    public AluminatiTalonFX(int id) {
-        super(id);
+    /**
+     * Returns true if the talon is ok
+     */
+    public boolean isOK() {
+        this.getFaults(faults);
+        boolean ok = (!faults.hasAnyFault() && versionOK);
+
+        return ok;
+    }
+
+    /**
+     * Verifies that a firmware version greater than or equal to the minimum is
+     * installed
+     */
+    private void checkFirmwareVersion() {
+        if (this.getFirmwareVersion() < AluminatiData.minTalonFXFirmwareVersion) {
+            versionOK = false;
+            DriverStation.reportWarning(this.toString() + " has too old of firmware (may not work)", false);
+        } else {
+            versionOK = true;
+        }
+    }
+
+    /**
+     * Initializes the talon
+     */
+    private void setupTalon() {
+        // Check firmware version
+        checkFirmwareVersion();
+
+        // Restore factory settings
+        this.configFactoryDefault();
+
+        // Clear faults
+        this.clearStickyFaults();
+
+        // Clear mp warning
+        this.clearMotionProfileHasUnderrun();
+
+        // Configure deadband
+        this.configNeutralDeadband(AluminatiData.deadband);
+
+        // Disable
+        this.set(ControlMode.PercentOutput, 0);
+    }
+
+    public AluminatiTalonFX(int canID) {
+        super(canID);
+        faults = new Faults();
+
+        setupTalon();
     }
 }

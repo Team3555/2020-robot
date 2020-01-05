@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,7 +73,7 @@ public class AluminatiTalonSRX extends TalonSRX implements AluminatiPoweredDevic
      * installed
      */
     private void checkFirmwareVersion() {
-        if (this.getFirmwareVersion() < AluminatiData.minTalonSRXFirmareVersion) {
+        if (this.getFirmwareVersion() < AluminatiData.minTalonSRXFirmwareVersion) {
             versionOK = false;
             DriverStation.reportWarning(this.toString() + " has too old of firmware (may not work)", false);
         } else {
@@ -82,7 +82,7 @@ public class AluminatiTalonSRX extends TalonSRX implements AluminatiPoweredDevic
     }
 
     /**
-     * Initializes talon
+     * Initializes the talon
      */
     private void setupTalon() {
         // Check firmware version
