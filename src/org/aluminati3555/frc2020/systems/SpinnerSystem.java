@@ -91,6 +91,20 @@ public class SpinnerSystem implements AluminatiSystem {
         spinnerMotor.setSelectedSensorPosition(0);
     }
 
+    /**
+     * Extends the spinner mechanism
+     */
+    public void extend() {
+        extenderSolenoid.forward();
+    }
+
+    /**
+     * Retracts the spinner mechanism
+     */
+    public void retract() {
+        extenderSolenoid.reverse();
+    }
+
     public void update(double timestamp, boolean enabled) {
         // Report failures to driver
         if (!this.spinnerMotor.isOK()) {
