@@ -20,19 +20,41 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020;
+package org.aluminati3555.frc2020.auto;
+
+import org.aluminati3555.frc2020.util.ShooterUtil;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.lib.auto.AluminatiAutoTask;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
- * This class provides utilities for the shooter system.  This includes distance to rpm calculations.
+ * This action sets the shooter rpm using the limelight
  * 
  * @author Caleb Heydon
  */
-public class ShooterUtil {
-    /**
-     * This method calculates a target rpm from the target height
-     */
-    public static double calculateRPM(double targetHeight) {
-        // Temporary
-        return 100;
+public class ActionSetShooterSpeedWithVision implements AluminatiAutoTask {
+    private ShooterSystem shooterSystem;
+    private AluminatiLimelight limelight;
+
+    public void start(double timestamp) {
+        double targetHeight = limelight.getVertical();
+        shooterSystem.set(ShooterUtil.calculateRPM(targetHeight));
+    }
+
+    public void update(double timestamp) {
+
+    }
+
+    public void stop() {
+
+    }
+
+    public boolean isComplete() {
+        return true;
+    }
+
+    public ActionSetShooterSpeedWithVision(ShooterSystem shooterSystem, AluminatiLimelight limelight) {
+        this.shooterSystem = shooterSystem;
+        this.limelight = limelight;
     }
 }

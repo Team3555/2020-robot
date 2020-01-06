@@ -22,7 +22,7 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import org.aluminati3555.frc2020.ShooterUtil;
+import org.aluminati3555.frc2020.util.ShooterUtil;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.vision.AluminatiLimelight;

@@ -48,10 +48,12 @@ import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
@@ -63,6 +65,7 @@ import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.frc2020.systems.SpinnerSystem;
+import org.aluminati3555.frc2020.util.ShooterUtil;
 
 /**
  * This is the main class of the robot
@@ -186,6 +189,9 @@ public class Robot extends AluminatiRobot {
     limelight = new AluminatiLimelight();
     limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
     limelight.setPipeline(0);
+
+    // Load neural network
+    ShooterUtil.load(Filesystem.getDeployDirectory() + "/shooter.ml");
 
     // Setup compressor
     compressor = new AluminatiCompressor();
