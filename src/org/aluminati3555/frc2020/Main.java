@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package frc.robot;
+package org.aluminati3555.frc2020;
 
 import org.aluminati3555.frc2020.Robot;
 
