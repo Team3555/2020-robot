@@ -81,9 +81,11 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
 
         // Shoot three power cells
+        taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
         taskList.add(new ActionStopShooter(shooterSystem));
+        taskList.add(new ActionRetractHood(shooterSystem));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
@@ -105,6 +107,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
 
         // Shoot five power cells here
+        taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
         taskList.add(new ActionStopShooter(shooterSystem));
