@@ -44,6 +44,8 @@ import org.aluminati3555.lib.robot.AluminatiRobot;
 import org.aluminati3555.lib.trajectoryfollowingmotion.AluminatiRobotStateEstimator;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.util.AluminatiUtil;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
+import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -103,6 +105,9 @@ public class Robot extends AluminatiRobot {
   private ShooterSystem shooterSystem;
   private IntakeSystem intakeSystem;
 
+  // Limelight
+  private AluminatiLimelight limelight;
+
   // Pneumatics
   private AluminatiCompressor compressor;
 
@@ -127,6 +132,10 @@ public class Robot extends AluminatiRobot {
     AluminatiData.pathFollowingMaxAccel = 100;
 
     AluminatiUtil.generatePathFollowingFeedforwardValues();
+
+    // Configure stop steering distance to be small since our paths require turning
+    // at the end
+    AluminatiData.pathStopSteeringDistance = 6;
 
     // Set encoder data
     AluminatiData.encoderUnitsPerRotation = 4096;
@@ -172,6 +181,11 @@ public class Robot extends AluminatiRobot {
 
     // Configure systems
     configureSystems();
+
+    // Setup limelight
+    limelight = new AluminatiLimelight();
+    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
+    limelight.setPipeline(0);
 
     // Setup compressor
     compressor = new AluminatiCompressor();
@@ -219,9 +233,15 @@ public class Robot extends AluminatiRobot {
     // Use brake mode if connected to the driverstation/fms
     if (DriverStation.getInstance().isDSAttached() || DriverStation.getInstance().isFMSAttached()) {
       driveSystem.brake();
+
+      // Turn limelight to current pipeline
+      limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
     } else {
       // Use coast for vision calibration
       driveSystem.coast();
+
+      // Have limelight on for vision calibration
+      limelight.setLEDMode(LEDMode.ON);
     }
 
     // Zero gyro if waiting for match to start
@@ -243,6 +263,9 @@ public class Robot extends AluminatiRobot {
 
     // Set brake mode
     driveSystem.brake();
+
+    // Set limelight mode
+    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
 
     // Stop auto task if one is running
     if (autoTask != null) {
@@ -266,6 +289,9 @@ public class Robot extends AluminatiRobot {
     // Set brake mode
     driveSystem.brake();
 
+    // Set limelight mode
+    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
+
     // Update leds
     updateLEDS(false, true);
 
@@ -286,6 +312,9 @@ public class Robot extends AluminatiRobot {
 
     // Set brake mode
     driveSystem.brake();
+
+    // Set limelight mode
+    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
   }
 
   @Override
@@ -294,6 +323,9 @@ public class Robot extends AluminatiRobot {
 
     // Set brake mode
     driveSystem.brake();
+
+    // Set limelight mode
+    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
 
     // Update leds
     updateLEDS(enabled, false);

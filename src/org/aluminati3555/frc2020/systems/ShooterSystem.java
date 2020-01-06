@@ -137,7 +137,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.flywheelMotor1.config_IntegralZone(0, 400);
 
         // Setup tuning listener
-        new AluminatiTunable(5806) {
+        new AluminatiTunable(5807) {
             protected void update(TuningData data) {
                 flywheelMotor1.config_kP(0, data.kP);
                 flywheelMotor1.config_kI(0, data.kI);

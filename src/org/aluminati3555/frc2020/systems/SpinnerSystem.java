@@ -146,7 +146,7 @@ public class SpinnerSystem implements AluminatiSystem {
         this.spinnerMotor.config_IntegralZone(0, 400);
 
         // Setup tuning listener
-        new AluminatiTunable(5805) {
+        new AluminatiTunable(5806) {
             protected void update(TuningData data) {
                 spinnerMotor.config_kP(0, data.kP);
                 spinnerMotor.config_kI(0, data.kI);
