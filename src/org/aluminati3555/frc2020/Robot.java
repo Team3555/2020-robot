@@ -123,7 +123,7 @@ public class Robot extends AluminatiRobot {
     AluminatiData.pathFollowingProfileKV = 0.007;
     AluminatiData.pathFollowingProfileKS = 0.076;
 
-    AluminatiData.pathFollowingMaxVel = 140;
+    AluminatiData.pathFollowingMaxVel = 120;
     AluminatiData.pathFollowingMaxAccel = 100;
 
     AluminatiUtil.generatePathFollowingFeedforwardValues();
@@ -190,8 +190,8 @@ public class Robot extends AluminatiRobot {
     // Setup auto selector
     autoSelector = new AluminatiAutoSelector(5810, new Entry("DoNothing", new ModeDoNothing()),
         new Entry("CharacterizeDrive", new ModeCharacterizeDrive(driveSystem)),
-        new Entry("ExamplePath", new ModeExamplePath(robotState, driveSystem)),
-        new Entry("Right6PowerCellTrench", null));
+        new Entry("ExamplePath", new ModeExamplePath(robotState, driveSystem)), new Entry("8PowerCell5TrenchRun", null),
+        new Entry("5PowerCell2ShieldGenerator", null), new Entry("5PowerCell3ShieldGenerator", null));
   }
 
   @Override

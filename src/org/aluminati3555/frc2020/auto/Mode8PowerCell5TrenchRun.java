@@ -22,6 +22,7 @@
 
 package org.aluminati3555.frc2020.auto;
 
+import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun1;
 import org.aluminati3555.frc2020.paths.PathExample;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
@@ -30,11 +31,12 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This mode runs an example pure pursuit path
+ * This mode shoots three power cells into the high goal, gets five more from
+ * the trench run, and then shoots them
  * 
  * @author Caleb Heydon
  */
-public class ModeExamplePath implements AluminatiAutoTask {
+public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
     public void start(double timestamp) {
@@ -53,11 +55,11 @@ public class ModeExamplePath implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public ModeExamplePath(RobotState robotState, DriveSystem driveSystem) {
+    public Mode8PowerCell5TrenchRun(RobotState robotState, DriveSystem driveSystem) {
         taskList = new AluminatiAutoTaskList();
-        PathContainer pathContainer = new PathExample();
 
-        taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
-        taskList.add(new ActionRunPath(driveSystem, pathContainer));
+        PathContainer path1 = new Path8PowerCell5TrenchRun1();
+
+        taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));
     }
 }

@@ -39,6 +39,8 @@ public class IntakeSystem implements AluminatiSystem {
     private AluminatiVictorSPX intakeMotor;
     private AluminatiDoubleSolenoid extenderSolenoid;
 
+    private double speed;
+
     /**
      * Extends the intake
      */
@@ -57,7 +59,7 @@ public class IntakeSystem implements AluminatiSystem {
      * Sets the speed of the intake
      */
     public void setSpeed(double speed) {
-        intakeMotor.set(ControlMode.PercentOutput, speed);
+        this.speed = speed;
     }
 
     /**
@@ -75,6 +77,8 @@ public class IntakeSystem implements AluminatiSystem {
 
         if (enabled) {
             // Add manual controls here
+        } else {
+            intakeMotor.set(ControlMode.PercentOutput, speed);
         }
     }
 

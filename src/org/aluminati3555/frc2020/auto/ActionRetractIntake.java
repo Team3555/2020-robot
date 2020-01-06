@@ -22,42 +22,34 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import org.aluminati3555.frc2020.paths.PathExample;
-import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
-import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
-import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This mode runs an example pure pursuit path
+ * This action retracts the intake
  * 
  * @author Caleb Heydon
  */
-public class ModeExamplePath implements AluminatiAutoTask {
-    private AluminatiAutoTaskList taskList;
+public class ActionRetractIntake implements AluminatiAutoTask {
+    private IntakeSystem intakeSystem;
 
     public void start(double timestamp) {
-        taskList.start(timestamp);
+        intakeSystem.retract();
     }
 
     public void update(double timestamp) {
-        taskList.update(timestamp);
+
     }
 
     public void stop() {
-        taskList.stop();
+
     }
 
     public boolean isComplete() {
-        return taskList.isComplete();
+        return true;
     }
 
-    public ModeExamplePath(RobotState robotState, DriveSystem driveSystem) {
-        taskList = new AluminatiAutoTaskList();
-        PathContainer pathContainer = new PathExample();
-
-        taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
-        taskList.add(new ActionRunPath(driveSystem, pathContainer));
+    public ActionRetractIntake(IntakeSystem intakeSystem) {
+        this.intakeSystem = intakeSystem;
     }
 }
