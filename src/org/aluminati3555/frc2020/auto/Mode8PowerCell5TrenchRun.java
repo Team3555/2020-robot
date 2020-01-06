@@ -28,6 +28,7 @@ import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun1;
 import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun2;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
 import org.aluminati3555.lib.auto.AluminatiParallelAutoTask;
@@ -64,7 +65,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
     }
 
     public Mode8PowerCell5TrenchRun(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem) {
+            IntakeSystem intakeSystem, ShooterSystem shooterSystem) {
         taskList = new AluminatiAutoTaskList();
 
         PathContainer path1 = new Path8PowerCell5TrenchRun1();
@@ -81,6 +82,8 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
 
         // Shoot three power cells
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
+        taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
+        taskList.add(new ActionStopShooter(shooterSystem));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
@@ -103,6 +106,8 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
 
         // Shoot five power cells here
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
+        taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
+        taskList.add(new ActionStopShooter(shooterSystem));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
