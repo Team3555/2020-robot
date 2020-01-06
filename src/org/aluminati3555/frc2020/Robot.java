@@ -58,6 +58,7 @@ import org.aluminati3555.frc2020.auto.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.ModeExamplePath;
 import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.frc2020.systems.SpinnerSystem;
 
@@ -100,6 +101,7 @@ public class Robot extends AluminatiRobot {
   private DriveSystem driveSystem;
   private SpinnerSystem spinnerSystem;
   private ShooterSystem shooterSystem;
+  private IntakeSystem intakeSystem;
 
   // Pneumatics
   private AluminatiCompressor compressor;
@@ -231,6 +233,8 @@ public class Robot extends AluminatiRobot {
     double timestamp = Timer.getFPGATimestamp();
     driveSystem.update(timestamp, false);
     spinnerSystem.update(timestamp, false);
+    shooterSystem.update(timestamp, false);
+    intakeSystem.update(timestamp, false);
   }
 
   @Override
@@ -272,6 +276,8 @@ public class Robot extends AluminatiRobot {
     // Update systems
     driveSystem.update(timestamp, false);
     spinnerSystem.update(timestamp, false);
+    shooterSystem.update(timestamp, false);
+    intakeSystem.update(timestamp, false);
   }
 
   @Override
@@ -304,6 +310,8 @@ public class Robot extends AluminatiRobot {
     // Update systems
     driveSystem.update(timestamp, enabled);
     spinnerSystem.update(timestamp, enabled);
+    shooterSystem.update(timestamp, enabled);
+    intakeSystem.update(timestamp, enabled);
   }
 
   @Override
@@ -339,7 +347,9 @@ public class Robot extends AluminatiRobot {
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1));
-    shooterSystem = new ShooterSystem(new AluminatiTalonSRX(70), new AluminatiDoubleSolenoid(2, 3));
+    shooterSystem = new ShooterSystem(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66),
+        new AluminatiDoubleSolenoid(2, 3));
+    intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiDoubleSolenoid(4, 5));
   }
 
   /**

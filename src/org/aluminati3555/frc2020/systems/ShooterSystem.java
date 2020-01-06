@@ -26,6 +26,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
+import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
 import org.aluminati3555.lib.net.AluminatiTunable;
 import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
@@ -56,7 +57,8 @@ public class ShooterSystem implements AluminatiSystem {
         return (int) (ticks / ENCODER_TICKS_PER_ROTATION * 600.0);
     }
 
-    private AluminatiTalonSRX flywheelMotor;
+    private AluminatiTalonSRX flywheelMotor1;
+    private AluminatiVictorSPX flywheelMotor2;
     private AluminatiDoubleSolenoid hoodSolenoid;
 
     private boolean shooterEnabled;
@@ -74,7 +76,7 @@ public class ShooterSystem implements AluminatiSystem {
      * Returns the velocity of the flywheel
      */
     public double getVelocity() {
-        return encoderTicksToRPM(flywheelMotor.getSelectedSensorVelocity());
+        return encoderTicksToRPM(flywheelMotor1.getSelectedSensorVelocity());
     }
 
     /**
@@ -100,11 +102,11 @@ public class ShooterSystem implements AluminatiSystem {
     }
 
     public void update(double timestamp, boolean enabled) {
-        if (!flywheelMotor.isOK()) {
+        if (!flywheelMotor1.isOK()) {
             DriverStation.reportError("Fault detected in shooter", false);
         }
 
-        if (!flywheelMotor.isEncoderOK()) {
+        if (!flywheelMotor1.isEncoderOK()) {
             DriverStation.reportError("Encoder failure detected in shooter", false);
         }
 
@@ -113,38 +115,43 @@ public class ShooterSystem implements AluminatiSystem {
         }
 
         if (shooterEnabled) {
-            flywheelMotor.set(ControlMode.Velocity, setpoint);
+            flywheelMotor1.set(ControlMode.Velocity, setpoint);
         } else {
-            flywheelMotor.set(ControlMode.PercentOutput, 0);
+            flywheelMotor1.set(ControlMode.PercentOutput, 0);
         }
     }
 
-    public ShooterSystem(AluminatiTalonSRX flywheelMotor, AluminatiDoubleSolenoid hoodSolenoid) {
-        this.flywheelMotor = flywheelMotor;
+    public ShooterSystem(AluminatiTalonSRX flywheelMotor1, AluminatiVictorSPX flywheelMotor2,
+            AluminatiDoubleSolenoid hoodSolenoid) {
+        this.flywheelMotor1 = flywheelMotor1;
+        this.flywheelMotor2 = flywheelMotor2;
         this.hoodSolenoid = hoodSolenoid;
 
         // Configure encoder
-        this.flywheelMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        this.flywheelMotor1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.flywheelMotor.config_kP(0, 0.1);
-        this.flywheelMotor.config_kI(0, 0);
-        this.flywheelMotor.config_kD(0, 0);
-        this.flywheelMotor.config_IntegralZone(0, 400);
+        this.flywheelMotor1.config_kP(0, 0.1);
+        this.flywheelMotor1.config_kI(0, 0);
+        this.flywheelMotor1.config_kD(0, 0);
+        this.flywheelMotor1.config_IntegralZone(0, 400);
 
         // Setup tuning listener
         new AluminatiTunable(5806) {
             protected void update(TuningData data) {
-                flywheelMotor.config_kP(0, data.kP);
-                flywheelMotor.config_kI(0, data.kI);
-                flywheelMotor.config_kD(0, data.kD);
+                flywheelMotor1.config_kP(0, data.kP);
+                flywheelMotor1.config_kI(0, data.kI);
+                flywheelMotor1.config_kD(0, data.kD);
             }
         };
 
         // Configure current limit
-        this.flywheelMotor.configPeakCurrentDuration(500);
-        this.flywheelMotor.configPeakCurrentLimit(SHOOTER_CURRENT_LIMIT);
-        this.flywheelMotor.configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
-        this.flywheelMotor.enableCurrentLimit(true);
+        this.flywheelMotor1.configPeakCurrentDuration(500);
+        this.flywheelMotor1.configPeakCurrentLimit(SHOOTER_CURRENT_LIMIT);
+        this.flywheelMotor1.configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
+        this.flywheelMotor1.enableCurrentLimit(true);
+
+        // Configure motor 2 to follow
+        this.flywheelMotor2.follow(this.flywheelMotor1);
     }
 }

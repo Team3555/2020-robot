@@ -24,6 +24,7 @@ package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.net.AluminatiTunable;
@@ -158,6 +159,9 @@ public class SpinnerSystem implements AluminatiSystem {
         this.spinnerMotor.configPeakCurrentLimit(SPINNER_CURRENT_LIMIT);
         this.spinnerMotor.configContinuousCurrentLimit(SPINNER_CURRENT_LIMIT);
         this.spinnerMotor.enableCurrentLimit(true);
+
+        // Configure brake mode
+        this.spinnerMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     private enum State {
