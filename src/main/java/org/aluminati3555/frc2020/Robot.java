@@ -54,7 +54,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
 
@@ -191,7 +190,11 @@ public class Robot extends AluminatiRobot {
     limelight.setPipeline(0);
 
     // Load neural network
-    ShooterUtil.load(Filesystem.getDeployDirectory() + "/shooter.ml");
+    if (!Robot.isSimulation()) {
+      ShooterUtil.load(Filesystem.getDeployDirectory() + "/shooter.ml");
+    } else {
+      ShooterUtil.load(Filesystem.getDeployDirectory() + "/../src/main/deploy/shooter.ml");
+    }
 
     // Setup compressor
     compressor = new AluminatiCompressor();
