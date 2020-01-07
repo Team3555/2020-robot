@@ -36,6 +36,9 @@ import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
 public class ActionTurnToHeading implements AluminatiAutoTask {
     private static AluminatiTunablePIDController controller;
 
+    /**
+     * Initializes the PID controller
+     */
     public static final void initialize() {
         controller = new AluminatiTunablePIDController(5805, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
@@ -48,7 +51,7 @@ public class ActionTurnToHeading implements AluminatiAutoTask {
     }
 
     public void update(double timestamp) {
-        double output = controller.update(setpoint.getDegrees(), driveSystem.getGyro().getHeading().getDegrees(),
+        double output = -controller.update(setpoint.getDegrees(), driveSystem.getGyro().getHeading().getDegrees(),
                 timestamp);
 
         driveSystem.manualArcadeDrive(output, 0);

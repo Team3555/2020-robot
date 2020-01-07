@@ -35,6 +35,9 @@ import org.aluminati3555.lib.vision.AluminatiLimelight;
 public class ActionAlignWithVision implements AluminatiAutoTask {
     private static AluminatiTunablePIDController controller;
 
+    /**
+     * Initializes the PID controller
+     */
     public static final void initialize() {
         controller = new AluminatiTunablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
