@@ -20,18 +20,39 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.systems;
+package org.aluminati3555.frc2020.auto;
+
+import org.aluminati3555.frc2020.systems.FeederSystem;
+import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This class controls the mechanism that feeds the power cells to the shooter
+ * This action feeds a specified number of power cells to the shooter
  * 
  * @author Caleb Heydon
  */
-public class FeederSystem {
-    /**
-     * Feeds a specified number of power cells to the shooter
-     */
-    public void feedPowerCell(int numberOfPowerCells) {
+public class ActionFeedPowerCell implements AluminatiAutoTask {
+    private FeederSystem feederSystem;
 
+    private int numberOfPowerCells;
+
+    public void start(double timestamp) {
+        feederSystem.feedPowerCell(numberOfPowerCells);
+    }
+
+    public void update(double timestamp) {
+
+    }
+
+    public void stop() {
+
+    }
+
+    public boolean isComplete() {
+        return true;
+    }
+
+    public ActionFeedPowerCell(FeederSystem feederSystem, int numberOfPowerCells) {
+        this.feederSystem = feederSystem;
+        this.numberOfPowerCells = numberOfPowerCells;
     }
 }

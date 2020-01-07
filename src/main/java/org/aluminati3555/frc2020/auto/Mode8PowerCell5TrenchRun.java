@@ -27,6 +27,7 @@ import com.team254.lib.geometry.Rotation2d;
 import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun1;
 import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun2;
 import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.FeederSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
@@ -65,7 +66,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
     }
 
     public Mode8PowerCell5TrenchRun(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem, ShooterSystem shooterSystem) {
+            IntakeSystem intakeSystem, ShooterSystem shooterSystem, FeederSystem feederSystem) {
         taskList = new AluminatiAutoTaskList();
 
         PathContainer path1 = new Path8PowerCell5TrenchRun1();
@@ -83,8 +84,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         // Shoot three power cells
         taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
-        taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
-        taskList.add(new ActionStopShooter(shooterSystem));
+        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 3));
         taskList.add(new ActionRetractHood(shooterSystem));
 
         // Set the limelight to the driver pipeline
@@ -109,8 +109,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         // Shoot five power cells here
         taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
-        taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
-        taskList.add(new ActionStopShooter(shooterSystem));
+        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 5));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
