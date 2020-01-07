@@ -58,6 +58,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
 
+import org.aluminati3555.frc2020.auto.ActionAlignWithVision;
+import org.aluminati3555.frc2020.auto.ActionTurnToHeading;
 import org.aluminati3555.frc2020.auto.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.ModeExamplePath;
@@ -184,6 +186,10 @@ public class Robot extends AluminatiRobot {
 
     // Configure systems
     configureSystems();
+
+    // Setup pid tuning on actions
+    ActionTurnToHeading.initialize();
+    ActionAlignWithVision.initialize();
 
     // Setup limelight
     limelight = new AluminatiLimelight();

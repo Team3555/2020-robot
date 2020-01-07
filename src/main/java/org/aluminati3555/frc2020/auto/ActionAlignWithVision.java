@@ -22,34 +22,32 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import com.team254.lib.geometry.Rotation2d;
-
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
- * This action turns the robot to a heading
+ * This action aligns the robot with a vision target
  * 
  * @author Caleb Heydon
  */
-public class ActionTurnToHeading implements AluminatiAutoTask {
+public class ActionAlignWithVision implements AluminatiAutoTask {
     private static AluminatiTunablePIDController controller;
 
     public static final void initialize() {
-        controller = new AluminatiTunablePIDController(5805, 0.1, 0, 0.1, 400, 1, 1, 0);
+        controller = new AluminatiTunablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
 
     private DriveSystem driveSystem;
-    private Rotation2d setpoint;
+    private AluminatiLimelight limelight;
 
     public void start(double timestamp) {
         controller.reset(timestamp);
     }
 
     public void update(double timestamp) {
-        double output = controller.update(setpoint.getDegrees(), driveSystem.getGyro().getHeading().getDegrees(),
-                timestamp);
+        double output = controller.update(0, limelight.getX(), timestamp);
 
         driveSystem.manualArcadeDrive(output, 0);
     }
@@ -62,8 +60,8 @@ public class ActionTurnToHeading implements AluminatiAutoTask {
         return controller.isComplete();
     }
 
-    public ActionTurnToHeading(DriveSystem driveSystem, Rotation2d setpoint) {
+    public ActionAlignWithVision(DriveSystem driveSystem, AluminatiLimelight limelight) {
         this.driveSystem = driveSystem;
-        this.setpoint = setpoint;
+        this.limelight = limelight;
     }
 }
