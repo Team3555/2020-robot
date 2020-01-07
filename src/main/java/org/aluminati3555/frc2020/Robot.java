@@ -27,6 +27,7 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoSelector.Entry;
 import org.aluminati3555.lib.data.AluminatiData;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
+import org.aluminati3555.lib.drivers.AluminatiColorSensor;
 import org.aluminati3555.lib.drivers.AluminatiDisplay;
 import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
 import org.aluminati3555.lib.drivers.AluminatiDualGyro;
@@ -387,7 +388,8 @@ public class Robot extends AluminatiRobot {
     right.getMaster().setSensorPhase(true);
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
 
-    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1));
+    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1),
+        new AluminatiColorSensor());
     shooterSystem = new ShooterSystem(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66),
         new AluminatiDoubleSolenoid(2, 3));
     intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiDoubleSolenoid(4, 5));
@@ -482,7 +484,7 @@ public class Robot extends AluminatiRobot {
     BATTERY_VOLTAGE, LOOP_TIME
   }
 
-  private enum ControlPanelColor {
+  public enum ControlPanelColor {
     UNKOWN, BLUE, GREEN, RED, YELLOW
   }
 
