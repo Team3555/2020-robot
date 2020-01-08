@@ -112,6 +112,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
         taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 5));
+        taskList.add(new ActionRetractHood(shooterSystem));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
