@@ -22,31 +22,26 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import com.team254.lib.geometry.Rotation2d;
-
-import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun1;
-import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun2;
+import org.aluminati3555.frc2020.paths.Path5PowerCell2OtherAllianceTrenchRun1;
+import org.aluminati3555.frc2020.paths.Path5PowerCell2OtherAllianceTrenchRun2;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.FeederSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
-import org.aluminati3555.lib.auto.AluminatiParallelAutoTask;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 /**
- * This mode shoots three power cells into the high goal, gets five more from
- * the trench run, and then shoots them
+ * This auto mode steals two power cells from the opposing alliance and shoots
+ * five into the high goal
  * 
  * @author Caleb Heydon
  */
-public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
-    private static final Rotation2d TARGET_ZONE_HEADING = Rotation2d.fromDegrees(30);
-
+public class Mode5PowerCell2OtherAllianceTrenchRun implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
     public void start(double timestamp) {
@@ -65,12 +60,13 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public Mode8PowerCell5TrenchRun(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem, ShooterSystem shooterSystem, FeederSystem feederSystem) {
+    public Mode5PowerCell2OtherAllianceTrenchRun(RobotState robotState, AluminatiLimelight limelight,
+            DriveSystem driveSystem, IntakeSystem intakeSystem, ShooterSystem shooterSystem,
+            FeederSystem feederSystem) {
         taskList = new AluminatiAutoTaskList();
 
-        PathContainer path1 = new Path8PowerCell5TrenchRun1();
-        PathContainer path2 = new Path8PowerCell5TrenchRun2();
+        PathContainer path1 = new Path5PowerCell2OtherAllianceTrenchRun1();
+        PathContainer path2 = new Path5PowerCell2OtherAllianceTrenchRun2();
 
         // Set robot position
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));
@@ -78,30 +74,21 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         // Turn on the limelight leds
         taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.ON));
 
-        // Set the limelight to the tracking pipeline
-        taskList.add(new ActionSetLimelightPipeline(limelight, 1));
-
-        // Shoot three power cells
-        taskList.add(new ActionExtendHood(shooterSystem));
-        taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
-        taskList.add(new ActionAlignWithVision(driveSystem, limelight));
-        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 3));
+        // Retract hood if it is extended
         taskList.add(new ActionRetractHood(shooterSystem));
 
-        // Set the limelight to the driver pipeline
-        taskList.add(new ActionSetLimelightPipeline(limelight, 0));
+        // Actuate intake and spin motors
+        taskList.add(new ActionExtendIntake(intakeSystem));
+        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0.5));
 
-        // Go get five more power cells
-        taskList.add(new ActionTurnToHeading(driveSystem, Rotation2d.fromDegrees(0)));
-        taskList.add(
-                new AluminatiParallelAutoTask(new ActionRunPath(driveSystem, path1),
-                        new ActionOnPathMarkerPassed(driveSystem, "Path8PowerCell5TrenchRun1A",
-                                new AluminatiParallelAutoTask(new ActionExtendIntake(intakeSystem),
-                                        new ActionSetIntakeSpeed(intakeSystem, 0.5)))));
+        // Run path
+        taskList.add(new ActionRunPath(driveSystem, path1));
+
+        // Stop intake and retract it
         taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0));
         taskList.add(new ActionRetractIntake(intakeSystem));
 
-        // Go back to the initiation line
+        // Run path two
         taskList.add(new ActionRunPath(driveSystem, path2));
 
         // Set the limelight to the tracking pipeline
@@ -109,7 +96,6 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
 
         // Shoot five power cells
         taskList.add(new ActionExtendHood(shooterSystem));
-        taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
         taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 5));
         taskList.add(new ActionRetractHood(shooterSystem));
