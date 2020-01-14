@@ -25,7 +25,6 @@ package org.aluminati3555.lib.drivers;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * This wrapper class interfaces with the REV Robotics ColorSensorV3
@@ -39,14 +38,6 @@ public class AluminatiColorSensor extends ColorSensorV3 {
     }
 
     /**
-     * Returns the RGB color
-     */
-    public RGB getRGB() {
-        Color color = this.getColor();
-        return new RGB(color.red, color.green, color.blue);
-    }
-
-    /**
      * Returns the proximety as a value between 0 and 1. 0 is close and 1 is far.
      */
     public double getActualProximityPercent() {
@@ -56,38 +47,5 @@ public class AluminatiColorSensor extends ColorSensorV3 {
     public AluminatiColorSensor() {
         // Use the robotRIO's designated I2C port
         super(I2C.Port.kOnboard);
-    }
-
-    public static class RGB {
-        private double r;
-        private double g;
-        private double b;
-
-        /**
-         * Returns the R value
-         */
-        public double getR() {
-            return r;
-        }
-
-        /**
-         * Returns the G value
-         */
-        public double getG() {
-            return g;
-        }
-
-        /**
-         * Returns the B value
-         */
-        public double getB() {
-            return b;
-        }
-
-        public RGB(double r, double b, double g) {
-            this.r = r;
-            this.b = b;
-            this.g = g;
-        }
     }
 }

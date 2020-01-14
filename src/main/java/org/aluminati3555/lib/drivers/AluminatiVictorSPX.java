@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,11 +37,12 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  * 
  * @author Caleb Heydon
  */
-public class AluminatiVictorSPX extends VictorSPX implements AluminatiPoweredDevice, AluminatiCriticalDevice {
+public class AluminatiVictorSPX extends VictorSPX
+        implements AluminatiPoweredDevice, AluminatiCriticalDevice, AluminatiMotorController {
     // Faults
     private Faults faults;
 
-    private boolean versionOK;
+    private boolean firmwareOK;
 
     // PDP
     private PowerDistributionPanel pdp;
@@ -95,6 +96,13 @@ public class AluminatiVictorSPX extends VictorSPX implements AluminatiPoweredDev
     }
 
     /**
+     * Empty method that warns drivers
+     */
+    public void follow(AluminatiSparkMax motorController) {
+        DriverStation.reportWarning(this.toString() + " is unable to follow REV motor controllers", false);
+    }
+
+    /**
      * Returns the output current of the motor controller
      */
     @Override
@@ -124,7 +132,7 @@ public class AluminatiVictorSPX extends VictorSPX implements AluminatiPoweredDev
     public boolean isOK() {
         this.getFaults(faults);
 
-        return (!faults.hasAnyFault() && versionOK);
+        return (!faults.hasAnyFault() && firmwareOK);
     }
 
     /**
@@ -133,10 +141,10 @@ public class AluminatiVictorSPX extends VictorSPX implements AluminatiPoweredDev
      */
     private void checkFirmwareVersion() {
         if (this.getFirmwareVersion() < AluminatiData.minVictorSPXFirmwareVersion) {
-            versionOK = false;
+            firmwareOK = false;
             DriverStation.reportWarning(this.toString() + " has too old of firmware (may not work)", false);
         } else {
-            versionOK = true;
+            firmwareOK = true;
         }
     }
 

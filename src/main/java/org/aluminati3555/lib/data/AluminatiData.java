@@ -33,7 +33,7 @@ package org.aluminati3555.lib.data;
  */
 public final class AluminatiData {
     // Library
-    public static final int LIBRARY_VERSION = 8;
+    public static final int LIBRARY_VERSION = 9;
 
     // Robot delay
     public static double robotDelay = 0.02; // Seconds
@@ -60,6 +60,9 @@ public final class AluminatiData {
 
     // TalonFX minimum firmware version
     public static int minTalonFXFirmwareVersion = 0;
+
+    // SparkMax minimum firmware version
+    public static int minSparkMaxFirmwareVersion = 0;
 
     // Tipping detection
     public static double minTippingAngle = 10; // Degrees

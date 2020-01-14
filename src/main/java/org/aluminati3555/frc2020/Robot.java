@@ -35,6 +35,7 @@ import org.aluminati3555.lib.drivers.AluminatiJoystick;
 import org.aluminati3555.lib.drivers.AluminatiLEDDriver;
 import org.aluminati3555.lib.drivers.AluminatiLEDDriver.Mode;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
+import org.aluminati3555.lib.drivers.AluminatiSparkMax;
 import org.aluminati3555.lib.loops.Loop;
 import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
@@ -401,13 +402,13 @@ public class Robot extends AluminatiRobot {
     AluminatiPigeon gyro2 = new AluminatiPigeon((AluminatiTalonSRX) right.getMotors()[1]);
     AluminatiDualGyro dualGyro = new AluminatiDualGyro(gyro1, gyro2);
 
-    left.getMaster().setSensorPhase(true);
-    right.getMaster().setSensorPhase(true);
+    left.getMasterTalon().setSensorPhase(true);
+    right.getMasterTalon().setSensorPhase(true);
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1),
         new AluminatiColorSensor());
-    shooterSystem = new ShooterSystem(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66),
+    shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiSparkMax(65), new AluminatiSparkMax(66)),
         new AluminatiDoubleSolenoid(2, 3));
     intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiDoubleSolenoid(4, 5));
     feederSystem = new FeederSystem();
@@ -515,8 +516,8 @@ public class Robot extends AluminatiRobot {
     public void onLoop(double timestamp) {
       // Do not report data if connected to the fms
       if (!DriverStation.getInstance().isFMSAttached()) {
-        SmartDashboard.putNumber("leftPower", driveSystem.getLeftGroup().getMaster().getMotorOutputPercent());
-        SmartDashboard.putNumber("rightPower", driveSystem.getRightGroup().getMaster().getMotorOutputPercent());
+        SmartDashboard.putNumber("leftPower", driveSystem.getLeftGroup().getMasterTalon().getMotorOutputPercent());
+        SmartDashboard.putNumber("rightPower", driveSystem.getRightGroup().getMasterTalon().getMotorOutputPercent());
       }
     }
 

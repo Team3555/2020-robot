@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
  */
 public class AluminatiMotorGroup implements AluminatiCriticalDevice {
     // Motors
-    private IMotorController master;
-    private IMotorController[] motors;
+    private AluminatiMotorController master;
+    private AluminatiMotorController[] motors;
 
     // Inverted
     private boolean inverted;
@@ -50,9 +50,20 @@ public class AluminatiMotorGroup implements AluminatiCriticalDevice {
     }
 
     /**
+     * Returns the master spark max
+     */
+    public AluminatiSparkMax getMasterSparkMax() {
+        if (!(master instanceof AluminatiSparkMax)) {
+            return null;
+        }
+
+        return (AluminatiSparkMax) master;
+    }
+
+    /**
      * Returns the master motor controller
      */
-    public IMotorController getMaster() {
+    public AluminatiMotorController getMaster() {
         return master;
     }
 
@@ -61,7 +72,7 @@ public class AluminatiMotorGroup implements AluminatiCriticalDevice {
      * 
      * @return
      */
-    public IMotorController[] getMotors() {
+    public AluminatiMotorController[] getMotors() {
         return motors;
     }
 
@@ -153,22 +164,32 @@ public class AluminatiMotorGroup implements AluminatiCriticalDevice {
      * @param master
      * @param followers
      */
-    public AluminatiMotorGroup(IMotorController master, IMotorController... followers) {
+    public AluminatiMotorGroup(AluminatiMotorController master, AluminatiMotorController... followers) {
         this.master = master;
 
-        motors = new IMotorController[followers.length + 1];
+        motors = new AluminatiMotorController[followers.length + 1];
         motors[0] = master;
 
         for (int i = 1; i < motors.length; i++) {
             motors[i] = followers[i - 1];
-            followers[i - 1].follow(master);
+
+            if (master instanceof AluminatiSparkMax) {
+                // Use different method for REV
+                followers[i - 1].follow((AluminatiSparkMax) master);
+                continue;
+            } else if (!(master instanceof IMotorController)) {
+                // Skip over unknown motor controllers
+                continue;
+            }
+
+            followers[i - 1].follow((IMotorController) master);
         }
     }
 
     /**
      * Allows all of the drive motors to be inverted
      */
-    public AluminatiMotorGroup(boolean inverted, IMotorController master, IMotorController... followers) {
+    public AluminatiMotorGroup(boolean inverted, AluminatiMotorController master, AluminatiMotorController... followers) {
         this(master, followers);
 
         setInverted(inverted);

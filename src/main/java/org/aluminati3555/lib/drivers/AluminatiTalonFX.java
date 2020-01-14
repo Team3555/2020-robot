@@ -35,11 +35,12 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  * @author Caleb Heydon
  */
-public class AluminatiTalonFX extends TalonFX implements AluminatiPoweredDevice, AluminatiCriticalDevice {
+public class AluminatiTalonFX extends TalonFX
+        implements AluminatiPoweredDevice, AluminatiCriticalDevice, AluminatiMotorController {
     // Fault buffer
     private Faults faults;
 
-    private boolean versionOK;
+    private boolean firmwareOK;
 
     /**
      * Provides a useful string about the motor controller
@@ -50,11 +51,18 @@ public class AluminatiTalonFX extends TalonFX implements AluminatiPoweredDevice,
     }
 
     /**
+     * Empty method that warns drivers
+     */
+    public void follow(AluminatiSparkMax motorController) {
+        DriverStation.reportWarning(this.toString() + " is unable to follow REV motor controllers", false);
+    }
+
+    /**
      * Returns true if the talon is ok
      */
     public boolean isOK() {
         this.getFaults(faults);
-        boolean ok = (!faults.hasAnyFault() && versionOK);
+        boolean ok = (!faults.hasAnyFault() && firmwareOK);
 
         return ok;
     }
@@ -65,10 +73,10 @@ public class AluminatiTalonFX extends TalonFX implements AluminatiPoweredDevice,
      */
     private void checkFirmwareVersion() {
         if (this.getFirmwareVersion() < AluminatiData.minTalonFXFirmwareVersion) {
-            versionOK = false;
+            firmwareOK = false;
             DriverStation.reportWarning(this.toString() + " has too old of firmware (may not work)", false);
         } else {
-            versionOK = true;
+            firmwareOK = true;
         }
     }
 
