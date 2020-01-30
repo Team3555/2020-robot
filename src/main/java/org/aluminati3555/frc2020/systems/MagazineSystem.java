@@ -22,16 +22,37 @@
 
 package org.aluminati3555.frc2020.systems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
+import org.aluminati3555.lib.system.AluminatiSystem;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+
 /**
  * This class controls the mechanism that feeds the power cells to the shooter
  * 
  * @author Caleb Heydon
  */
-public class MagazineSystem {
+public class MagazineSystem implements AluminatiSystem {
+    private AluminatiVictorSPX motor;
+    private DigitalInput photoelectricSensor;
+
     /**
      * Feeds a specified number of power cells to the shooter
      */
     public void feedPowerCell(int numberOfPowerCells) {
 
+    }
+
+    public void update(double timestamp, boolean enabled) {
+        if (photoelectricSensor.get()) {
+            motor.set(ControlMode.PercentOutput, 0.5);
+        }
+    }
+
+    public MagazineSystem(AluminatiVictorSPX motor, DigitalInput photoelectricSensor) {
+        this.motor = motor;
+        this.photoelectricSensor = photoelectricSensor;
     }
 }

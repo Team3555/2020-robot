@@ -49,6 +49,7 @@ import org.aluminati3555.lib.util.AluminatiUtil;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -154,7 +155,7 @@ public class Robot extends AluminatiRobot {
 
     // Set robot physical constants
     AluminatiData.wheelDiamater = 6;
-    AluminatiData.driveWidth = 21;
+    AluminatiData.driveWidth = 25.125;
 
     // Set thread priority
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -411,8 +412,8 @@ public class Robot extends AluminatiRobot {
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
         new AluminatiSolenoid(1));
     intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiSolenoid(2));
-    feederSystem = new MagazineSystem();
-    climberSystem = new ClimberSystem();
+    feederSystem = new MagazineSystem(new AluminatiVictorSPX(75), new DigitalInput(0));
+    climberSystem = new ClimberSystem(new AluminatiTalonSRX(80), new AluminatiTalonSRX(81), new AluminatiSolenoid(3));
   }
 
   /**

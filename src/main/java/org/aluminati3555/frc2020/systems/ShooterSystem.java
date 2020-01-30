@@ -129,7 +129,7 @@ public class ShooterSystem implements AluminatiSystem {
         motorGroup.getMasterTalon().config_IntegralZone(0, 400);
 
         // Setup tuning listener
-        new AluminatiTunable(5805) {
+        new AluminatiTunable(5806) {
             protected void update(TuningData data) {
                 motorGroup.getMasterTalon().config_kP(0, data.kP);
                 motorGroup.getMasterTalon().config_kI(0, data.kI);
