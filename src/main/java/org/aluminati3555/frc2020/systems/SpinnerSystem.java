@@ -32,7 +32,7 @@ import org.aluminati3555.frc2020.Robot.ControlPanelColor;
 import org.aluminati3555.lib.drivers.AluminatiColorSensor;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.net.AluminatiTunable;
-import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
+import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -75,7 +75,7 @@ public class SpinnerSystem implements AluminatiSystem {
     }
 
     private AluminatiTalonSRX spinnerMotor;
-    private AluminatiDoubleSolenoid extenderSolenoid;
+    private AluminatiSolenoid extenderSolenoid;
     private AluminatiColorSensor colorSensor;
     private ColorMatch colorMatch;
     private State state;
@@ -110,14 +110,14 @@ public class SpinnerSystem implements AluminatiSystem {
      * Extends the spinner mechanism
      */
     public void extend() {
-        extenderSolenoid.forward();
+        extenderSolenoid.enable();
     }
 
     /**
      * Retracts the spinner mechanism
      */
     public void retract() {
-        extenderSolenoid.reverse();
+        extenderSolenoid.disable();
     }
 
     /**
@@ -166,7 +166,7 @@ public class SpinnerSystem implements AluminatiSystem {
         }
     }
 
-    public SpinnerSystem(AluminatiTalonSRX spinnerMotor, AluminatiDoubleSolenoid extenderSolenoid,
+    public SpinnerSystem(AluminatiTalonSRX spinnerMotor, AluminatiSolenoid extenderSolenoid,
             AluminatiColorSensor colorSensor) {
         this.spinnerMotor = spinnerMotor;
         this.extenderSolenoid = extenderSolenoid;

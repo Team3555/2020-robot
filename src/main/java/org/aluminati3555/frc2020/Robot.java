@@ -35,13 +35,13 @@ import org.aluminati3555.lib.drivers.AluminatiJoystick;
 import org.aluminati3555.lib.drivers.AluminatiLEDDriver;
 import org.aluminati3555.lib.drivers.AluminatiLEDDriver.Mode;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
-import org.aluminati3555.lib.drivers.AluminatiSparkMax;
 import org.aluminati3555.lib.loops.Loop;
 import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
+import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiCompressor;
-import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
+import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.robot.AluminatiRobot;
 import org.aluminati3555.lib.trajectoryfollowingmotion.AluminatiRobotStateEstimator;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
@@ -68,7 +68,7 @@ import org.aluminati3555.frc2020.auto.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.ModeExamplePath;
 import org.aluminati3555.frc2020.systems.ClimberSystem;
 import org.aluminati3555.frc2020.systems.DriveSystem;
-import org.aluminati3555.frc2020.systems.FeederSystem;
+import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.frc2020.systems.SpinnerSystem;
@@ -106,15 +106,15 @@ public class Robot extends AluminatiRobot {
   private AluminatiDisplay display;
 
   // Joysticks
-  private AluminatiJoystick driverJoystick;
-  private AluminatiJoystick operatorJoystick;
+  private AluminatiXboxController driverController;
+  private AluminatiJoystick operatorController;
 
   // Systems
   private DriveSystem driveSystem;
   private SpinnerSystem spinnerSystem;
   private ShooterSystem shooterSystem;
   private IntakeSystem intakeSystem;
-  private FeederSystem feederSystem;
+  private MagazineSystem feederSystem;
   private ClimberSystem climberSystem;
 
   // Limelight
@@ -188,8 +188,8 @@ public class Robot extends AluminatiRobot {
     display = new AluminatiDisplay();
 
     // Setup joysticks
-    driverJoystick = new AluminatiJoystick(0);
-    operatorJoystick = new AluminatiJoystick(1);
+    driverController = new AluminatiXboxController(0);
+    operatorController = new AluminatiJoystick(1);
 
     // Configure systems
     configureSystems();
@@ -404,14 +404,14 @@ public class Robot extends AluminatiRobot {
 
     left.getMasterTalon().setSensorPhase(true);
     right.getMasterTalon().setSensorPhase(true);
-    driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverJoystick);
+    driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverController);
 
-    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiDoubleSolenoid(0, 1),
+    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0),
         new AluminatiColorSensor());
-    shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiSparkMax(65), new AluminatiSparkMax(66)),
-        new AluminatiDoubleSolenoid(2, 3));
-    intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiDoubleSolenoid(4, 5));
-    feederSystem = new FeederSystem();
+    shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
+        new AluminatiSolenoid(1));
+    intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiSolenoid(2));
+    feederSystem = new MagazineSystem();
     climberSystem = new ClimberSystem();
   }
 
@@ -444,7 +444,7 @@ public class Robot extends AluminatiRobot {
    * Controls the robot during auto
    */
   private void autoControl(double timestamp) {
-    if (driverJoystick.getRawButtonPressed(11)) {
+    if (driverController.getRawButtonPressed(1)) {
       // Stop task and cleanup
       autoTask.stop();
       robotMode = RobotMode.OPERATOR_CONTROL;

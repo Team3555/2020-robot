@@ -25,7 +25,7 @@ package org.aluminati3555.frc2020.systems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
-import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
+import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class IntakeSystem implements AluminatiSystem {
     private AluminatiVictorSPX intakeMotor;
-    private AluminatiDoubleSolenoid extenderSolenoid;
+    private AluminatiSolenoid extenderSolenoid;
 
     private double speed;
 
@@ -45,14 +45,14 @@ public class IntakeSystem implements AluminatiSystem {
      * Extends the intake
      */
     public void extend() {
-        extenderSolenoid.forward();
+        extenderSolenoid.enable();
     }
 
     /**
      * Retracts the intake
      */
     public void retract() {
-        extenderSolenoid.reverse();
+        extenderSolenoid.disable();
     }
 
     /**
@@ -82,7 +82,7 @@ public class IntakeSystem implements AluminatiSystem {
         }
     }
 
-    public IntakeSystem(AluminatiVictorSPX intakeMotor, AluminatiDoubleSolenoid extenderSolenoid) {
+    public IntakeSystem(AluminatiVictorSPX intakeMotor, AluminatiSolenoid extenderSolenoid) {
         this.intakeMotor = intakeMotor;
         this.extenderSolenoid = extenderSolenoid;
     }

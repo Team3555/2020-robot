@@ -71,19 +71,37 @@ public class AluminatiXboxController extends XboxController {
     /**
      * Returns the squared x
      * 
-     * @return The squared x
+     * @return The squared left x
      */
-    public double getSquaredX() {
-        return squareOutput(this.getX());
+    public double getSquaredLeftX() {
+        return squareOutput(this.getX(Hand.kLeft));
     }
 
     /**
-     * Returns the squared y
+     * Returns the squared left y
      * 
      * @return The squared y
      */
-    public double getSquaredY() {
-        return squareOutput(this.getY());
+    public double getSquaredLeftY() {
+        return squareOutput(this.getY(Hand.kLeft));
+    }
+
+    /**
+     * Returns the squared right x
+     * 
+     * @return The squared x
+     */
+    public double getSquaredRightX() {
+        return squareOutput(this.getX(Hand.kRight));
+    }
+
+    /**
+     * Returns the squared right y
+     * 
+     * @return The squared y
+     */
+    public double getSquaredRightY() {
+        return squareOutput(this.getY(Hand.kRight));
     }
 
     /**

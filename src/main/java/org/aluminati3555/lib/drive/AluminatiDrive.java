@@ -328,42 +328,8 @@ public class AluminatiDrive implements AluminatiCriticalDevice {
      * Drives the robot using arcade drive
      */
     public void arcadeDrive(AluminatiXboxController controller) {
-        driveHelper.aluminatiDrive(-controller.getSquaredY() * controlCoefficient,
-                controller.getSquaredX() * controlCoefficient, true, (shifter == null) ? true : shifter.isHigh());
-
-        if (!inverted) {
-            left.getMaster().set(ControlMode.PercentOutput, driveHelper.getLeftPower());
-            right.getMaster().set(ControlMode.PercentOutput, driveHelper.getRightPower());
-        } else {
-            left.getMaster().set(ControlMode.PercentOutput, -driveHelper.getRightPower());
-            right.getMaster().set(ControlMode.PercentOutput, -driveHelper.getLeftPower());
-        }
-    }
-
-    /**
-     * Drives the robot using cheesy drive
-     */
-    public void cheesyDrive(AluminatiJoystick joystick, int cheesyDriveButton) {
-        driveHelper.aluminatiDrive(-joystick.getSquaredY() * controlCoefficient,
-                joystick.getSquaredX() * controlCoefficient, joystick.getRawButton(cheesyDriveButton),
-                (shifter == null) ? true : shifter.isHigh());
-
-        if (!inverted) {
-            left.getMaster().set(ControlMode.PercentOutput, driveHelper.getLeftPower());
-            right.getMaster().set(ControlMode.PercentOutput, driveHelper.getRightPower());
-        } else {
-            left.getMaster().set(ControlMode.PercentOutput, -driveHelper.getRightPower());
-            right.getMaster().set(ControlMode.PercentOutput, -driveHelper.getLeftPower());
-        }
-    }
-
-    /**
-     * Drives the robot using cheesy drive
-     */
-    public void cheesyDrive(AluminatiXboxController controller, int cheesyDriveButton) {
-        driveHelper.aluminatiDrive(-controller.getSquaredY() * controlCoefficient,
-                controller.getSquaredX() * controlCoefficient, controller.getRawButton(cheesyDriveButton),
-                (shifter == null) ? true : shifter.isHigh());
+        driveHelper.aluminatiDrive(-controller.getSquaredLeftY() * controlCoefficient,
+                controller.getSquaredRightX() * controlCoefficient, true, (shifter == null) ? true : shifter.isHigh());
 
         if (!inverted) {
             left.getMaster().set(ControlMode.PercentOutput, driveHelper.getLeftPower());

@@ -27,7 +27,7 @@ package org.aluminati3555.frc2020.systems;
  * 
  * @author Caleb Heydon
  */
-public class FeederSystem {
+public class MagazineSystem {
     /**
      * Feeds a specified number of power cells to the shooter
      */

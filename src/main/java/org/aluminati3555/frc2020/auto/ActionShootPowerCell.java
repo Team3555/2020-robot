@@ -22,7 +22,7 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import org.aluminati3555.frc2020.systems.FeederSystem;
+import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
@@ -52,7 +52,7 @@ public class ActionShootPowerCell implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public ActionShootPowerCell(AluminatiLimelight limelight, ShooterSystem shooterSystem, FeederSystem feederSystem,
+    public ActionShootPowerCell(AluminatiLimelight limelight, ShooterSystem shooterSystem, MagazineSystem feederSystem,
             int numberOfPowerCells) {
         taskList = new AluminatiAutoTaskList();
 

@@ -27,7 +27,7 @@ import com.team254.lib.geometry.Rotation2d;
 import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun1;
 import org.aluminati3555.frc2020.paths.Path8PowerCell5TrenchRun2;
 import org.aluminati3555.frc2020.systems.DriveSystem;
-import org.aluminati3555.frc2020.systems.FeederSystem;
+import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
@@ -66,7 +66,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
     }
 
     public Mode8PowerCell5TrenchRun(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem, ShooterSystem shooterSystem, FeederSystem feederSystem) {
+            IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem feederSystem) {
         taskList = new AluminatiAutoTaskList();
 
         PathContainer path1 = new Path8PowerCell5TrenchRun1();

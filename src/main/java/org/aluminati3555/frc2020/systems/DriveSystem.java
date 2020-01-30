@@ -24,8 +24,8 @@ package org.aluminati3555.frc2020.systems;
 
 import org.aluminati3555.lib.drive.AluminatiDrive;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
+import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.drivers.AluminatiGyro;
-import org.aluminati3555.lib.drivers.AluminatiJoystick;
 import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.system.AluminatiSystem;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
@@ -41,7 +41,7 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     // Constants
     private static final int DRIVE_CURRENT_LIMIT_1 = 80;
 
-    private AluminatiJoystick driverJoystick;
+    private AluminatiXboxController driverController;
     private boolean visionTracking;
 
     /**
@@ -75,14 +75,16 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
 
         if (enabled) {
             if (!visionTracking && getDriveState() == DriveState.OPEN_LOOP) {
-                this.arcadeDrive(driverJoystick);
+                this.arcadeDrive(driverController);
             }
         }
     }
 
     public DriveSystem(Looper looper, RobotState robotState, AluminatiMotorGroup left, AluminatiMotorGroup right,
-            AluminatiGyro gyro, AluminatiJoystick driverJoystick) {
+            AluminatiGyro gyro, AluminatiXboxController driverController) {
         super(looper, robotState, left, right, gyro);
+
+        this.driverController = driverController;
 
         this.getLeftGroup().getMasterTalon().configPeakCurrentDuration(500);
         this.getLeftGroup().getMasterTalon().configPeakCurrentLimit(DRIVE_CURRENT_LIMIT_1);
@@ -93,7 +95,5 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
         this.getRightGroup().getMasterTalon().configPeakCurrentLimit(DRIVE_CURRENT_LIMIT_1);
         this.getRightGroup().getMasterTalon().configContinuousCurrentLimit(DRIVE_CURRENT_LIMIT_1);
         this.getRightGroup().getMasterTalon().enableCurrentLimit(true);
-
-        this.driverJoystick = driverJoystick;
     }
 }

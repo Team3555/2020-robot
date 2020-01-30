@@ -23,10 +23,11 @@
 package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.net.AluminatiTunable;
-import org.aluminati3555.lib.pneumatics.AluminatiDoubleSolenoid;
+import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,10 +40,24 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class ShooterSystem implements AluminatiSystem {
     // Constants
     private static final int SHOOTER_CURRENT_LIMIT = 30;
-    private static final double RATIO = 0.5;
+    private static final int ENCODER_TICKS_PER_ROTATION = 4096;
 
-    private AluminatiMotorGroup flywheelMotorGroup;
-    private AluminatiDoubleSolenoid hoodSolenoid;
+    /**
+     * Converts rpm to native units
+     */
+    public static int convertRPMToNativeUnits(double rpm) {
+        return (int) (rpm * ENCODER_TICKS_PER_ROTATION / 600.0);
+    }
+
+    /**
+     * Converts native units to rpm
+     */
+    public static int convertNativeUnitsToRPM(double nativeUnits) {
+        return (int) (nativeUnits / ENCODER_TICKS_PER_ROTATION * 600.0);
+    }
+
+    private AluminatiMotorGroup motorGroup;
+    private AluminatiSolenoid hoodSolenoid;
 
     private boolean shooterEnabled;
     private double setpoint;
@@ -51,7 +66,7 @@ public class ShooterSystem implements AluminatiSystem {
      * Sets the target rpm
      */
     public void set(double rpm) {
-        this.setpoint = rpm;
+        this.setpoint = convertRPMToNativeUnits(rpm);
         this.shooterEnabled = true;
     }
 
@@ -59,7 +74,7 @@ public class ShooterSystem implements AluminatiSystem {
      * Returns the velocity of the flywheel
      */
     public double getVelocity() {
-        return flywheelMotorGroup.getMasterSparkMax().getEncoder().getVelocity();
+        return convertNativeUnitsToRPM(motorGroup.getMasterTalon().getSelectedSensorVelocity());
     }
 
     /**
@@ -74,18 +89,18 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood
      */
     public void extendHood() {
-        hoodSolenoid.forward();
+        hoodSolenoid.disable();
     }
 
     /**
      * Retracts the hood
      */
     public void retractHood() {
-        hoodSolenoid.reverse();
+        hoodSolenoid.enable();
     }
 
     public void update(double timestamp, boolean enabled) {
-        if (!flywheelMotorGroup.getMasterSparkMax().isOK()) {
+        if (!motorGroup.getMasterSparkMax().isOK()) {
             DriverStation.reportError("Fault detected in shooter", false);
         }
 
@@ -94,31 +109,38 @@ public class ShooterSystem implements AluminatiSystem {
         }
 
         if (shooterEnabled) {
-            flywheelMotorGroup.getMasterSparkMax().set(ControlMode.Velocity, setpoint);
+            motorGroup.getMasterSparkMax().set(ControlMode.Velocity, setpoint);
         } else {
-            flywheelMotorGroup.getMasterSparkMax().set(ControlMode.PercentOutput, 0);
+            motorGroup.getMasterSparkMax().set(ControlMode.PercentOutput, 0);
         }
     }
 
-    public ShooterSystem(AluminatiMotorGroup flywheelMotorGroup, AluminatiDoubleSolenoid hoodSolenoid) {
-        this.flywheelMotorGroup = flywheelMotorGroup;
+    public ShooterSystem(AluminatiMotorGroup motorGroup, AluminatiSolenoid hoodSolenoid) {
+        this.motorGroup = motorGroup;
         this.hoodSolenoid = hoodSolenoid;
 
-        // Configure velocity for gear ratio
-        this.flywheelMotorGroup.getMasterSparkMax().getEncoder().setVelocityConversionFactor(RATIO);
+        // Configure encoder
+        motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.flywheelMotorGroup.getMasterSparkMax().configPID(0.1, 0, 0);
-        this.flywheelMotorGroup.getMasterSparkMax().configIZone(400);
+        motorGroup.getMasterTalon().config_kP(0, 0.1);
+        motorGroup.getMasterTalon().config_kI(0, 0);
+        motorGroup.getMasterTalon().config_kD(0, 0);
+        motorGroup.getMasterTalon().config_IntegralZone(0, 400);
 
         // Setup tuning listener
-        new AluminatiTunable(5807) {
+        new AluminatiTunable(5805) {
             protected void update(TuningData data) {
-                flywheelMotorGroup.getMasterSparkMax().configPID(data.kP, data.kI, data.kD);
+                motorGroup.getMasterTalon().config_kP(0, data.kP);
+                motorGroup.getMasterTalon().config_kI(0, data.kI);
+                motorGroup.getMasterTalon().config_kD(0, data.kD);
             }
         };
 
         // Configure current limit
-        this.flywheelMotorGroup.getMasterSparkMax().setSmartCurrentLimit(SHOOTER_CURRENT_LIMIT);
+        motorGroup.getMasterTalon().configPeakCurrentDuration(500);
+        motorGroup.getMasterTalon().configPeakCurrentLimit(SHOOTER_CURRENT_LIMIT);
+        motorGroup.getMasterTalon().configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
+        motorGroup.getMasterTalon().enableCurrentLimit(true);
     }
 }

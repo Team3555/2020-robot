@@ -25,7 +25,7 @@ package org.aluminati3555.frc2020.auto;
 import org.aluminati3555.frc2020.paths.Path5PowerCell2OtherAllianceTrenchRun1;
 import org.aluminati3555.frc2020.paths.Path5PowerCell2OtherAllianceTrenchRun2;
 import org.aluminati3555.frc2020.systems.DriveSystem;
-import org.aluminati3555.frc2020.systems.FeederSystem;
+import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
@@ -62,7 +62,7 @@ public class Mode5PowerCell2OtherAllianceTrenchRun implements AluminatiAutoTask 
 
     public Mode5PowerCell2OtherAllianceTrenchRun(RobotState robotState, AluminatiLimelight limelight,
             DriveSystem driveSystem, IntakeSystem intakeSystem, ShooterSystem shooterSystem,
-            FeederSystem feederSystem) {
+            MagazineSystem feederSystem) {
         taskList = new AluminatiAutoTaskList();
 
         PathContainer path1 = new Path5PowerCell2OtherAllianceTrenchRun1();
