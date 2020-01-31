@@ -115,7 +115,7 @@ public class Robot extends AluminatiRobot {
   private SpinnerSystem spinnerSystem;
   private ShooterSystem shooterSystem;
   private IntakeSystem intakeSystem;
-  private MagazineSystem feederSystem;
+  private MagazineSystem magazineSystem;
   private ClimberSystem climberSystem;
 
   // Limelight
@@ -231,10 +231,10 @@ public class Robot extends AluminatiRobot {
         new Entry("ExamplePath", new ModeExamplePath(robotState, driveSystem)),
         new Entry("8PowerCell5TrenchRun",
             new Mode8PowerCell5TrenchRun(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
-                feederSystem)),
+                magazineSystem)),
         new Entry("5PowerCell2ShieldGenerator", null), new Entry("5PowerCell3ShieldGenerator", null),
         new Entry("5PowerCell2OtherAllianceTrenchRun", new Mode5PowerCell2OtherAllianceTrenchRun(robotState, limelight,
-            driveSystem, intakeSystem, shooterSystem, feederSystem)));
+            driveSystem, intakeSystem, shooterSystem, magazineSystem)));
   }
 
   @Override
@@ -407,12 +407,11 @@ public class Robot extends AluminatiRobot {
     right.getMasterTalon().setSensorPhase(true);
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverController);
 
-    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0),
-        new AluminatiColorSensor());
+    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), new AluminatiColorSensor());
+    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(75), new AluminatiTalonSRX(76), new DigitalInput(0));
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
-        new AluminatiSolenoid(1));
+        new AluminatiSolenoid(1), driverController, limelight, driveSystem, magazineSystem);
     intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiSolenoid(2));
-    feederSystem = new MagazineSystem(new AluminatiVictorSPX(75), new DigitalInput(0));
     climberSystem = new ClimberSystem(new AluminatiTalonSRX(80), new AluminatiTalonSRX(81), new AluminatiSolenoid(3));
   }
 
@@ -445,7 +444,7 @@ public class Robot extends AluminatiRobot {
    * Controls the robot during auto
    */
   private void autoControl(double timestamp) {
-    if (driverController.getRawButtonPressed(1)) {
+    if (driverController.getRawButtonPressed(2)) {
       // Stop task and cleanup
       autoTask.stop();
       robotMode = RobotMode.OPERATOR_CONTROL;

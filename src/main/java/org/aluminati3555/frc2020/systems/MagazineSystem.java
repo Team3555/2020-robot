@@ -24,6 +24,7 @@ package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
@@ -35,7 +36,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
  * @author Caleb Heydon
  */
 public class MagazineSystem implements AluminatiSystem {
+    private static final int ENCODER_TICKS_PER_ROTATION = 4096;
+
     private AluminatiVictorSPX motor;
+    private AluminatiTalonSRX feederMotor;
     private DigitalInput photoelectricSensor;
 
     /**
@@ -45,14 +49,29 @@ public class MagazineSystem implements AluminatiSystem {
 
     }
 
+    /**
+     * Starts continuously feeding power cells to the shooter
+     */
+    public void startFeedingPowerCells() {
+
+    }
+
+    /**
+     * Stops continously feeding power cells to the shooter
+     */
+    public void stopFeedingPowerCells() {
+
+    }
+
     public void update(double timestamp, boolean enabled) {
         if (photoelectricSensor.get()) {
             motor.set(ControlMode.PercentOutput, 0.5);
         }
     }
 
-    public MagazineSystem(AluminatiVictorSPX motor, DigitalInput photoelectricSensor) {
+    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor) {
         this.motor = motor;
+        this.feederMotor = feederMotor;
         this.photoelectricSensor = photoelectricSensor;
     }
 }
