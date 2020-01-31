@@ -47,6 +47,7 @@ public class ShooterSystem implements AluminatiSystem {
     private static final int SHOOTER_CURRENT_LIMIT = 30;
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
     private static final double ALLOWED_ERROR = 3;
+    private static final int SHORT_SHOT_RPM = 500;
 
     /**
      * Converts rpm to native units
@@ -156,6 +157,29 @@ public class ShooterSystem implements AluminatiSystem {
                         && Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
+                } else {
+                    magazineSystem.stopFeedingPowerCells();
+                }
+            } else if (driverController.getRawButton(5)) {
+                // Driver wants the robot to align with vision target and flywheel to get up to
+                // speed
+
+                // Configure limelight for driver vision
+                limelight.setPipeline(0);
+
+                wasTracking = false;
+
+                // Retract hood
+                retractHood();
+
+                // Set flywheel speed
+                set(SHORT_SHOT_RPM);
+
+                if (driverController.getRawButton(6) && Math.abs(SHORT_SHOT_RPM - getVelocity()) <= ALLOWED_ERROR) {
+                    // Fire power cells
+                    magazineSystem.startFeedingPowerCells();
+                } else {
+                    magazineSystem.stopFeedingPowerCells();
                 }
             } else {
                 // Configure limelight for driver vision
