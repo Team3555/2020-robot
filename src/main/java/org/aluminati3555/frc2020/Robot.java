@@ -54,6 +54,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -110,6 +111,9 @@ public class Robot extends AluminatiRobot {
   private AluminatiXboxController driverController;
   private AluminatiJoystick operatorController;
 
+  // Limelight
+  private AluminatiLimelight limelight;
+
   // Systems
   private DriveSystem driveSystem;
   private SpinnerSystem spinnerSystem;
@@ -117,9 +121,6 @@ public class Robot extends AluminatiRobot {
   private IntakeSystem intakeSystem;
   private MagazineSystem magazineSystem;
   private ClimberSystem climberSystem;
-
-  // Limelight
-  private AluminatiLimelight limelight;
 
   // Pneumatics
   private AluminatiCompressor compressor;
@@ -192,17 +193,17 @@ public class Robot extends AluminatiRobot {
     driverController = new AluminatiXboxController(0);
     operatorController = new AluminatiJoystick(1);
 
+    // Setup limelight
+    limelight = new AluminatiLimelight();
+    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
+    limelight.setPipeline(0);
+
     // Configure systems
     configureSystems();
 
     // Setup pid tuning on actions
     ActionTurnToHeading.initialize();
     ActionAlignWithVision.initialize();
-
-    // Setup limelight
-    limelight = new AluminatiLimelight();
-    limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
-    limelight.setPipeline(0);
 
     // Load neural network
     if (!Robot.isSimulation()) {
@@ -441,12 +442,24 @@ public class Robot extends AluminatiRobot {
   }
 
   /**
+   * Returns true if the auto kill switch is activated on the driver joystick
+   * 
+   * @return
+   */
+  private boolean autoKillSwitch() {
+    return (driverController.getRawButton(9) && driverController.getRawButton(10)
+        && driverController.getX(Hand.kLeft) >= 0.5 && driverController.getX(Hand.kRight) <= 0.5);
+  }
+
+  /**
    * Controls the robot during auto
    */
   private void autoControl(double timestamp) {
-    if (driverController.getRawButtonPressed(2)) {
+    if (autoKillSwitch()) {
       // Stop task and cleanup
-      autoTask.stop();
+      if (autoTask != null) {
+        autoTask.stop();
+      }
       robotMode = RobotMode.OPERATOR_CONTROL;
     }
 

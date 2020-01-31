@@ -103,19 +103,23 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood
      */
     public void extendHood() {
-        hoodSolenoid.disable();
+        hoodSolenoid.enable();
     }
 
     /**
      * Retracts the hood
      */
     public void retractHood() {
-        hoodSolenoid.enable();
+        hoodSolenoid.disable();
     }
 
     public void update(double timestamp, boolean enabled) {
-        if (!motorGroup.getMasterSparkMax().isOK()) {
+        if (!motorGroup.getMasterTalon().isOK()) {
             DriverStation.reportError("Fault detected in shooter", false);
+        }
+
+        if (!motorGroup.isEncoderOK()) {
+            DriverStation.reportError("Encoder failure detected in the shooter", false);
         }
 
         if (enabled) {
@@ -174,9 +178,9 @@ public class ShooterSystem implements AluminatiSystem {
         }
 
         if (shooterEnabled) {
-            motorGroup.getMasterSparkMax().set(ControlMode.Velocity, setpoint);
+            motorGroup.getMasterTalon().set(ControlMode.Velocity, setpoint);
         } else {
-            motorGroup.getMasterSparkMax().set(ControlMode.PercentOutput, 0);
+            motorGroup.getMasterTalon().set(ControlMode.PercentOutput, 0);
         }
     }
 
