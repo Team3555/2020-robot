@@ -47,14 +47,14 @@ public class ClimberSystem implements AluminatiSystem {
      * Locks the ratchet
      */
     public void lockRatchet() {
-        ratchetSolenoid.enable();
+        ratchetSolenoid.disable();
     }
 
     /**
      * Unlocks the ratchet
      */
     public void unlockRatchet() {
-        ratchetSolenoid.disable();
+        ratchetSolenoid.enable();
     }
 
     public void update(double timestamp, boolean enabled) {

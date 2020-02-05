@@ -74,7 +74,7 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
         }
 
         if (enabled) {
-            if (!visionTracking && getDriveState() == DriveState.OPEN_LOOP) {
+            if (!visionTracking && this.getDriveState() == DriveState.OPEN_LOOP) {
                 this.arcadeDrive(driverController);
             }
         }

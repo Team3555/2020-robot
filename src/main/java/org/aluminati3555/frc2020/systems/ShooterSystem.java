@@ -131,30 +131,35 @@ public class ShooterSystem implements AluminatiSystem {
                 // Configure limelight for vision tracking
                 limelight.setPipeline(1);
 
-                // Reset the pid controller if it is being reused
-                if (!wasTracking) {
-                    turnController.reset(timestamp);
+                // Only run if there is a target
+                if (limelight.hasTarget()) {
+                    // Reset the pid controller if it is being reused
+                    if (!wasTracking) {
+                        turnController.reset(timestamp);
+                    }
+
+                    // Tell the drivetrain not to use controller for driving
+                    driveSystem.setVisionTracking(true);
+
+                    double output = turnController.update(0, limelight.getX(), timestamp);
+                    driveSystem.manualArcadeDrive(output, -driverController.getSquaredLeftY());
+
+                    // Mark pid controller as used
+                    wasTracking = true;
+                } else {
+                    driveSystem.setVisionTracking(false);
                 }
-
-                // Tell the drivetrain not to use controller for driving
-                driveSystem.setVisionTracking(true);
-
-                double output = turnController.update(0, limelight.getX(), timestamp);
-                driveSystem.manualArcadeDrive(output, 0);
-
-                // Mark pid controller as used
-                wasTracking = true;
 
                 // Extend hood
                 extendHood();
 
                 // Set flywheel speed
                 double targetHeight = limelight.getVertical();
-                double rpm = ShooterUtil.calculateRPM(targetHeight);
+                double rpm = limelight.hasTarget() ? ShooterUtil.calculateRPM(targetHeight) : SHORT_SHOT_RPM;
                 set(rpm);
 
                 if (driverController.getTriggerAxis(Hand.kRight) >= 0.5
-                        && Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR) {
+                        && Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR && limelight.hasTarget()) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
                 } else {
