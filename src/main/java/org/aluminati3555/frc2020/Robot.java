@@ -284,6 +284,7 @@ public class Robot extends AluminatiRobot {
     spinnerSystem.update(timestamp, false);
     shooterSystem.update(timestamp, false);
     intakeSystem.update(timestamp, false);
+    climberSystem.update(timestamp, false);
   }
 
   @Override
@@ -333,6 +334,7 @@ public class Robot extends AluminatiRobot {
     spinnerSystem.update(timestamp, false);
     shooterSystem.update(timestamp, false);
     intakeSystem.update(timestamp, false);
+    climberSystem.update(timestamp, false);
   }
 
   @Override
@@ -373,6 +375,7 @@ public class Robot extends AluminatiRobot {
     spinnerSystem.update(timestamp, enabled);
     shooterSystem.update(timestamp, enabled);
     intakeSystem.update(timestamp, enabled);
+    climberSystem.update(timestamp, enabled);
   }
 
   @Override
