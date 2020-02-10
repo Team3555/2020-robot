@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     // Constants
-    private static final int DRIVE_CURRENT_LIMIT_1 = 80;
+    private static final int DRIVE_CURRENT_LIMIT_1 = 60;
 
     private AluminatiXboxController driverController;
     private boolean visionTracking;

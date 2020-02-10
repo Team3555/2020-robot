@@ -66,6 +66,7 @@ public class ShooterSystem implements AluminatiSystem {
     private AluminatiMotorGroup motorGroup;
     private AluminatiSolenoid hoodSolenoid;
     private AluminatiXboxController driverController;
+    private AluminatiXboxController operatorController;
     private AluminatiLimelight limelight;
     private DriveSystem driveSystem;
     private MagazineSystem magazineSystem;
@@ -158,7 +159,8 @@ public class ShooterSystem implements AluminatiSystem {
                 double rpm = limelight.hasTarget() ? ShooterUtil.calculateRPM(targetHeight) : SHORT_SHOT_RPM;
                 set(rpm);
 
-                if (driverController.getTriggerAxis(Hand.kRight) >= 0.5
+                if ((driverController.getTriggerAxis(Hand.kRight) >= 0.5
+                        || operatorController.getTriggerAxis(Hand.kRight) >= 0.5)
                         && Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR && limelight.hasTarget()) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
@@ -214,11 +216,12 @@ public class ShooterSystem implements AluminatiSystem {
     }
 
     public ShooterSystem(AluminatiMotorGroup motorGroup, AluminatiSolenoid hoodSolenoid,
-            AluminatiXboxController driverController, AluminatiLimelight limelight, DriveSystem driveSystem,
-            MagazineSystem magazineSystem) {
+            AluminatiXboxController driverController, AluminatiXboxController operatorController,
+            AluminatiLimelight limelight, DriveSystem driveSystem, MagazineSystem magazineSystem) {
         this.motorGroup = motorGroup;
         this.hoodSolenoid = hoodSolenoid;
         this.driverController = driverController;
+        this.operatorController = operatorController;
         this.limelight = limelight;
         this.driveSystem = driveSystem;
         this.magazineSystem = magazineSystem;

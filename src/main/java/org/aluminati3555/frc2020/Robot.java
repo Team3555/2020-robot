@@ -31,7 +31,6 @@ import org.aluminati3555.lib.drivers.AluminatiColorSensor;
 import org.aluminati3555.lib.drivers.AluminatiDisplay;
 import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
 import org.aluminati3555.lib.drivers.AluminatiDualGyro;
-import org.aluminati3555.lib.drivers.AluminatiJoystick;
 import org.aluminati3555.lib.drivers.AluminatiLEDDriver;
 import org.aluminati3555.lib.drivers.AluminatiLEDDriver.Mode;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
@@ -109,7 +108,7 @@ public class Robot extends AluminatiRobot {
 
   // Joysticks
   private AluminatiXboxController driverController;
-  private AluminatiJoystick operatorController;
+  private AluminatiXboxController operatorController;
 
   // Limelight
   private AluminatiLimelight limelight;
@@ -191,7 +190,7 @@ public class Robot extends AluminatiRobot {
 
     // Setup joysticks
     driverController = new AluminatiXboxController(0);
-    operatorController = new AluminatiJoystick(1);
+    operatorController = new AluminatiXboxController(1);
 
     // Setup limelight
     limelight = new AluminatiLimelight();
@@ -411,9 +410,10 @@ public class Robot extends AluminatiRobot {
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), new AluminatiColorSensor());
     magazineSystem = new MagazineSystem(new AluminatiVictorSPX(75), new AluminatiTalonSRX(76), new DigitalInput(0));
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
-        new AluminatiSolenoid(1), driverController, limelight, driveSystem, magazineSystem);
-    intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiSolenoid(2));
-    climberSystem = new ClimberSystem(new AluminatiTalonSRX(80), new AluminatiTalonSRX(81), new AluminatiSolenoid(3));
+        new AluminatiSolenoid(1), driverController, operatorController, limelight, driveSystem, magazineSystem);
+    intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiSolenoid(2), operatorController);
+    climberSystem = new ClimberSystem(new AluminatiTalonSRX(80), new AluminatiTalonSRX(81), new AluminatiSolenoid(3),
+        intakeSystem, operatorController);
   }
 
   /**
@@ -443,10 +443,8 @@ public class Robot extends AluminatiRobot {
 
   /**
    * Returns true if the auto kill switch is activated on the driver joystick
-   * 
-   * @return
    */
-  private boolean autoKillSwitch() {
+  private boolean getAutoKillSwitch() {
     return (driverController.getRawButton(9) && driverController.getRawButton(10)
         && driverController.getX(Hand.kLeft) >= 0.5 && driverController.getX(Hand.kRight) <= 0.5);
   }
@@ -455,7 +453,7 @@ public class Robot extends AluminatiRobot {
    * Controls the robot during auto
    */
   private void autoControl(double timestamp) {
-    if (autoKillSwitch()) {
+    if (getAutoKillSwitch()) {
       // Stop task and cleanup
       if (autoTask != null) {
         autoTask.stop();

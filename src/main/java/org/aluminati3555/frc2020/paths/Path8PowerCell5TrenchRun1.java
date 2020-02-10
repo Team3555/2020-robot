@@ -39,7 +39,7 @@ public class Path8PowerCell5TrenchRun1 implements PathContainer {
         waypoints.add(new Waypoint(480, 55, 15, 120, "Path8PowerCell5TrenchRun1A"));
         waypoints.add(new Waypoint(390, 27, 15, 120));
         waypoints.add(new Waypoint(350, 27, 15, 120));
-        waypoints.add(new Waypoint(255, 27, 0, 120));
+        waypoints.add(new Waypoint(255, 29, 0, 120));
 
         return PathBuilder.buildPathFromWaypoints(waypoints);
     }

@@ -25,6 +25,7 @@ package org.aluminati3555.frc2020.systems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
+import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
@@ -39,7 +40,23 @@ public class IntakeSystem implements AluminatiSystem {
     private AluminatiVictorSPX intakeMotor;
     private AluminatiSolenoid extenderSolenoid;
 
+    private AluminatiXboxController operatorController;
+
     private double speed;
+
+    /**
+     * Returns true if the intake is down
+     */
+    public boolean isDown() {
+        return extenderSolenoid.get();
+    }
+
+    /**
+     * Returns true if the intake is up
+     */
+    public boolean isUp() {
+        return !extenderSolenoid.get();
+    }
 
     /**
      * Extends the intake
@@ -76,14 +93,29 @@ public class IntakeSystem implements AluminatiSystem {
         }
 
         if (enabled) {
-            // Add manual controls here
+            // Control intake position
+            if (operatorController.getRawButtonPressed(5)) {
+                extend();
+            } else if (operatorController.getRawButtonReleased(5)) {
+                retract();
+            }
+
+            // Control intake speed
+            if (operatorController.getRawButton(6)) {
+                setSpeed(0.5);
+            } else {
+                setSpeed(0);
+            }
         } else {
             intakeMotor.set(ControlMode.PercentOutput, speed);
         }
     }
 
-    public IntakeSystem(AluminatiVictorSPX intakeMotor, AluminatiSolenoid extenderSolenoid) {
+    public IntakeSystem(AluminatiVictorSPX intakeMotor, AluminatiSolenoid extenderSolenoid,
+            AluminatiXboxController operatorController) {
         this.intakeMotor = intakeMotor;
         this.extenderSolenoid = extenderSolenoid;
+
+        this.operatorController = operatorController;
     }
 }

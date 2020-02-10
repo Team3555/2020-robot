@@ -22,13 +22,15 @@
 
 package org.aluminati3555.frc2020.systems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
-import org.aluminati3555.lib.net.AluminatiTunable;
+import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class controls climber
@@ -36,12 +38,16 @@ import org.aluminati3555.lib.system.AluminatiSystem;
  * @author Caleb Heydon
  */
 public class ClimberSystem implements AluminatiSystem {
-    private static final int ARM_CURRENT_LIMIT = 30;
-    private static final int SPOOL_CURRENT_LIMIT = 30;
+    private static final int ARM_CURRENT_LIMIT = 40;
+    private static final int SPOOL_CURRENT_LIMIT = 40;
 
     private AluminatiTalonSRX armMotor;
     private AluminatiTalonSRX spoolMotor;
     private AluminatiSolenoid ratchetSolenoid;
+
+    private IntakeSystem intakeSystem;
+
+    private AluminatiXboxController operatorController;
 
     /**
      * Locks the ratchet
@@ -58,31 +64,57 @@ public class ClimberSystem implements AluminatiSystem {
     }
 
     public void update(double timestamp, boolean enabled) {
+        // Check for faults
+        if (!armMotor.isOK()) {
+            DriverStation.reportError("Fault detected in climber arm", false);
+        }
 
+        if (!spoolMotor.isOK()) {
+            DriverStation.reportError("Fault detected in climber spool", false);
+        }
+
+        if (enabled) {
+            // Manual control
+
+            int pov = operatorController.getPOV();
+
+            if (pov != -1 && intakeSystem.isUp()) {
+                // Extend intake to prevent interference
+                intakeSystem.extend();
+            }
+
+            if (pov == 270) {
+                // Lift arms
+                armMotor.set(ControlMode.PercentOutput, -0.5);
+            } else if (pov == 90) {
+                // Lower arms
+                armMotor.set(ControlMode.PercentOutput, 0.1);
+            } else {
+                armMotor.set(ControlMode.PercentOutput, 0);
+            }
+
+            if (pov == 0) {
+                spoolMotor.set(ControlMode.PercentOutput, 1);
+            } else if (pov == 180) {
+                spoolMotor.set(ControlMode.PercentOutput, -1);
+            } else {
+                spoolMotor.set(ControlMode.PercentOutput, 0);
+            }
+        } else {
+            // We never need to use the climber in auto
+            armMotor.set(ControlMode.PercentOutput, 0);
+            spoolMotor.set(ControlMode.PercentOutput, 0);
+        }
     }
 
-    public ClimberSystem(AluminatiTalonSRX armMotor, AluminatiTalonSRX spoolMotor, AluminatiSolenoid ratchetSolenoid) {
+    public ClimberSystem(AluminatiTalonSRX armMotor, AluminatiTalonSRX spoolMotor, AluminatiSolenoid ratchetSolenoid,
+            IntakeSystem intakeSystem, AluminatiXboxController operatorController) {
         this.armMotor = armMotor;
         this.spoolMotor = spoolMotor;
         this.ratchetSolenoid = ratchetSolenoid;
+        this.intakeSystem = intakeSystem;
 
-        // Configure encoder
-        this.armMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-
-        // Configure PID
-        this.armMotor.config_kP(0, 0.1);
-        this.armMotor.config_kI(0, 0);
-        this.armMotor.config_kD(0, 0);
-        this.armMotor.config_IntegralZone(0, 400);
-
-        // Setup tuning listener
-        new AluminatiTunable(5808) {
-            protected void update(TuningData data) {
-                armMotor.config_kP(0, data.kP);
-                armMotor.config_kI(0, data.kI);
-                armMotor.config_kD(0, data.kD);
-            }
-        };
+        this.operatorController = operatorController;
 
         // Configure current limit
         this.armMotor.configPeakCurrentDuration(500);
