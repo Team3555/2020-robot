@@ -127,6 +127,9 @@ public class Robot extends AluminatiRobot {
   // Auto selector
   private AluminatiAutoSelector autoSelector;
 
+  // Video display
+  private VideoDisplay videoDisplay;
+
   @Override
   public void robotInit() {
     // Configure pid
@@ -235,21 +238,15 @@ public class Robot extends AluminatiRobot {
         new Entry("5PowerCell2ShieldGenerator", null), new Entry("5PowerCell3ShieldGenerator", null),
         new Entry("5PowerCell2OtherAllianceTrenchRun", new Mode5PowerCell2OtherAllianceTrenchRun(robotState, limelight,
             driveSystem, intakeSystem, shooterSystem, magazineSystem)));
+
+    // Setup video display
+    videoDisplay = new VideoDisplay("VideoReporter", 5);
   }
 
   @Override
   public void robotPeriodic() {
-    if (display.getButton(Button.BUTTON_A)) {
-      displayMode = DisplayMode.BATTERY_VOLTAGE;
-    } else if (display.getButton(Button.BUTTON_B)) {
-      displayMode = DisplayMode.LOOP_TIME;
-    }
-
-    if (displayMode == DisplayMode.BATTERY_VOLTAGE) {
-      display.display(pdp.getVoltage());
-    } else {
-      display.display(this.getLastDT() * 100);
-    }
+    updateDisplay();
+    videoDisplay.update();
   }
 
   @Override
@@ -507,6 +504,23 @@ public class Robot extends AluminatiRobot {
         controlPanelColor = ControlPanelColor.UNKOWN;
         break;
       }
+    }
+  }
+
+  /**
+   * Updates the digit display
+   */
+  private void updateDisplay() {
+    if (display.getButton(Button.BUTTON_A)) {
+      displayMode = DisplayMode.BATTERY_VOLTAGE;
+    } else if (display.getButton(Button.BUTTON_B)) {
+      displayMode = DisplayMode.LOOP_TIME;
+    }
+
+    if (displayMode == DisplayMode.BATTERY_VOLTAGE) {
+      display.display(pdp.getVoltage());
+    } else {
+      display.display(this.getLastDT() * 100);
     }
   }
 
