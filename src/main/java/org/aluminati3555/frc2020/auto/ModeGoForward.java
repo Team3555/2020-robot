@@ -30,16 +30,16 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This mode runs an example pure pursuit path
+ * This mode goes forward into the sector
  * 
  * @author Caleb Heydon
  */
-public class ModeExamplePath implements AluminatiAutoTask {
+public class ModeGoForward implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
     @Override
     public String toString() {
-        return "ExamplePath";
+        return "GoForward";
     }
 
     public void start(double timestamp) {
@@ -58,7 +58,7 @@ public class ModeExamplePath implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public ModeExamplePath(RobotState robotState, DriveSystem driveSystem) {
+    public ModeGoForward(RobotState robotState, DriveSystem driveSystem) {
         taskList = new AluminatiAutoTaskList();
         PathContainer pathContainer = new PathExample();
 

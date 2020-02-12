@@ -46,7 +46,7 @@ public class Mode5PowerCell2OtherAllianceTrenchRun implements AluminatiAutoTask 
 
     @Override
     public String toString() {
-        return "Mode5PowerCell2OtherAllianceTrenchRun";
+        return "5PowerCell2OtherAllianceTrenchRun";
     }
 
     public void start(double timestamp) {

@@ -35,8 +35,8 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.PathBuilder.Waypoint;
 public class Path5PowerCell2OtherAllianceTrenchRun2 implements PathContainer {
     public Path buildPath() {
         ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
-        waypoints.add(new Waypoint(390, 296, 0, 0));
-        waypoints.add(new Waypoint(460, 296, 15, 120));
+        waypoints.add(new Waypoint(390, 294, 0, 0));
+        waypoints.add(new Waypoint(460, 294, 15, 120));
         waypoints.add(new Waypoint(460, 95, 15, 120));
         waypoints.add(new Waypoint(510, 95, 0, 120));
 

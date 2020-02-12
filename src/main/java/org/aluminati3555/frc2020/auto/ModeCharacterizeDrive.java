@@ -48,7 +48,7 @@ public class ModeCharacterizeDrive implements AluminatiAutoTask {
 
     @Override
     public String toString() {
-        return "ModeCharacterizeDrive";
+        return "CharacterizeDrive";
     }
 
     public void start(double timestamp) {

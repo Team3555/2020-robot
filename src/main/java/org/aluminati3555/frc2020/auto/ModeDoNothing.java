@@ -32,7 +32,7 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
 public class ModeDoNothing implements AluminatiAutoTask {
     @Override
     public String toString() {
-        return "ModeDoNothing";
+        return "DoNothing";
     }
 
     public void start(double timestamp) {

@@ -68,6 +68,7 @@ import org.aluminati3555.frc2020.auto.Mode8PowerCell5TrenchRun;
 import org.aluminati3555.frc2020.auto.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.ModeExamplePath;
+import org.aluminati3555.frc2020.auto.ModeGoForward;
 import org.aluminati3555.frc2020.systems.ClimberSystem;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
@@ -243,7 +244,8 @@ public class Robot extends AluminatiRobot {
                 magazineSystem)),
         new Entry("5PowerCell2ShieldGenerator", null), new Entry("5PowerCell3ShieldGenerator", null),
         new Entry("5PowerCell2OtherAllianceTrenchRun", new Mode5PowerCell2OtherAllianceTrenchRun(robotState, limelight,
-            driveSystem, intakeSystem, shooterSystem, magazineSystem)));
+            driveSystem, intakeSystem, shooterSystem, magazineSystem)),
+        new Entry("GoForward", new ModeGoForward(robotState, driveSystem)));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoReporter", 2);
