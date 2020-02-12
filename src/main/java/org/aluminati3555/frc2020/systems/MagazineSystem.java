@@ -23,10 +23,12 @@
 package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
-import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
+import org.aluminati3555.lib.net.AluminatiTunable;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -38,46 +40,126 @@ import edu.wpi.first.wpilibj.DigitalInput;
  */
 public class MagazineSystem implements AluminatiSystem {
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
+    private static final double FEED_BASE_TIME = 1;
+    private static final double FEED_TIME = 0.5;
+    private static final double FEEDER_RPM = 1000;
+    private static final int FEEDER_CURRENT_LIMIT = 30;
 
-    private AluminatiVictorSPX motor;
+    /**
+     * Converts rpm to native units
+     */
+    private static int convertRPMToNativeUnits(double rpm) {
+        return (int) (rpm * ENCODER_TICKS_PER_ROTATION / 600.0);
+    }
+
+    private AluminatiTalonSRX motor;
     private AluminatiTalonSRX feederMotor;
     private DigitalInput photoelectricSensor;
 
     private RobotFaults robotFaults;
 
+    private State state;
+
+    private double stopTime;
+
     /**
      * Feeds a specified number of power cells to the shooter
      */
-    public void feedPowerCell(int numberOfPowerCells) {
-
+    public void feedPowerCell(int numberOfPowerCells, double timestamp) {
+        stopTime = timestamp + FEED_BASE_TIME + numberOfPowerCells * FEED_TIME;
+        state = State.TIMING;
     }
 
     /**
      * Starts continuously feeding power cells to the shooter
      */
     public void startFeedingPowerCells() {
-
+        state = State.CONTINUOUS;
     }
 
     /**
      * Stops continously feeding power cells to the shooter
      */
     public void stopFeedingPowerCells() {
-
+        state = State.SENSOR;
     }
 
     public void update(double timestamp, boolean enabled) {
-        if (photoelectricSensor.get()) {
+        // Check for errors
+        if (!motor.isOK()) {
+            robotFaults.setMagazineFault(true);
+        }
+
+        if (!feederMotor.isOK()) {
+            robotFaults.setMagazineFault(true);
+        }
+
+        // Update states
+        if (timestamp >= stopTime) {
+            state = State.SENSOR;
+        }
+
+        switch (state) {
+        case CONTINUOUS:
             motor.set(ControlMode.PercentOutput, 0.5);
+            feederMotor.set(ControlMode.PercentOutput, 0);
+            break;
+        case SENSOR:
+            if (!photoelectricSensor.get()) {
+                motor.set(ControlMode.PercentOutput, 0.5);
+            }
+            feederMotor.set(ControlMode.PercentOutput, 0);
+            break;
+        case TIMING:
+            motor.set(ControlMode.PercentOutput, 0.5);
+            feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
+            break;
+        default:
+            motor.set(ControlMode.PercentOutput, 0);
+            feederMotor.set(ControlMode.PercentOutput, 0);
+            break;
         }
     }
 
-    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor,
+    public MagazineSystem(AluminatiTalonSRX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor,
             RobotFaults robotFaults) {
         this.motor = motor;
         this.feederMotor = feederMotor;
         this.photoelectricSensor = photoelectricSensor;
 
         this.robotFaults = robotFaults;
+
+        // Configure encoder
+        this.feederMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
+        // Configure PID
+        this.feederMotor.config_kP(0, 0.1);
+        this.feederMotor.config_kI(0, 0);
+        this.feederMotor.config_kD(0, 0);
+        this.feederMotor.config_IntegralZone(0, 400);
+
+        // Setup tuning listener
+        new AluminatiTunable(5804) {
+            protected void update(TuningData data) {
+                feederMotor.config_kP(0, data.kP);
+                feederMotor.config_kI(0, data.kI);
+                feederMotor.config_kD(0, data.kD);
+            }
+        };
+
+        // Configure current limit
+        this.feederMotor.configPeakCurrentDuration(500);
+        this.feederMotor.configPeakCurrentLimit(FEEDER_CURRENT_LIMIT);
+        this.feederMotor.configContinuousCurrentLimit(FEEDER_CURRENT_LIMIT);
+        this.feederMotor.enableCurrentLimit(true);
+
+        // Set brake mode
+        this.feederMotor.setNeutralMode(NeutralMode.Brake);
+
+        state = State.SENSOR;
+    }
+
+    private enum State {
+        CONTINUOUS, SENSOR, TIMING
     }
 }

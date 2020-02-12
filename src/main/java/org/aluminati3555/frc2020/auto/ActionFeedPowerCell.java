@@ -36,7 +36,7 @@ public class ActionFeedPowerCell implements AluminatiAutoTask {
     private int numberOfPowerCells;
 
     public void start(double timestamp) {
-        feederSystem.feedPowerCell(numberOfPowerCells);
+        feederSystem.feedPowerCell(numberOfPowerCells, timestamp);
     }
 
     public void update(double timestamp) {

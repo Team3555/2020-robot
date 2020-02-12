@@ -52,14 +52,14 @@ public class ShooterSystem implements AluminatiSystem {
     /**
      * Converts rpm to native units
      */
-    public static int convertRPMToNativeUnits(double rpm) {
+    private static int convertRPMToNativeUnits(double rpm) {
         return (int) (rpm * ENCODER_TICKS_PER_ROTATION / 600.0);
     }
 
     /**
      * Converts native units to rpm
      */
-    public static int convertNativeUnitsToRPM(double nativeUnits) {
+    private static int convertNativeUnitsToRPM(double nativeUnits) {
         return (int) (nativeUnits / ENCODER_TICKS_PER_ROTATION * 600.0);
     }
 

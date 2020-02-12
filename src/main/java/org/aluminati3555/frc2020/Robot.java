@@ -429,13 +429,13 @@ public class Robot extends AluminatiRobot {
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), new AluminatiColorSensor(),
         robotFaults);
-    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(75), new AluminatiTalonSRX(76), new DigitalInput(0),
+    magazineSystem = new MagazineSystem(new AluminatiTalonSRX(75), new AluminatiTalonSRX(76), new DigitalInput(0),
         robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
         new AluminatiSolenoid(1), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
     intakeSystem = new IntakeSystem(new AluminatiTalonSRX(70), new AluminatiSolenoid(2), operatorController,
-        robotFaults);
+        magazineSystem, robotFaults);
     climberSystem = new ClimberSystem(climberArm, climberSpool, new AluminatiSolenoid(3), intakeSystem,
         operatorController, robotFaults);
   }

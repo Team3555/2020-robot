@@ -41,6 +41,8 @@ public class IntakeSystem implements AluminatiSystem {
 
     private AluminatiXboxController operatorController;
 
+    private MagazineSystem magazineSystem;
+
     private RobotFaults robotFaults;
 
     private double speed;
@@ -102,10 +104,14 @@ public class IntakeSystem implements AluminatiSystem {
             }
 
             // Control intake speed
-            if (operatorController.getRawButton(6)) {
+            if (operatorController.getRawButtonPressed(6)) {
                 setSpeed(0.5);
-            } else {
+
+                // Run the magazine as well
+                magazineSystem.startFeedingPowerCells();
+            } else if (operatorController.getRawButtonReleased(6)) {
                 setSpeed(0);
+                magazineSystem.stopFeedingPowerCells();
             }
         } else {
             intakeMotor.set(ControlMode.PercentOutput, speed);
@@ -113,11 +119,13 @@ public class IntakeSystem implements AluminatiSystem {
     }
 
     public IntakeSystem(AluminatiTalonSRX intakeMotor, AluminatiSolenoid extenderSolenoid,
-            AluminatiXboxController operatorController, RobotFaults robotFaults) {
+            AluminatiXboxController operatorController, MagazineSystem magazineSystem, RobotFaults robotFaults) {
         this.intakeMotor = intakeMotor;
         this.extenderSolenoid = extenderSolenoid;
 
         this.operatorController = operatorController;
+
+        this.magazineSystem = magazineSystem;
 
         this.robotFaults = robotFaults;
     }
