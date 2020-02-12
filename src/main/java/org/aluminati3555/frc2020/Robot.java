@@ -397,6 +397,9 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void testInit() {
+    // Mark match as started for testing
+    matchStarted = true;
+
     // Set coast mode
     driveSystem.coast();
   }
