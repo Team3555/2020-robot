@@ -212,8 +212,7 @@ public class Robot extends AluminatiRobot {
     if (!Robot.isSimulation()) {
       ShooterUtil.load(Filesystem.getDeployDirectory() + "/shooter.ml");
     } else {
-      // ShooterUtil.load(Filesystem.getDeployDirectory() +
-      // "/../src/main/deploy/shooter.ml");
+      ShooterUtil.load(Filesystem.getDeployDirectory() + "/../src/main/deploy/shooter.ml");
     }
 
     // Setup compressor
