@@ -49,6 +49,11 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
 
     private AluminatiAutoTaskList taskList;
 
+    @Override
+    public String toString() {
+        return "Mode8PowerCell5TrenchRun";
+    }
+
     public void start(double timestamp) {
         taskList.start(timestamp);
     }

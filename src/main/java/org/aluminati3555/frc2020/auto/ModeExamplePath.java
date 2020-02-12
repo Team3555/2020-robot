@@ -37,6 +37,11 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 public class ModeExamplePath implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
+    @Override
+    public String toString() {
+        return "ModeExamplePath";
+    }
+
     public void start(double timestamp) {
         taskList.start(timestamp);
     }

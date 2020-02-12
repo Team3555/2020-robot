@@ -59,6 +59,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
+import com.team254.lib.geometry.Translation2d;
 
 import org.aluminati3555.frc2020.auto.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.ActionTurnToHeading;
@@ -211,7 +212,8 @@ public class Robot extends AluminatiRobot {
     if (!Robot.isSimulation()) {
       ShooterUtil.load(Filesystem.getDeployDirectory() + "/shooter.ml");
     } else {
-      ShooterUtil.load(Filesystem.getDeployDirectory() + "/../src/main/deploy/shooter.ml");
+      // ShooterUtil.load(Filesystem.getDeployDirectory() +
+      // "/../src/main/deploy/shooter.ml");
     }
 
     // Setup compressor
@@ -246,7 +248,16 @@ public class Robot extends AluminatiRobot {
   @Override
   public void robotPeriodic() {
     updateDisplay();
-    videoDisplay.update();
+
+    Pose2d position = robotState.getLatestFieldToVehicle().getValue();
+    Translation2d translation = position.getTranslation();
+    Rotation2d rotation = position.getRotation();
+
+    AluminatiAutoTask auto = autoSelector.getSelected();
+    String autoString = (auto == null) ? "null" : auto.toString();
+
+    videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
+        autoString);
   }
 
   @Override

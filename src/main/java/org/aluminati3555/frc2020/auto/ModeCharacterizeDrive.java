@@ -46,6 +46,11 @@ public class ModeCharacterizeDrive implements AluminatiAutoTask {
     private double startTime;
     private double power;
 
+    @Override
+    public String toString() {
+        return "ModeCharacterizeDrive";
+    }
+
     public void start(double timestamp) {
         done = false;
         startTime = timestamp;

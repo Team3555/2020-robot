@@ -44,6 +44,11 @@ import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 public class Mode5PowerCell2OtherAllianceTrenchRun implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
+    @Override
+    public String toString() {
+        return "Mode5PowerCell2OtherAllianceTrenchRun";
+    }
+
     public void start(double timestamp) {
         taskList.start(timestamp);
     }

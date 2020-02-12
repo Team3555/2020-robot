@@ -30,6 +30,11 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
  * @author Caleb Heydon
  */
 public class ModeDoNothing implements AluminatiAutoTask {
+    @Override
+    public String toString() {
+        return "ModeDoNothing";
+    }
+
     public void start(double timestamp) {
 
     }
