@@ -48,10 +48,10 @@ public class VideoDisplay {
     private static final int HEIGHT = 480;
 
     private static final Scalar BLACK = new Scalar(0, 0, 0);
-    private static final Scalar BLUE = new Scalar(0, 0, 255);
+    private static final Scalar BLUE = new Scalar(255, 0, 0);
     private static final Scalar GREEN = new Scalar(0, 255, 0);
-    private static final Scalar RED = new Scalar(255, 0, 0);
-    private static final Scalar YELLOW = new Scalar(255, 255, 0);
+    private static final Scalar RED = new Scalar(0, 0, 255);
+    private static final Scalar YELLOW = new Scalar(0, 255, 255);
 
     private Mat frame;
     private CvSource outputStream;
@@ -70,7 +70,7 @@ public class VideoDisplay {
      * Sends a new frame
      */
     public void update(ControlPanelColor controlPanelColor, double averageDT, double x, double y, double heading,
-            String auto) {
+            String auto, RobotFaults robotFaults) {
         double currentTime = Timer.getFPGATimestamp();
         double delta = currentTime - lastTime;
         if (delta < targetTime) {
@@ -93,7 +93,7 @@ public class VideoDisplay {
         }
 
         // Fill rectangle for header
-        Imgproc.rectangle(frame, new Point(0, 0), new Point(WIDTH - 1, 100), BLACK, -1);
+        Imgproc.rectangle(frame, new Point(0, 0), new Point(WIDTH - 1, 200), BLACK, -1);
 
         // Write header
         Imgproc.putText(frame, "averageDT: " + averageDT + " seconds", new Point(5, 15), Core.FONT_HERSHEY_PLAIN, 1,
@@ -102,6 +102,42 @@ public class VideoDisplay {
         Imgproc.putText(frame, "y: " + y + " inches", new Point(5, 45), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
         Imgproc.putText(frame, "heading: " + heading + " degrees", new Point(5, 60), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
         Imgproc.putText(frame, "auto: " + auto, new Point(5, 75), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+
+        if (!robotFaults.getClimberFault()) {
+            Imgproc.putText(frame, "ClimberSystem: OK", new Point(5, 105), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "ClimberSystem: FAULT", new Point(5, 105), Core.FONT_HERSHEY_PLAIN, 1, RED);
+        }
+
+        if (!robotFaults.getDriveFault()) {
+            Imgproc.putText(frame, "DriveSystem: OK", new Point(5, 120), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "DriveSystem: FAULT", new Point(5, 120), Core.FONT_HERSHEY_PLAIN, 1, RED);
+        }
+
+        if (!robotFaults.getIntakeFault()) {
+            Imgproc.putText(frame, "IntakeSystem: OK", new Point(5, 135), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "IntakeSystem: FAULT", new Point(5, 135), Core.FONT_HERSHEY_PLAIN, 1, RED);
+        }
+
+        if (!robotFaults.getMagazineFault()) {
+            Imgproc.putText(frame, "MagazineSystem: OK", new Point(5, 150), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "MagazineSystem: FAULT", new Point(5, 150), Core.FONT_HERSHEY_PLAIN, 1, RED);
+        }
+
+        if (!robotFaults.getShooterFault()) {
+            Imgproc.putText(frame, "ShooterSystem: OK", new Point(5, 165), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "ShooterSystem: FAULT", new Point(5, 165), Core.FONT_HERSHEY_PLAIN, 1, RED);
+        }
+
+        if (!robotFaults.getSpinnerFault()) {
+            Imgproc.putText(frame, "SpinnerSystem: OK", new Point(5, 180), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "SpinnerSystem: FAULT", new Point(5, 180), Core.FONT_HERSHEY_PLAIN, 1, RED);
+        }
 
         outputStream.putFrame(frame);
 

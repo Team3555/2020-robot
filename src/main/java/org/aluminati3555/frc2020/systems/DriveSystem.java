@@ -22,6 +22,7 @@
 
 package org.aluminati3555.frc2020.systems;
 
+import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drive.AluminatiDrive;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
@@ -29,8 +30,6 @@ import org.aluminati3555.lib.drivers.AluminatiGyro;
 import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.system.AluminatiSystem;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This is the drivetrain class for the robot
@@ -42,6 +41,9 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     private static final int DRIVE_CURRENT_LIMIT_1 = 60;
 
     private AluminatiXboxController driverController;
+
+    private RobotFaults robotFaults;
+
     private boolean visionTracking;
 
     /**
@@ -54,23 +56,23 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     public void update(double timestamp, boolean enabled) {
         // Report failures to driver
         if (!this.getLeftGroup().isOK()) {
-            DriverStation.reportError("Fault detected in the left side of the drive", false);
+            robotFaults.setDriveFault(true);
         }
 
         if (!this.getLeftGroup().isEncoderOK()) {
-            DriverStation.reportError("Encoder failure detected in the left side of the drive", false);
+            robotFaults.setDriveFault(true);
         }
 
         if (!this.getRightGroup().isOK()) {
-            DriverStation.reportError("Fault detected in the right side of the drive", false);
+            robotFaults.setDriveFault(true);
         }
 
         if (!this.getRightGroup().isEncoderOK()) {
-            DriverStation.reportError("Encoder failure detected in the right side of the drive", false);
+            robotFaults.setDriveFault(true);
         }
 
         if (!this.getGyro().isOK()) {
-            DriverStation.reportError("Gyro fault detected", false);
+            robotFaults.setDriveFault(true);
         }
 
         if (enabled) {
@@ -81,10 +83,11 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     }
 
     public DriveSystem(Looper looper, RobotState robotState, AluminatiMotorGroup left, AluminatiMotorGroup right,
-            AluminatiGyro gyro, AluminatiXboxController driverController) {
+            AluminatiGyro gyro, AluminatiXboxController driverController, RobotFaults robotFaults) {
         super(looper, robotState, left, right, gyro);
 
         this.driverController = driverController;
+        this.robotFaults = robotFaults;
 
         this.getLeftGroup().getMasterTalon().configPeakCurrentDuration(500);
         this.getLeftGroup().getMasterTalon().configPeakCurrentLimit(DRIVE_CURRENT_LIMIT_1);

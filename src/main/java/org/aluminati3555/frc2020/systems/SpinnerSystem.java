@@ -28,6 +28,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 
+import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.frc2020.Robot.ControlPanelColor;
 import org.aluminati3555.lib.drivers.AluminatiColorSensor;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
@@ -35,7 +36,6 @@ import org.aluminati3555.lib.net.AluminatiTunable;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 
 /**
@@ -77,6 +77,9 @@ public class SpinnerSystem implements AluminatiSystem {
     private AluminatiTalonSRX spinnerMotor;
     private AluminatiSolenoid extenderSolenoid;
     private AluminatiColorSensor colorSensor;
+
+    private RobotFaults robotFaults;
+
     private ColorMatch colorMatch;
     private State state;
 
@@ -145,11 +148,11 @@ public class SpinnerSystem implements AluminatiSystem {
     public void update(double timestamp, boolean enabled) {
         // Report failures to driver
         if (!this.spinnerMotor.isOK()) {
-            DriverStation.reportError("Fault detected in spinner", false);
+            robotFaults.setSpinnerFault(true);
         }
 
         if (!this.spinnerMotor.isEncoderOK()) {
-            DriverStation.reportError("Encoder failure detected in spinner", false);
+            robotFaults.setSpinnerFault(true);
         }
 
         if (enabled) {
@@ -167,10 +170,12 @@ public class SpinnerSystem implements AluminatiSystem {
     }
 
     public SpinnerSystem(AluminatiTalonSRX spinnerMotor, AluminatiSolenoid extenderSolenoid,
-            AluminatiColorSensor colorSensor) {
+            AluminatiColorSensor colorSensor, RobotFaults robotFaults) {
         this.spinnerMotor = spinnerMotor;
         this.extenderSolenoid = extenderSolenoid;
         this.colorSensor = colorSensor;
+
+        this.robotFaults = robotFaults;
 
         this.colorMatch = new ColorMatch();
         this.colorMatch.addColorMatch(BLUE);

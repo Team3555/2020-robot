@@ -25,12 +25,11 @@ package org.aluminati3555.frc2020.systems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class controls climber
@@ -49,6 +48,8 @@ public class ClimberSystem implements AluminatiSystem {
 
     private AluminatiXboxController operatorController;
 
+    private RobotFaults robotFaults;
+
     /**
      * Locks the ratchet
      */
@@ -66,11 +67,11 @@ public class ClimberSystem implements AluminatiSystem {
     public void update(double timestamp, boolean enabled) {
         // Check for faults
         if (!armMotor.isOK()) {
-            DriverStation.reportError("Fault detected in climber arm", false);
+            robotFaults.setClimberFault(true);
         }
 
         if (!spoolMotor.isOK()) {
-            DriverStation.reportError("Fault detected in climber spool", false);
+            robotFaults.setClimberFault(true);
         }
 
         if (enabled) {
@@ -108,13 +109,15 @@ public class ClimberSystem implements AluminatiSystem {
     }
 
     public ClimberSystem(AluminatiTalonSRX armMotor, AluminatiTalonSRX spoolMotor, AluminatiSolenoid ratchetSolenoid,
-            IntakeSystem intakeSystem, AluminatiXboxController operatorController) {
+            IntakeSystem intakeSystem, AluminatiXboxController operatorController, RobotFaults robotFaults) {
         this.armMotor = armMotor;
         this.spoolMotor = spoolMotor;
         this.ratchetSolenoid = ratchetSolenoid;
         this.intakeSystem = intakeSystem;
 
         this.operatorController = operatorController;
+
+        this.robotFaults = robotFaults;
 
         // Configure current limit
         this.armMotor.configPeakCurrentDuration(500);

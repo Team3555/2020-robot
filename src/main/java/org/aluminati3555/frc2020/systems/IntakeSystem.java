@@ -24,12 +24,11 @@ package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
+import org.aluminati3555.frc2020.RobotFaults;
+import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class controls the intake for the power cells
@@ -37,10 +36,12 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author Caleb Heydon
  */
 public class IntakeSystem implements AluminatiSystem {
-    private AluminatiVictorSPX intakeMotor;
+    private AluminatiTalonSRX intakeMotor;
     private AluminatiSolenoid extenderSolenoid;
 
     private AluminatiXboxController operatorController;
+
+    private RobotFaults robotFaults;
 
     private double speed;
 
@@ -89,7 +90,7 @@ public class IntakeSystem implements AluminatiSystem {
 
     public void update(double timestamp, boolean enabled) {
         if (!intakeMotor.isOK()) {
-            DriverStation.reportError("Fault detected in intake", false);
+            robotFaults.setIntakeFault(true);
         }
 
         if (enabled) {
@@ -111,11 +112,13 @@ public class IntakeSystem implements AluminatiSystem {
         }
     }
 
-    public IntakeSystem(AluminatiVictorSPX intakeMotor, AluminatiSolenoid extenderSolenoid,
-            AluminatiXboxController operatorController) {
+    public IntakeSystem(AluminatiTalonSRX intakeMotor, AluminatiSolenoid extenderSolenoid,
+            AluminatiXboxController operatorController, RobotFaults robotFaults) {
         this.intakeMotor = intakeMotor;
         this.extenderSolenoid = extenderSolenoid;
 
         this.operatorController = operatorController;
+
+        this.robotFaults = robotFaults;
     }
 }

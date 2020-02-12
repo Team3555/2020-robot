@@ -25,6 +25,7 @@ package org.aluminati3555.frc2020.systems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
+import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.frc2020.util.ShooterUtil;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
@@ -34,7 +35,6 @@ import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
@@ -70,6 +70,8 @@ public class ShooterSystem implements AluminatiSystem {
     private AluminatiLimelight limelight;
     private DriveSystem driveSystem;
     private MagazineSystem magazineSystem;
+
+    private RobotFaults robotFaults;
 
     private boolean wasTracking;
 
@@ -117,11 +119,11 @@ public class ShooterSystem implements AluminatiSystem {
 
     public void update(double timestamp, boolean enabled) {
         if (!motorGroup.getMasterTalon().isOK()) {
-            DriverStation.reportError("Fault detected in shooter", false);
+            robotFaults.setShooterFault(true);
         }
 
         if (!motorGroup.isEncoderOK()) {
-            DriverStation.reportError("Encoder failure detected in the shooter", false);
+            robotFaults.setShooterFault(true);
         }
 
         if (enabled) {
@@ -217,7 +219,7 @@ public class ShooterSystem implements AluminatiSystem {
 
     public ShooterSystem(AluminatiMotorGroup motorGroup, AluminatiSolenoid hoodSolenoid,
             AluminatiXboxController driverController, AluminatiXboxController operatorController,
-            AluminatiLimelight limelight, DriveSystem driveSystem, MagazineSystem magazineSystem) {
+            AluminatiLimelight limelight, DriveSystem driveSystem, MagazineSystem magazineSystem, RobotFaults robotFaults) {
         this.motorGroup = motorGroup;
         this.hoodSolenoid = hoodSolenoid;
         this.driverController = driverController;
@@ -225,6 +227,8 @@ public class ShooterSystem implements AluminatiSystem {
         this.limelight = limelight;
         this.driveSystem = driveSystem;
         this.magazineSystem = magazineSystem;
+
+        this.robotFaults = robotFaults;
 
         this.wasTracking = false;
 

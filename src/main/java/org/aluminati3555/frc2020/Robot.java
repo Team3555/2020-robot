@@ -114,6 +114,9 @@ public class Robot extends AluminatiRobot {
   // Limelight
   private AluminatiLimelight limelight;
 
+  // System faults
+  RobotFaults robotFaults;
+
   // Systems
   private DriveSystem driveSystem;
   private SpinnerSystem spinnerSystem;
@@ -201,6 +204,8 @@ public class Robot extends AluminatiRobot {
     limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
     limelight.setPipeline(0);
 
+    robotFaults = new RobotFaults();
+
     // Configure systems
     configureSystems();
 
@@ -241,7 +246,7 @@ public class Robot extends AluminatiRobot {
             driveSystem, intakeSystem, shooterSystem, magazineSystem)));
 
     // Setup video display
-    videoDisplay = new VideoDisplay("VideoReporter", 5);
+    videoDisplay = new VideoDisplay("VideoReporter", 2);
   }
 
   @Override
@@ -256,7 +261,7 @@ public class Robot extends AluminatiRobot {
     String autoString = (auto == null) ? "null" : auto.toString();
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
-        autoString);
+        autoString, robotFaults);
   }
 
   @Override
@@ -409,21 +414,28 @@ public class Robot extends AluminatiRobot {
     AluminatiMotorGroup right = new AluminatiMotorGroup(true, new AluminatiTalonSRX(50), new AluminatiTalonSRX(51),
         new AluminatiVictorSPX(52));
 
-    AluminatiPigeon gyro1 = new AluminatiPigeon((AluminatiTalonSRX) left.getMotors()[1]);
-    AluminatiPigeon gyro2 = new AluminatiPigeon((AluminatiTalonSRX) right.getMotors()[1]);
+    AluminatiTalonSRX climberArm = new AluminatiTalonSRX(80);
+    AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(81);
+
+    AluminatiPigeon gyro1 = new AluminatiPigeon(climberArm);
+    AluminatiPigeon gyro2 = new AluminatiPigeon(climberSpool);
     AluminatiDualGyro dualGyro = new AluminatiDualGyro(gyro1, gyro2);
 
     left.getMasterTalon().setSensorPhase(true);
     right.getMasterTalon().setSensorPhase(true);
-    driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverController);
+    driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverController, robotFaults);
 
-    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), new AluminatiColorSensor());
-    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(75), new AluminatiTalonSRX(76), new DigitalInput(0));
+    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), new AluminatiColorSensor(),
+        robotFaults);
+    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(75), new AluminatiTalonSRX(76), new DigitalInput(0),
+        robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
-        new AluminatiSolenoid(1), driverController, operatorController, limelight, driveSystem, magazineSystem);
-    intakeSystem = new IntakeSystem(new AluminatiVictorSPX(70), new AluminatiSolenoid(2), operatorController);
-    climberSystem = new ClimberSystem(new AluminatiTalonSRX(80), new AluminatiTalonSRX(81), new AluminatiSolenoid(3),
-        intakeSystem, operatorController);
+        new AluminatiSolenoid(1), driverController, operatorController, limelight, driveSystem, magazineSystem,
+        robotFaults);
+    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(70), new AluminatiSolenoid(2), operatorController,
+        robotFaults);
+    climberSystem = new ClimberSystem(climberArm, climberSpool, new AluminatiSolenoid(3), intakeSystem,
+        operatorController, robotFaults);
   }
 
   /**
@@ -495,25 +507,22 @@ public class Robot extends AluminatiRobot {
 
     char color = dataString.charAt(0);
 
-    // Synchronized to make this thread-safe when accessing from vision thread
-    synchronized (controlPanelColor) {
-      switch (color) {
-      case 'B':
-        controlPanelColor = ControlPanelColor.BLUE;
-        break;
-      case 'G':
-        controlPanelColor = ControlPanelColor.GREEN;
-        break;
-      case 'R':
-        controlPanelColor = ControlPanelColor.RED;
-        break;
-      case 'Y':
-        controlPanelColor = ControlPanelColor.YELLOW;
-        break;
-      default:
-        controlPanelColor = ControlPanelColor.UNKOWN;
-        break;
-      }
+    switch (color) {
+    case 'B':
+      controlPanelColor = ControlPanelColor.BLUE;
+      break;
+    case 'G':
+      controlPanelColor = ControlPanelColor.GREEN;
+      break;
+    case 'R':
+      controlPanelColor = ControlPanelColor.RED;
+      break;
+    case 'Y':
+      controlPanelColor = ControlPanelColor.YELLOW;
+      break;
+    default:
+      controlPanelColor = ControlPanelColor.UNKOWN;
+      break;
     }
   }
 

@@ -24,6 +24,7 @@ package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
 import org.aluminati3555.lib.system.AluminatiSystem;
@@ -41,6 +42,8 @@ public class MagazineSystem implements AluminatiSystem {
     private AluminatiVictorSPX motor;
     private AluminatiTalonSRX feederMotor;
     private DigitalInput photoelectricSensor;
+
+    private RobotFaults robotFaults;
 
     /**
      * Feeds a specified number of power cells to the shooter
@@ -69,9 +72,12 @@ public class MagazineSystem implements AluminatiSystem {
         }
     }
 
-    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor) {
+    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor,
+            RobotFaults robotFaults) {
         this.motor = motor;
         this.feederMotor = feederMotor;
         this.photoelectricSensor = photoelectricSensor;
+
+        this.robotFaults = robotFaults;
     }
 }
