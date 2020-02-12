@@ -261,7 +261,7 @@ public class Robot extends AluminatiRobot {
     String autoString = (auto == null) ? "null" : auto.toString();
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
-        autoString, robotFaults);
+        autoString, robotFaults, limelight);
   }
 
   @Override

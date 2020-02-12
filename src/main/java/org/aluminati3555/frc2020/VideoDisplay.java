@@ -23,6 +23,7 @@
 package org.aluminati3555.frc2020;
 
 import org.aluminati3555.frc2020.Robot.ControlPanelColor;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -46,6 +47,7 @@ public class VideoDisplay {
 
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
+    private static final int HEADER_HEIGHT = 400;
 
     private static final Scalar BLACK = new Scalar(0, 0, 0);
     private static final Scalar BLUE = new Scalar(255, 0, 0);
@@ -70,7 +72,7 @@ public class VideoDisplay {
      * Sends a new frame
      */
     public void update(ControlPanelColor controlPanelColor, double averageDT, double x, double y, double heading,
-            String auto, RobotFaults robotFaults) {
+            String auto, RobotFaults robotFaults, AluminatiLimelight limelight) {
         double currentTime = Timer.getFPGATimestamp();
         double delta = currentTime - lastTime;
         if (delta < targetTime) {
@@ -93,7 +95,7 @@ public class VideoDisplay {
         }
 
         // Fill rectangle for header
-        Imgproc.rectangle(frame, new Point(0, 0), new Point(WIDTH - 1, 200), BLACK, -1);
+        Imgproc.rectangle(frame, new Point(0, 0), new Point(WIDTH - 1, HEADER_HEIGHT), BLACK, -1);
 
         // Write header
         Imgproc.putText(frame, "averageDT: " + averageDT + " seconds", new Point(5, 15), Core.FONT_HERSHEY_PLAIN, 1,
@@ -138,6 +140,17 @@ public class VideoDisplay {
         } else {
             Imgproc.putText(frame, "SpinnerSystem: FAULT", new Point(5, 180), Core.FONT_HERSHEY_PLAIN, 1, RED);
         }
+
+        Imgproc.putText(frame, "hasTarget: " + limelight.hasTarget(), new Point(5, 210), Core.FONT_HERSHEY_PLAIN, 1,
+                GREEN);
+        Imgproc.putText(frame, "targetX: " + limelight.getX() + " degrees", new Point(5, 225), Core.FONT_HERSHEY_PLAIN,
+                1, GREEN);
+        Imgproc.putText(frame, "targetY: " + limelight.getX() + " degrees", new Point(5, 240), Core.FONT_HERSHEY_PLAIN,
+                1, GREEN);
+        Imgproc.putText(frame, "targetWidth: " + limelight.getHorizontal() + " degrees", new Point(5, 255),
+                Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        Imgproc.putText(frame, "targetHeight: " + limelight.getVertical() + " degrees", new Point(5, 270),
+                Core.FONT_HERSHEY_PLAIN, 1, GREEN);
 
         outputStream.putFrame(frame);
 
