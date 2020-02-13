@@ -251,7 +251,7 @@ public class Robot extends AluminatiRobot {
             shooterSystem, magazineSystem)));
 
     // Setup video display
-    videoDisplay = new VideoDisplay("VideoReporter", 2);
+    videoDisplay = new VideoDisplay("VideoDisplay", 2);
   }
 
   @Override
