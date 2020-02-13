@@ -74,13 +74,27 @@ public class MagazineSystem implements AluminatiSystem {
      * Starts continuously feeding power cells to the shooter
      */
     public void startFeedingPowerCells() {
-        state = State.CONTINUOUS;
+        state = State.CONTINUOUS_FORWARD;
     }
 
     /**
-     * Stops continously feeding power cells to the shooter
+     * Stops continuously feeding power cells to the shooter
      */
     public void stopFeedingPowerCells() {
+        state = State.SENSOR;
+    }
+
+    /**
+     * Starts continuously ejecting power cells
+     */
+    public void startEjectingPowerCells() {
+        state = State.CONTINUOUS_REVERSE;
+    }
+
+    /**
+     * Stops continuously ejecting power cells
+     */
+    public void stopEjectingPowerCells() {
         state = State.SENSOR;
     }
 
@@ -100,9 +114,13 @@ public class MagazineSystem implements AluminatiSystem {
         }
 
         switch (state) {
-        case CONTINUOUS:
+        case CONTINUOUS_FORWARD:
             motor.set(ControlMode.PercentOutput, 0.5);
             feederMotor.set(ControlMode.PercentOutput, 0);
+            break;
+        case CONTINUOUS_REVERSE:
+            motor.set(ControlMode.PercentOutput, -0.5);
+            feederMotor.set(ControlMode.PercentOutput, -0.5);
             break;
         case SENSOR:
             if (!photoelectricSensor.get()) {
@@ -160,6 +178,6 @@ public class MagazineSystem implements AluminatiSystem {
     }
 
     private enum State {
-        CONTINUOUS, SENSOR, TIMING
+        CONTINUOUS_FORWARD, CONTINUOUS_REVERSE, SENSOR, TIMING
     }
 }

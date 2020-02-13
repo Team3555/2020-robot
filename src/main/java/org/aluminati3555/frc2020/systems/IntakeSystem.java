@@ -99,7 +99,9 @@ public class IntakeSystem implements AluminatiSystem {
             // Control intake position
             if (operatorController.getRawButtonPressed(5)) {
                 extend();
-            } else if (operatorController.getRawButtonReleased(5)) {
+            }
+            
+            if (operatorController.getRawButtonReleased(5)) {
                 retract();
             }
 
@@ -109,13 +111,28 @@ public class IntakeSystem implements AluminatiSystem {
 
                 // Run the magazine as well
                 magazineSystem.startFeedingPowerCells();
-            } else if (operatorController.getRawButtonReleased(6)) {
+            }
+            
+            if (operatorController.getRawButtonReleased(6)) {
                 setSpeed(0);
                 magazineSystem.stopFeedingPowerCells();
             }
-        } else {
-            intakeMotor.set(ControlMode.PercentOutput, speed);
+
+            // Check for button to eject power cells
+            if (operatorController.getRawButtonPressed(3)) {
+                extend();
+                setSpeed(-0.5);
+                magazineSystem.startEjectingPowerCells();
+            }
+
+            if (operatorController.getRawButtonReleased(3)) {
+                magazineSystem.stopEjectingPowerCells();
+                setSpeed(0);
+                retract();
+            }
         }
+
+        intakeMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public IntakeSystem(AluminatiTalonSRX intakeMotor, AluminatiSolenoid extenderSolenoid,
