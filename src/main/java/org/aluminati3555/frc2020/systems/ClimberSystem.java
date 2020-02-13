@@ -31,6 +31,8 @@ import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 /**
  * This class controls climber
  * 
@@ -39,6 +41,7 @@ import org.aluminati3555.lib.system.AluminatiSystem;
 public class ClimberSystem implements AluminatiSystem {
     private static final int ARM_CURRENT_LIMIT = 40;
     private static final int SPOOL_CURRENT_LIMIT = 40;
+    private static final double ARM_DEADBAND = 0.1;
 
     private AluminatiTalonSRX armMotor;
     private AluminatiTalonSRX spoolMotor;
@@ -77,19 +80,20 @@ public class ClimberSystem implements AluminatiSystem {
         if (enabled) {
             // Manual control
 
+            double leftJoystick = operatorController.getY(Hand.kLeft);
             int pov = operatorController.getPOV();
 
-            if (pov != -1 && intakeSystem.isUp()) {
+            if ((Math.abs(leftJoystick) > ARM_DEADBAND || pov != -1) && intakeSystem.isUp()) {
                 // Extend intake to prevent interference
                 intakeSystem.extend();
             }
 
-            if (pov == 270) {
+            if (leftJoystick < ARM_DEADBAND) {
                 // Lift arms
-                armMotor.set(ControlMode.PercentOutput, -0.5);
-            } else if (pov == 90) {
+                armMotor.set(ControlMode.PercentOutput, leftJoystick);
+            } else if (leftJoystick > ARM_DEADBAND) {
                 // Lower arms
-                armMotor.set(ControlMode.PercentOutput, 0.1);
+                armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else {
                 armMotor.set(ControlMode.PercentOutput, 0);
             }

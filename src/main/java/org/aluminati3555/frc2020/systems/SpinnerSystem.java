@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class SpinnerSystem implements AluminatiSystem {
     private static final int SPINNER_CURRENT_LIMIT = 30;
+    private static final double SPINNER_DEADBAND = 0.1;
 
     private AluminatiTalonSRX spinnerMotor;
     private AluminatiSolenoid extenderSolenoid;
@@ -74,18 +75,15 @@ public class SpinnerSystem implements AluminatiSystem {
         }
 
         if (enabled) {
-            if (operatorController.getY(Hand.kLeft) <= -0.5) {
+            if (operatorController.getTriggerAxis(Hand.kLeft) >= 0.5) {
                 extend();
-            } else if (operatorController.getY(Hand.kLeft) >= 0.5) {
+            } else {
                 retract();
             }
 
-            if (operatorController.getX(Hand.kRight) <= 0.5) {
-                spinnerMotor.set(ControlMode.PercentOutput, -0.5);
-            } else if (operatorController.getX(Hand.kRight) >= 0.5) {
-                spinnerMotor.set(ControlMode.PercentOutput, 0.5);
-            } else {
-                spinnerMotor.set(ControlMode.PercentOutput, 0);
+            double rightJoystick = operatorController.getX(Hand.kRight);
+            if (Math.abs(rightJoystick) > SPINNER_DEADBAND) {
+                spinnerMotor.set(ControlMode.PercentOutput, rightJoystick);
             }
         } else {
             // The control panel manipulator is never used in auto
