@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj.Timer;
  * @author Caleb Heydon
  */
 public class AluminatiAutoSelector extends Thread {
-    private static final int PACKET_LENGTH = 64;
+    private static final int MAX_PACKET_LENGTH = 64;
 
     private int port;
     private ArrayList<Entry> entries;
@@ -68,28 +68,49 @@ public class AluminatiAutoSelector extends Thread {
     }
 
     /**
+     * Finds a mode by the name
+     */
+    private AluminatiAutoTask getModeByName(String name) {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).name.equals(name)) {
+                return entries.get(i).mode;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Selects an auto mode
      */
     private void select(String mode) {
+        autoMode = getModeByName(mode);
+    }
+
+    /**
+     * Returns the currently selected auto mode (does not lock in network tables
+     * mode if udp mode does not exist)
+     */
+    public AluminatiAutoTask getEarlySelected() {
         synchronized (this) {
-            boolean found = false;
-            for (int i = 0; i < entries.size(); i++) {
-                if (entries.get(i).name.equals(mode)) {
-                    autoMode = entries.get(i).mode;
-                    found = true;
-                }
+            if (autoMode != null) {
+                return autoMode;
             }
 
-            if (!found) {
-                autoMode = null;
+            String auto = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("Auto Selector")
+                    .getString(null);
+
+            if (auto == null) {
+                return null;
             }
+
+            return getModeByName(auto);
         }
     }
 
     /**
-     * Returns the selected mode
-     * 
-     * @return
+     * Returns the selected mode (This method sets the auto mode as the network
+     * tables selected one if there is no udp selected mode)
      */
     public AluminatiAutoTask getSelected() {
         synchronized (this) {
@@ -121,7 +142,9 @@ public class AluminatiAutoSelector extends Thread {
                 String data = input.readUTF();
                 input.close();
 
-                select(data);
+                synchronized (this) {
+                    select(data);
+                }
             } catch (IOException e) {
                 Timer.delay(1);
                 continue;
@@ -139,7 +162,7 @@ public class AluminatiAutoSelector extends Thread {
             DriverStation.reportError("Unable to start UDP listener for AutoSelector on port " + port, false);
             return;
         }
-        this.packet = new DatagramPacket(new byte[PACKET_LENGTH], PACKET_LENGTH);
+        this.packet = new DatagramPacket(new byte[MAX_PACKET_LENGTH], MAX_PACKET_LENGTH);
 
         super.setName("Auto-Selector");
         super.setPriority(Thread.MIN_PRIORITY);
