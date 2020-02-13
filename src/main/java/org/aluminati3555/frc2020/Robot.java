@@ -27,7 +27,6 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoSelector.Entry;
 import org.aluminati3555.lib.data.AluminatiData;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
-import org.aluminati3555.lib.drivers.AluminatiColorSensor;
 import org.aluminati3555.lib.drivers.AluminatiDisplay;
 import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
 import org.aluminati3555.lib.drivers.AluminatiDualGyro;
@@ -433,7 +432,7 @@ public class Robot extends AluminatiRobot {
     right.getMasterTalon().setSensorPhase(true);
     driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverController, robotFaults);
 
-    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), new AluminatiColorSensor(),
+    spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), operatorController,
         robotFaults);
     magazineSystem = new MagazineSystem(new AluminatiTalonSRX(75), new AluminatiTalonSRX(76), new DigitalInput(0),
         robotFaults);

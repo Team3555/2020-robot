@@ -43,6 +43,8 @@ public class MagazineSystem implements AluminatiSystem {
     private static final double FEED_BASE_TIME = 1;
     private static final double FEED_TIME = 0.5;
     private static final double FEEDER_RPM = 1000;
+
+    private static final int MAGAZINE_CURRENT_LIMIT = 30;
     private static final int FEEDER_CURRENT_LIMIT = 30;
 
     /**
@@ -146,6 +148,15 @@ public class MagazineSystem implements AluminatiSystem {
         this.photoelectricSensor = photoelectricSensor;
 
         this.robotFaults = robotFaults;
+
+        // Configure current limit
+        this.motor.configPeakCurrentDuration(500);
+        this.motor.configPeakCurrentLimit(MAGAZINE_CURRENT_LIMIT);
+        this.motor.configContinuousCurrentLimit(MAGAZINE_CURRENT_LIMIT);
+        this.motor.enableCurrentLimit(true);
+
+        // Set brake mode
+        this.motor.setNeutralMode(NeutralMode.Brake);
 
         // Configure encoder
         this.feederMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
