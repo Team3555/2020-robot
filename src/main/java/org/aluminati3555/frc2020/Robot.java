@@ -417,9 +417,9 @@ public class Robot extends AluminatiRobot {
    */
   private void configureSystems() {
     // Setup drivetrain
-    AluminatiMotorGroup left = new AluminatiMotorGroup(new AluminatiTalonSRX(40), new AluminatiTalonSRX(41),
+    AluminatiMotorGroup left = new AluminatiMotorGroup(new AluminatiTalonSRX(40), new AluminatiVictorSPX(41),
         new AluminatiVictorSPX(42));
-    AluminatiMotorGroup right = new AluminatiMotorGroup(true, new AluminatiTalonSRX(50), new AluminatiTalonSRX(51),
+    AluminatiMotorGroup right = new AluminatiMotorGroup(true, new AluminatiTalonSRX(50), new AluminatiVictorSPX(51),
         new AluminatiVictorSPX(52));
 
     AluminatiTalonSRX climberArm = new AluminatiTalonSRX(80);
