@@ -71,7 +71,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
     }
 
     public Mode8PowerCell5TrenchRun(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem feederSystem) {
+            IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem magazineSystem) {
         taskList = new AluminatiAutoTaskList();
 
         PathContainer path1 = new Path8PowerCell5TrenchRun1();
@@ -90,7 +90,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
-        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 3));
+        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 3));
         taskList.add(new ActionRetractHood(shooterSystem));
 
         // Set the limelight to the driver pipeline
@@ -116,7 +116,7 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
-        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, feederSystem, 5));
+        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 5));
         taskList.add(new ActionRetractHood(shooterSystem));
 
         // Set the limelight to the driver pipeline
