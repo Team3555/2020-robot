@@ -42,6 +42,7 @@ public class ClimberSystem implements AluminatiSystem {
     private static final int ARM_CURRENT_LIMIT = 40;
     private static final int SPOOL_CURRENT_LIMIT = 40;
     private static final double ARM_DEADBAND = 0.1;
+    private static final double LOWERING_DELAY = 0.1;
 
     private AluminatiTalonSRX armMotor;
     private AluminatiTalonSRX spoolMotor;
@@ -52,6 +53,9 @@ public class ClimberSystem implements AluminatiSystem {
     private AluminatiXboxController operatorController;
 
     private RobotFaults robotFaults;
+
+    private boolean isLowering;
+    private double loweringTime;
 
     /**
      * Locks the ratchet
@@ -89,32 +93,41 @@ public class ClimberSystem implements AluminatiSystem {
             }
 
             if (leftJoystick < ARM_DEADBAND) {
-                lockRatchet();
-
                 // Lift arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else if (leftJoystick > ARM_DEADBAND) {
-                unlockRatchet();
-
                 // Lower arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else {
                 armMotor.set(ControlMode.PercentOutput, 0);
-
-                lockRatchet();
             }
 
             if (pov == 0 || pov == 45 || pov == 315) {
-                spoolMotor.set(ControlMode.PercentOutput, 1);
+                if (!isLowering) {
+                    // Remember time started lowering
+                    isLowering = true;
+                    loweringTime = timestamp;
+                }
+
+                if (timestamp >= loweringTime + LOWERING_DELAY) {
+                    spoolMotor.set(ControlMode.PercentOutput, 1);
+                } else {
+                    spoolMotor.set(ControlMode.PercentOutput, 0);
+                }
             } else if (pov == 180 || pov == 135 || pov == 225) {
+                isLowering = false;
                 spoolMotor.set(ControlMode.PercentOutput, -1);
             } else {
+                isLowering = false;
                 spoolMotor.set(ControlMode.PercentOutput, 0);
             }
         } else {
             // We never need to use the climber in auto
             armMotor.set(ControlMode.PercentOutput, 0);
             spoolMotor.set(ControlMode.PercentOutput, 0);
+
+            // Lock ratchet in auto
+            lockRatchet();
         }
     }
 
@@ -128,6 +141,8 @@ public class ClimberSystem implements AluminatiSystem {
         this.operatorController = operatorController;
 
         this.robotFaults = robotFaults;
+
+        this.isLowering = false;
 
         // Configure current limit
         this.armMotor.configPeakCurrentDuration(500);
