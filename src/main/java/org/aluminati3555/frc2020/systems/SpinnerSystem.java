@@ -96,7 +96,7 @@ public class SpinnerSystem implements AluminatiSystem {
             }
 
             double rightJoystick = operatorController.getX(Hand.kRight);
-            if (Math.abs(rightJoystick) > SPINNER_DEADBAND && isUp()) {
+            if (Math.abs(rightJoystick) > SPINNER_DEADBAND && !operatorController.getRawButton(10) && isUp()) {
                 spinnerMotor.set(ControlMode.PercentOutput, rightJoystick);
             } else {
                 spinnerMotor.set(ControlMode.PercentOutput, 0);

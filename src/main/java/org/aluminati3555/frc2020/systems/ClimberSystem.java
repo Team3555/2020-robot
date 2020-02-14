@@ -55,7 +55,7 @@ public class ClimberSystem implements AluminatiSystem {
     private RobotFaults robotFaults;
 
     private boolean isLowering;
-    private double loweringTime;
+    private double startLoweringTime;
 
     /**
      * Locks the ratchet
@@ -69,6 +69,14 @@ public class ClimberSystem implements AluminatiSystem {
      */
     public void unlockRatchet() {
         ratchetSolenoid.enable();
+    }
+
+    /**
+     * Returns true if the ratchet release is activated
+     */
+    private boolean getRatchetRelease() {
+        return (operatorController.getRawButton(9) && operatorController.getRawButton(10)
+                && operatorController.getX(Hand.kLeft) >= 0.5 && operatorController.getX(Hand.kRight) <= 0.5);
     }
 
     public void update(double timestamp, boolean enabled) {
@@ -87,15 +95,16 @@ public class ClimberSystem implements AluminatiSystem {
             double leftJoystick = operatorController.getY(Hand.kLeft);
             int pov = operatorController.getPOV();
 
-            if ((Math.abs(leftJoystick) > ARM_DEADBAND || pov != -1) && intakeSystem.isUp()) {
+            if (((Math.abs(leftJoystick) > ARM_DEADBAND && !operatorController.getRawButton(9)) || pov != -1)
+                    && intakeSystem.isUp()) {
                 // Extend intake to prevent interference
                 intakeSystem.extend();
             }
 
-            if (leftJoystick < ARM_DEADBAND) {
+            if (leftJoystick < ARM_DEADBAND && !operatorController.getRawButton(9)) {
                 // Lift arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
-            } else if (leftJoystick > ARM_DEADBAND) {
+            } else if (leftJoystick > ARM_DEADBAND && !operatorController.getRawButton(9)) {
                 // Lower arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else {
@@ -106,19 +115,30 @@ public class ClimberSystem implements AluminatiSystem {
                 if (!isLowering) {
                     // Remember time started lowering
                     isLowering = true;
-                    loweringTime = timestamp;
+                    startLoweringTime = timestamp;
+
+                    unlockRatchet();
                 }
 
-                if (timestamp >= loweringTime + LOWERING_DELAY) {
+                if (timestamp >= startLoweringTime + LOWERING_DELAY) {
                     spoolMotor.set(ControlMode.PercentOutput, 1);
                 } else {
                     spoolMotor.set(ControlMode.PercentOutput, 0);
                 }
             } else if (pov == 180 || pov == 135 || pov == 225) {
                 isLowering = false;
+                lockRatchet();
+
                 spoolMotor.set(ControlMode.PercentOutput, -1);
+            } else if (getRatchetRelease()) {
+                isLowering = false;
+                unlockRatchet();
+
+                spoolMotor.set(ControlMode.PercentOutput, 0);
             } else {
                 isLowering = false;
+                lockRatchet();
+
                 spoolMotor.set(ControlMode.PercentOutput, 0);
             }
         } else {
@@ -126,7 +146,6 @@ public class ClimberSystem implements AluminatiSystem {
             armMotor.set(ControlMode.PercentOutput, 0);
             spoolMotor.set(ControlMode.PercentOutput, 0);
 
-            // Lock ratchet in auto
             lockRatchet();
         }
     }
