@@ -111,7 +111,7 @@ public class MagazineSystem implements AluminatiSystem {
         }
 
         // Update states
-        if (timestamp >= stopTime) {
+        if (state == State.TIMING && timestamp >= stopTime) {
             state = State.SENSOR;
         }
 
