@@ -30,8 +30,6 @@ import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.drivers.AluminatiDisplay;
 import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
 import org.aluminati3555.lib.drivers.AluminatiDualGyro;
-import org.aluminati3555.lib.drivers.AluminatiLEDDriver;
-import org.aluminati3555.lib.drivers.AluminatiLEDDriver.Mode;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
 import org.aluminati3555.lib.loops.Loop;
 import org.aluminati3555.lib.loops.Looper;
@@ -100,9 +98,6 @@ public class Robot extends AluminatiRobot {
 
   // Power distribution
   private PowerDistributionPanel pdp;
-
-  // LED driver
-  private AluminatiLEDDriver ledDriver;
 
   // Digit display
   private DisplayMode displayMode;
@@ -188,9 +183,6 @@ public class Robot extends AluminatiRobot {
     // Setup pdp
     pdp = new PowerDistributionPanel();
     pdp.clearStickyFaults();
-
-    // Setup led driver
-    ledDriver = new AluminatiLEDDriver(0);
 
     // Setup digit display
     displayMode = DisplayMode.BATTERY_VOLTAGE;
@@ -340,9 +332,6 @@ public class Robot extends AluminatiRobot {
     // Set limelight mode
     limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
 
-    // Update leds
-    updateLEDS(false, true);
-
     double timestamp = Timer.getFPGATimestamp();
 
     autoControl(timestamp);
@@ -377,9 +366,6 @@ public class Robot extends AluminatiRobot {
     // Set limelight mode
     limelight.setLEDMode(LEDMode.CURRENT_PIPELINE);
 
-    // Update leds
-    updateLEDS(enabled, false);
-
     // Fetch control panel color if we do not already have it
     if (controlPanelColor == ControlPanelColor.UNKOWN) {
       fetchControlPanelColor();
@@ -411,8 +397,6 @@ public class Robot extends AluminatiRobot {
   public void testPeriodic() {
     // Set coast mode
     driveSystem.coast();
-
-    updateLEDS(true, false);
   }
 
   /**
@@ -456,21 +440,6 @@ public class Robot extends AluminatiRobot {
     autoTask = autoSelector.getSelected();
     if (autoTask == null) {
       autoTask = new ModeDoNothing();
-    }
-  }
-
-  /**
-   * Updates the LED driver
-   */
-  private void updateLEDS(boolean operatorControl, boolean auto) {
-    if (!operatorControl && auto) {
-      ledDriver.setMode(Mode.BLUE);
-    } else if (operatorControl && !auto) {
-      ledDriver.setMode(Mode.VIOLET);
-    } else if (!operatorControl && !auto) {
-      ledDriver.setMode(Mode.SCANNER);
-    } else {
-      ledDriver.setMode(Mode.OFF);
     }
   }
 
