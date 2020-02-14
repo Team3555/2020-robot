@@ -51,6 +51,20 @@ public class SpinnerSystem implements AluminatiSystem {
     private RobotFaults robotFaults;
 
     /**
+     * Returns true if the mechanism is up
+     */
+    public boolean isUp() {
+        return extenderSolenoid.get();
+    }
+
+    /**
+     * Returns true if the mechanism is down
+     */
+    public boolean isDown() {
+        return !extenderSolenoid.get();
+    }
+
+    /**
      * Extends the spinner mechanism
      */
     public void extend() {
@@ -82,8 +96,10 @@ public class SpinnerSystem implements AluminatiSystem {
             }
 
             double rightJoystick = operatorController.getX(Hand.kRight);
-            if (Math.abs(rightJoystick) > SPINNER_DEADBAND) {
+            if (Math.abs(rightJoystick) > SPINNER_DEADBAND && isUp()) {
                 spinnerMotor.set(ControlMode.PercentOutput, rightJoystick);
+            } else {
+                spinnerMotor.set(ControlMode.PercentOutput, 0);
             }
         } else {
             // The control panel manipulator is never used in auto
@@ -95,6 +111,8 @@ public class SpinnerSystem implements AluminatiSystem {
             AluminatiXboxController operatorController, RobotFaults robotFaults) {
         this.spinnerMotor = spinnerMotor;
         this.extenderSolenoid = extenderSolenoid;
+
+        this.operatorController = operatorController;
 
         this.robotFaults = robotFaults;
 
