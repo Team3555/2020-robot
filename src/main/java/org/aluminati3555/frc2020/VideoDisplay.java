@@ -152,7 +152,7 @@ public class VideoDisplay {
         Imgproc.putText(frame, "targetHeight: " + limelight.getVertical() + " degrees", new Point(5, 270),
                 Core.FONT_HERSHEY_PLAIN, 1, GREEN);
 
-        Imgproc.putText(frame, "shooterSetpoint: " + shooterSetpoint + " RPM", new Point(5, 285),
+        Imgproc.putText(frame, "shooterSetpoint: " + shooterSetpoint + " RPM", new Point(5, 300),
                 Core.FONT_HERSHEY_PLAIN, 1, GREEN);
 
         outputStream.putFrame(frame);
