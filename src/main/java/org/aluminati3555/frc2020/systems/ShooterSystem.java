@@ -83,9 +83,20 @@ public class ShooterSystem implements AluminatiSystem {
     /**
      * Sets the target rpm
      */
-    public void set(double rpm) {
+    public synchronized void set(double rpm) {
         this.setpoint = convertRPMToNativeUnits(rpm);
         this.shooterEnabled = true;
+    }
+
+    /**
+     * Returns the target rpm
+     */
+    public synchronized double get() {
+        if (!shooterEnabled) {
+            return 0;
+        }
+
+        return convertNativeUnitsToRPM(setpoint);
     }
 
     /**
