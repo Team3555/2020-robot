@@ -89,18 +89,24 @@ public class ClimberSystem implements AluminatiSystem {
             }
 
             if (leftJoystick < ARM_DEADBAND) {
+                lockRatchet();
+
                 // Lift arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else if (leftJoystick > ARM_DEADBAND) {
+                unlockRatchet();
+
                 // Lower arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else {
                 armMotor.set(ControlMode.PercentOutput, 0);
+
+                lockRatchet();
             }
 
-            if (pov == 0) {
+            if (pov == 0 || pov == 45 || pov == 315) {
                 spoolMotor.set(ControlMode.PercentOutput, 1);
-            } else if (pov == 180) {
+            } else if (pov == 180 || pov == 135 || pov == 225) {
                 spoolMotor.set(ControlMode.PercentOutput, -1);
             } else {
                 spoolMotor.set(ControlMode.PercentOutput, 0);

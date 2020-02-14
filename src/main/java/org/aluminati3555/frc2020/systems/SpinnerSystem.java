@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class SpinnerSystem implements AluminatiSystem {
     private static final int SPINNER_CURRENT_LIMIT = 30;
-    private static final double SPINNER_DEADBAND = 0.1;
+    private static final double SPINNER_DEADBAND = 0.01;
 
     private AluminatiTalonSRX spinnerMotor;
     private AluminatiSolenoid extenderSolenoid;
