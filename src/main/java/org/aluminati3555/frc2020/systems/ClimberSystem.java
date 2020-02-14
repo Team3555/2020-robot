@@ -95,8 +95,8 @@ public class ClimberSystem implements AluminatiSystem {
             double leftJoystick = operatorController.getY(Hand.kLeft);
             int pov = operatorController.getPOV();
 
-            if (((Math.abs(leftJoystick) > ARM_DEADBAND && !operatorController.getRawButton(9)) || pov != -1)
-                    && intakeSystem.isUp()) {
+            if (((Math.abs(leftJoystick) > ARM_DEADBAND && !operatorController.getRawButton(9)) || pov == 0 || pov == 45
+                    || pov == 315 || pov == 180 || pov == 135 || pov == 225) && intakeSystem.isUp()) {
                 // Extend intake to prevent interference
                 intakeSystem.extend();
             }
