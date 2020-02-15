@@ -35,10 +35,10 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.PathBuilder.Waypoint;
 public class Path5PowerCell2ShieldGenerator1 implements PathContainer {
     public Path buildPath() {
         ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
-        waypoints.add(new Waypoint(510, 95, 0, 0));
-        waypoints.add(new Waypoint(485, 95, 15, 120));
-        waypoints.add(new Waypoint(470, 95, 15, 120));
-        waypoints.add(new Waypoint(445, 83, 15, 120));
+        waypoints.add(new Waypoint(510, 55, 0, 0));
+        waypoints.add(new Waypoint(485, 55, 15, 120));
+        waypoints.add(new Waypoint(470, 55, 15, 120));
+        waypoints.add(new Waypoint(445, 55, 15, 120, "Path8PowerCell2ShieldGeneratorA"));
         waypoints.add(new Waypoint(405, 81, 15, 120));
         waypoints.add(new Waypoint(394, 100, 0, 120));
 
@@ -46,7 +46,7 @@ public class Path5PowerCell2ShieldGenerator1 implements PathContainer {
     }
     
     public Pose2d getStartPose() {
-        return new Pose2d(510, 95, Rotation2d.fromDegrees(0)); 
+        return new Pose2d(510, 55, Rotation2d.fromDegrees(0)); 
     }
 
     public boolean isReversed() {

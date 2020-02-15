@@ -37,10 +37,10 @@ public class Path5PowerCell2ShieldGenerator2 implements PathContainer {
         ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
         waypoints.add(new Waypoint(394, 100, 0, 0));
         waypoints.add(new Waypoint(405, 81, 0, 120));
-        waypoints.add(new Waypoint(445, 83, 0, 120));
-        waypoints.add(new Waypoint(470, 95, 0, 120));
-        waypoints.add(new Waypoint(485, 95, 0, 120));
-        waypoints.add(new Waypoint(510, 95, 0, 120));
+        waypoints.add(new Waypoint(445, 55, 0, 120));
+        waypoints.add(new Waypoint(470, 55, 0, 120));
+        waypoints.add(new Waypoint(485, 55, 0, 120));
+        waypoints.add(new Waypoint(510, 55, 0, 120));
 
         return PathBuilder.buildPathFromWaypoints(waypoints);
     }
