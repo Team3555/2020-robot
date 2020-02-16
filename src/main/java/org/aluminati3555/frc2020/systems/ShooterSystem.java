@@ -245,8 +245,8 @@ public class ShooterSystem implements AluminatiSystem {
 
         this.wasTracking = false;
 
-        // Invert second motor
-        this.motorGroup.getMotors()[1].setInverted(true);
+        // Invert master
+        this.motorGroup.getMaster().setInverted(true);
 
         // Configure encoder
         this.motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);

@@ -408,13 +408,13 @@ public class Robot extends AluminatiRobot {
    */
   private void configureSystems() {
     // Setup drivetrain
-    AluminatiMotorGroup left = new AluminatiMotorGroup(new AluminatiTalonSRX(40), new AluminatiVictorSPX(41),
-        new AluminatiVictorSPX(42));
+    AluminatiMotorGroup left = new AluminatiMotorGroup(new AluminatiTalonSRX(35), new AluminatiVictorSPX(14),
+        new AluminatiVictorSPX(15));
     AluminatiMotorGroup right = new AluminatiMotorGroup(true, new AluminatiTalonSRX(50), new AluminatiVictorSPX(51),
-        new AluminatiVictorSPX(52));
+        new AluminatiVictorSPX(1));
 
-    AluminatiTalonSRX climberArm = new AluminatiTalonSRX(80);
-    AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(81);
+    AluminatiTalonSRX climberArm = new AluminatiTalonSRX(43);
+    AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(42);
 
     AluminatiPigeon gyro1 = new AluminatiPigeon(climberArm);
     AluminatiPigeon gyro2 = new AluminatiPigeon(climberSpool);
@@ -426,12 +426,12 @@ public class Robot extends AluminatiRobot {
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), operatorController,
         robotFaults);
-    magazineSystem = new MagazineSystem(new AluminatiTalonSRX(75), new AluminatiTalonSRX(76), new DigitalInput(0),
+    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), new AluminatiTalonSRX(46), new DigitalInput(0),
         robotFaults);
-    shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(65), new AluminatiVictorSPX(66)),
+    shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
         new AluminatiSolenoid(1), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
-    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(70), new AluminatiSolenoid(2), operatorController,
+    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(79), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);
     climberSystem = new ClimberSystem(climberArm, climberSpool, new AluminatiSolenoid(3), intakeSystem,
         operatorController, robotFaults);

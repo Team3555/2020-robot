@@ -28,6 +28,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
+import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
 import org.aluminati3555.lib.net.AluminatiTunable;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
@@ -44,7 +45,6 @@ public class MagazineSystem implements AluminatiSystem {
     private static final double FEED_TIME = 0.5;
     private static final double FEEDER_RPM = 1000;
 
-    private static final int MAGAZINE_CURRENT_LIMIT = 30;
     private static final int FEEDER_CURRENT_LIMIT = 30;
 
     /**
@@ -54,7 +54,7 @@ public class MagazineSystem implements AluminatiSystem {
         return (int) (rpm * ENCODER_TICKS_PER_ROTATION / 600.0);
     }
 
-    private AluminatiTalonSRX motor;
+    private AluminatiVictorSPX motor;
     private AluminatiTalonSRX feederMotor;
     private DigitalInput photoelectricSensor;
 
@@ -141,19 +141,13 @@ public class MagazineSystem implements AluminatiSystem {
         }
     }
 
-    public MagazineSystem(AluminatiTalonSRX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor,
+    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor,
             RobotFaults robotFaults) {
         this.motor = motor;
         this.feederMotor = feederMotor;
         this.photoelectricSensor = photoelectricSensor;
 
         this.robotFaults = robotFaults;
-
-        // Configure current limit
-        this.motor.configPeakCurrentDuration(500);
-        this.motor.configPeakCurrentLimit(MAGAZINE_CURRENT_LIMIT);
-        this.motor.configContinuousCurrentLimit(MAGAZINE_CURRENT_LIMIT);
-        this.motor.enableCurrentLimit(true);
 
         // Set brake mode
         this.motor.setNeutralMode(NeutralMode.Brake);
