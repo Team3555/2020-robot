@@ -31,6 +31,7 @@ import org.aluminati3555.lib.drivers.AluminatiDisplay;
 import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
 import org.aluminati3555.lib.drivers.AluminatiDualGyro;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
+import org.aluminati3555.lib.drivers.AluminatiSpark;
 import org.aluminati3555.lib.loops.Loop;
 import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
@@ -429,7 +430,7 @@ public class Robot extends AluminatiRobot {
     magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), new AluminatiTalonSRX(46), new DigitalInput(0),
         robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
-        new AluminatiSolenoid(1), driverController, operatorController, limelight, driveSystem, magazineSystem,
+        new AluminatiSpark(0), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
     intakeSystem = new IntakeSystem(new AluminatiTalonSRX(79), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);

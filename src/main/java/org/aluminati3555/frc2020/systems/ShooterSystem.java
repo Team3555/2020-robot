@@ -28,10 +28,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.frc2020.util.ShooterUtil;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
+import org.aluminati3555.lib.drivers.AluminatiSpark;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.net.AluminatiTunable;
 import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
-import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 
@@ -64,7 +64,7 @@ public class ShooterSystem implements AluminatiSystem {
     }
 
     private AluminatiMotorGroup motorGroup;
-    private AluminatiSolenoid hoodSolenoid;
+    private AluminatiSpark hoodMotor;
     private AluminatiXboxController driverController;
     private AluminatiXboxController operatorController;
     private AluminatiLimelight limelight;
@@ -72,6 +72,8 @@ public class ShooterSystem implements AluminatiSystem {
     private MagazineSystem magazineSystem;
 
     private RobotFaults robotFaults;
+
+    private HoodState hoodState;
 
     private boolean wasTracking;
 
@@ -118,14 +120,21 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood
      */
     public void extendHood() {
-        hoodSolenoid.enable();
+        hoodState = HoodState.RAISING;
     }
 
     /**
      * Retracts the hood
      */
     public void retractHood() {
-        hoodSolenoid.disable();
+        hoodState = HoodState.LOWERING;
+    }
+
+    /**
+     * Returns the hood's state
+     */
+    public HoodState getHoodState() {
+        return hoodState;
     }
 
     public void update(double timestamp, boolean enabled) {
@@ -222,19 +231,27 @@ public class ShooterSystem implements AluminatiSystem {
             }
         }
 
+        // Set flywheel rpm
         if (shooterEnabled) {
             motorGroup.getMasterTalon().set(ControlMode.Velocity, setpoint);
         } else {
             motorGroup.getMasterTalon().set(ControlMode.PercentOutput, 0);
         }
+
+        // Update hood
+        if (hoodState == HoodState.LOWERING) {
+            hoodMotor.set(1);
+        } else {
+            hoodMotor.set(-1);
+        }
     }
 
-    public ShooterSystem(AluminatiMotorGroup motorGroup, AluminatiSolenoid hoodSolenoid,
+    public ShooterSystem(AluminatiMotorGroup motorGroup, AluminatiSpark hoodMotor,
             AluminatiXboxController driverController, AluminatiXboxController operatorController,
             AluminatiLimelight limelight, DriveSystem driveSystem, MagazineSystem magazineSystem,
             RobotFaults robotFaults) {
         this.motorGroup = motorGroup;
-        this.hoodSolenoid = hoodSolenoid;
+        this.hoodMotor = hoodMotor;
         this.driverController = driverController;
         this.operatorController = operatorController;
         this.limelight = limelight;
@@ -242,6 +259,8 @@ public class ShooterSystem implements AluminatiSystem {
         this.magazineSystem = magazineSystem;
 
         this.robotFaults = robotFaults;
+
+        this.hoodState = HoodState.LOWERING;
 
         this.wasTracking = false;
 
@@ -273,5 +292,9 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().enableCurrentLimit(true);
 
         this.turnController = new AluminatiTunablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
+    }
+
+    private enum HoodState {
+        RAISING, LOWERING
     }
 }
