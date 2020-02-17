@@ -147,7 +147,7 @@ public class Robot extends AluminatiRobot {
     AluminatiData.pathFollowingProfileKV = 0.007;
     AluminatiData.pathFollowingProfileKS = 0.076;
 
-    AluminatiData.pathFollowingMaxVel = 120;
+    AluminatiData.pathFollowingMaxVel = 150;
     AluminatiData.pathFollowingMaxAccel = 100;
 
     AluminatiUtil.generatePathFollowingFeedforwardValues();
