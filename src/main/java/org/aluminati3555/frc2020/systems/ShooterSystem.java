@@ -120,14 +120,14 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood
      */
     public void extendHood() {
-        hoodState = HoodState.RAISING;
+        hoodState = HoodState.UP;
     }
 
     /**
      * Retracts the hood
      */
     public void retractHood() {
-        hoodState = HoodState.LOWERING;
+        hoodState = HoodState.DOWN;
     }
 
     /**
@@ -239,7 +239,7 @@ public class ShooterSystem implements AluminatiSystem {
         }
 
         // Update hood
-        if (hoodState == HoodState.LOWERING) {
+        if (hoodState == HoodState.DOWN) {
             hoodMotor.set(1);
         } else {
             hoodMotor.set(-1);
@@ -260,7 +260,7 @@ public class ShooterSystem implements AluminatiSystem {
 
         this.robotFaults = robotFaults;
 
-        this.hoodState = HoodState.LOWERING;
+        this.hoodState = HoodState.DOWN;
 
         this.wasTracking = false;
 
@@ -295,6 +295,6 @@ public class ShooterSystem implements AluminatiSystem {
     }
 
     private enum HoodState {
-        RAISING, LOWERING
+        UP, DOWN
     }
 }
