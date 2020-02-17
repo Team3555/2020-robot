@@ -22,7 +22,7 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import org.aluminati3555.frc2020.paths.PathExample;
+import org.aluminati3555.frc2020.paths.PathGoForward;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
@@ -60,7 +60,7 @@ public class ModeGoForward implements AluminatiAutoTask {
 
     public ModeGoForward(RobotState robotState, DriveSystem driveSystem) {
         taskList = new AluminatiAutoTaskList();
-        PathContainer pathContainer = new PathExample();
+        PathContainer pathContainer = new PathGoForward();
 
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
         taskList.add(new ActionRunPath(driveSystem, pathContainer));
