@@ -92,7 +92,7 @@ public class ClimberSystem implements AluminatiSystem {
         if (mode == SystemMode.OPERATOR_CONTROLLED) {
             // Manual control
 
-            double leftJoystick = operatorController.getY(Hand.kLeft);
+            double leftJoystick = -operatorController.getY(Hand.kLeft);
             int pov = operatorController.getPOV();
 
             if (((Math.abs(leftJoystick) > ARM_DEADBAND && !operatorController.getRawButton(9)) || pov == 0 || pov == 45
@@ -101,10 +101,10 @@ public class ClimberSystem implements AluminatiSystem {
                 intakeSystem.extend();
             }
 
-            if (leftJoystick < ARM_DEADBAND && !operatorController.getRawButton(9)) {
+            if (leftJoystick > ARM_DEADBAND && !operatorController.getRawButton(9)) {
                 // Lift arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
-            } else if (leftJoystick > ARM_DEADBAND && !operatorController.getRawButton(9)) {
+            } else if (leftJoystick < ARM_DEADBAND && !operatorController.getRawButton(9)) {
                 // Lower arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else {
