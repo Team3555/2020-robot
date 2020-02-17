@@ -136,7 +136,7 @@ public class Robot extends AluminatiRobot {
   @Override
   public void robotInit() {
     // Configure pid
-    AluminatiData.velocityKF = 0.3;
+    AluminatiData.velocityKF = 0.277254831449;
     AluminatiData.velocityKP = 0.2;
     AluminatiData.velocityKI = 0.0001;
     AluminatiData.velocityKD = 0.25;

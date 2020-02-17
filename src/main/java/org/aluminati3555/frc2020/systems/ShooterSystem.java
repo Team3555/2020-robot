@@ -276,6 +276,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().config_kP(0, 0.1);
         this.motorGroup.getMasterTalon().config_kI(0, 0);
         this.motorGroup.getMasterTalon().config_kD(0, 0);
+        this.motorGroup.getMasterTalon().config_kF(0, 0.0240406709559);
         this.motorGroup.getMasterTalon().config_IntegralZone(0, 400);
 
         // Setup tuning listener
