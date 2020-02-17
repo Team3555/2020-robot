@@ -118,12 +118,12 @@ public class MagazineSystem implements AluminatiSystem {
         if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
             switch (state) {
                 case CONTINUOUS_FORWARD:
-                    motor.set(ControlMode.PercentOutput, 0.5);
+                    motor.set(ControlMode.PercentOutput, 1);
                     feederMotor.set(ControlMode.PercentOutput, 0);
                     break;
                 case CONTINUOUS_REVERSE:
-                    motor.set(ControlMode.PercentOutput, -0.5);
-                    feederMotor.set(ControlMode.PercentOutput, -0.5);
+                    motor.set(ControlMode.PercentOutput, -1);
+                    feederMotor.set(ControlMode.PercentOutput, -1);
                     break;
                 case SENSOR:
                     if (!photoelectricSensor.get()) {
