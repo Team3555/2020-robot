@@ -137,7 +137,7 @@ public class ShooterSystem implements AluminatiSystem {
         return hoodState;
     }
 
-    public void update(double timestamp, boolean enabled) {
+    public void update(double timestamp, SystemMode mode) {
         if (!motorGroup.getMasterTalon().isOK()) {
             robotFaults.setShooterFault(true);
         }
@@ -146,7 +146,7 @@ public class ShooterSystem implements AluminatiSystem {
             robotFaults.setShooterFault(true);
         }
 
-        if (enabled) {
+        if (mode == SystemMode.OPERATOR_CONTROLLED) {
             if (driverController.getTriggerAxis(Hand.kLeft) >= 0.5) {
                 // Driver wants the robot to align with vision target and flywheel to get up to
                 // speed
@@ -231,18 +231,20 @@ public class ShooterSystem implements AluminatiSystem {
             }
         }
 
-        // Set flywheel rpm
-        if (shooterEnabled) {
-            motorGroup.getMasterTalon().set(ControlMode.Velocity, setpoint);
-        } else {
-            motorGroup.getMasterTalon().set(ControlMode.PercentOutput, 0);
-        }
+        if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
+            // Set flywheel rpm
+            if (shooterEnabled) {
+                motorGroup.getMasterTalon().set(ControlMode.Velocity, setpoint);
+            } else {
+                motorGroup.getMasterTalon().set(ControlMode.PercentOutput, 0);
+            }
 
-        // Update hood
-        if (hoodState == HoodState.DOWN) {
-            hoodMotor.set(1);
-        } else {
-            hoodMotor.set(-1);
+            // Update hood
+            if (hoodState == HoodState.DOWN) {
+                hoodMotor.set(1);
+            } else {
+                hoodMotor.set(-1);
+            }
         }
     }
 

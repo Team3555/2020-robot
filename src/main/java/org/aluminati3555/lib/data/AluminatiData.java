@@ -33,7 +33,7 @@ package org.aluminati3555.lib.data;
  */
 public final class AluminatiData {
     // Library
-    public static final int LIBRARY_VERSION = 11;
+    public static final int LIBRARY_VERSION = 12;
 
     // Robot delay
     public static double robotDelay = 0.02; // Seconds

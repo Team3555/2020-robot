@@ -100,7 +100,7 @@ public class MagazineSystem implements AluminatiSystem {
         state = State.SENSOR;
     }
 
-    public void update(double timestamp, boolean enabled) {
+    public void update(double timestamp, SystemMode mode) {
         // Check for errors
         if (!motor.isOK()) {
             robotFaults.setMagazineFault(true);
@@ -115,29 +115,31 @@ public class MagazineSystem implements AluminatiSystem {
             state = State.SENSOR;
         }
 
-        switch (state) {
-        case CONTINUOUS_FORWARD:
-            motor.set(ControlMode.PercentOutput, 0.5);
-            feederMotor.set(ControlMode.PercentOutput, 0);
-            break;
-        case CONTINUOUS_REVERSE:
-            motor.set(ControlMode.PercentOutput, -0.5);
-            feederMotor.set(ControlMode.PercentOutput, -0.5);
-            break;
-        case SENSOR:
-            if (!photoelectricSensor.get()) {
-                motor.set(ControlMode.PercentOutput, 0.5);
-            }
-            feederMotor.set(ControlMode.PercentOutput, 0);
-            break;
-        case TIMING:
-            motor.set(ControlMode.PercentOutput, 0.5);
-            feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
-            break;
-        default:
-            motor.set(ControlMode.PercentOutput, 0);
-            feederMotor.set(ControlMode.PercentOutput, 0);
-            break;
+        if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
+            switch (state) {
+                case CONTINUOUS_FORWARD:
+                    motor.set(ControlMode.PercentOutput, 0.5);
+                    feederMotor.set(ControlMode.PercentOutput, 0);
+                    break;
+                case CONTINUOUS_REVERSE:
+                    motor.set(ControlMode.PercentOutput, -0.5);
+                    feederMotor.set(ControlMode.PercentOutput, -0.5);
+                    break;
+                case SENSOR:
+                    if (!photoelectricSensor.get()) {
+                        motor.set(ControlMode.PercentOutput, 0.5);
+                    }
+                    feederMotor.set(ControlMode.PercentOutput, 0);
+                    break;
+                case TIMING:
+                    motor.set(ControlMode.PercentOutput, 0.5);
+                    feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
+                    break;
+                default:
+                    motor.set(ControlMode.PercentOutput, 0);
+                    feederMotor.set(ControlMode.PercentOutput, 0);
+                    break;
+                }
         }
     }
 

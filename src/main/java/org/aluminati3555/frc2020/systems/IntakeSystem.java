@@ -90,12 +90,12 @@ public class IntakeSystem implements AluminatiSystem {
         retract();
     }
 
-    public void update(double timestamp, boolean enabled) {
+    public void update(double timestamp, SystemMode mode) {
         if (!intakeMotor.isOK()) {
             robotFaults.setIntakeFault(true);
         }
 
-        if (enabled) {
+        if (mode == SystemMode.OPERATOR_CONTROLLED) {
             // Control intake position
             if (operatorController.getRawButtonPressed(5)) {
                 extend();

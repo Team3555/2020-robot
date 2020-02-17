@@ -53,7 +53,7 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
         this.visionTracking = visionTracking;
     }
 
-    public void update(double timestamp, boolean enabled) {
+    public void update(double timestamp, SystemMode mode) {
         // Report failures to driver
         if (!this.getLeftGroup().isOK()) {
             robotFaults.setDriveFault(true);
@@ -75,7 +75,7 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
             robotFaults.setDriveFault(true);
         }
 
-        if (enabled) {
+        if (mode == SystemMode.OPERATOR_CONTROLLED) {
             if (!visionTracking && this.getDriveState() == DriveState.OPEN_LOOP) {
                 this.arcadeDrive(driverController);
             }

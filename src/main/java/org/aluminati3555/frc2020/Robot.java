@@ -40,6 +40,7 @@ import org.aluminati3555.lib.drivers.AluminatiXboxController;
 import org.aluminati3555.lib.pneumatics.AluminatiCompressor;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.robot.AluminatiRobot;
+import org.aluminati3555.lib.system.AluminatiSystem.SystemMode;
 import org.aluminati3555.lib.trajectoryfollowingmotion.AluminatiRobotStateEstimator;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.util.AluminatiUtil;
@@ -294,12 +295,12 @@ public class Robot extends AluminatiRobot {
 
     // Update systems
     double timestamp = Timer.getFPGATimestamp();
-    driveSystem.update(timestamp, false);
-    spinnerSystem.update(timestamp, false);
-    shooterSystem.update(timestamp, false);
-    intakeSystem.update(timestamp, false);
-    climberSystem.update(timestamp, false);
-    magazineSystem.update(timestamp, false);
+    driveSystem.update(timestamp, SystemMode.DISABLED);
+    spinnerSystem.update(timestamp, SystemMode.DISABLED);
+    shooterSystem.update(timestamp, SystemMode.DISABLED);
+    intakeSystem.update(timestamp, SystemMode.DISABLED);
+    climberSystem.update(timestamp, SystemMode.DISABLED);
+    magazineSystem.update(timestamp, SystemMode.DISABLED);
   }
 
   @Override
@@ -342,12 +343,12 @@ public class Robot extends AluminatiRobot {
     autoControl(timestamp);
 
     // Update systems
-    driveSystem.update(timestamp, false);
-    spinnerSystem.update(timestamp, false);
-    shooterSystem.update(timestamp, false);
-    intakeSystem.update(timestamp, false);
-    climberSystem.update(timestamp, false);
-    magazineSystem.update(timestamp, false);
+    driveSystem.update(timestamp, SystemMode.AUTONOMOUS);
+    spinnerSystem.update(timestamp, SystemMode.AUTONOMOUS);
+    shooterSystem.update(timestamp, SystemMode.AUTONOMOUS);
+    intakeSystem.update(timestamp, SystemMode.AUTONOMOUS);
+    climberSystem.update(timestamp, SystemMode.AUTONOMOUS);
+    magazineSystem.update(timestamp, SystemMode.AUTONOMOUS);
   }
 
   @Override
@@ -363,7 +364,8 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean enabled = (robotMode == RobotMode.OPERATOR_CONTROL);
+    SystemMode mode = (robotMode == RobotMode.OPERATOR_CONTROL) ? SystemMode.OPERATOR_CONTROLLED
+        : SystemMode.AUTONOMOUS;
 
     // Set brake mode
     driveSystem.brake();
@@ -381,12 +383,12 @@ public class Robot extends AluminatiRobot {
     autoControl(timestamp);
 
     // Update systems
-    driveSystem.update(timestamp, enabled);
-    spinnerSystem.update(timestamp, enabled);
-    shooterSystem.update(timestamp, enabled);
-    intakeSystem.update(timestamp, enabled);
-    climberSystem.update(timestamp, enabled);
-    magazineSystem.update(timestamp, enabled);
+    driveSystem.update(timestamp, mode);
+    spinnerSystem.update(timestamp, mode);
+    shooterSystem.update(timestamp, mode);
+    intakeSystem.update(timestamp, mode);
+    climberSystem.update(timestamp, mode);
+    magazineSystem.update(timestamp, mode);
   }
 
   @Override

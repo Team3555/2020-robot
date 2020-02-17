@@ -79,7 +79,7 @@ public class ClimberSystem implements AluminatiSystem {
                 && operatorController.getX(Hand.kLeft) >= 0.5 && operatorController.getX(Hand.kRight) <= 0.5);
     }
 
-    public void update(double timestamp, boolean enabled) {
+    public void update(double timestamp, SystemMode mode) {
         // Check for faults
         if (!armMotor.isOK()) {
             robotFaults.setClimberFault(true);
@@ -89,7 +89,7 @@ public class ClimberSystem implements AluminatiSystem {
             robotFaults.setClimberFault(true);
         }
 
-        if (enabled) {
+        if (mode == SystemMode.OPERATOR_CONTROLLED) {
             // Manual control
 
             double leftJoystick = operatorController.getY(Hand.kLeft);

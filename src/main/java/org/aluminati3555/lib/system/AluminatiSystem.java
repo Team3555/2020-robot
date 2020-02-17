@@ -30,9 +30,10 @@ package org.aluminati3555.lib.system;
 public interface AluminatiSystem {
     /**
      * Updates the system
-     * 
-     * @param timestamp The timestamp in milliseconds
-     * @param enabled   True if the robot is enabled
      */
-    public void update(double timestamp, boolean enabled);
+    public void update(double timestamp, SystemMode mode);
+
+    public enum SystemMode {
+        OPERATOR_CONTROLLED, AUTONOMOUS, DISABLED
+    }
 }

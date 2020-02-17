@@ -91,7 +91,7 @@ public class SpinnerSystem implements AluminatiSystem {
         extenderSolenoid.disable();
     }
 
-    public void update(double timestamp, boolean enabled) {
+    public void update(double timestamp, SystemMode mode) {
         // Report failures to driver
         if (!this.spinnerMotor.isOK()) {
             robotFaults.setSpinnerFault(true);
@@ -101,7 +101,7 @@ public class SpinnerSystem implements AluminatiSystem {
             robotFaults.setSpinnerFault(true);
         }
 
-        if (enabled) {
+        if (mode == SystemMode.OPERATOR_CONTROLLED) {
             if (operatorController.getTriggerAxis(Hand.kLeft) >= 0.5) {
                 extend();
             } else {
