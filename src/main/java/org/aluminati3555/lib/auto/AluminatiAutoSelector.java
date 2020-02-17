@@ -88,29 +88,7 @@ public class AluminatiAutoSelector extends Thread {
     }
 
     /**
-     * Returns the currently selected auto mode (does not lock in network tables
-     * mode if udp mode does not exist)
-     */
-    public AluminatiAutoTask getEarlySelected() {
-        synchronized (this) {
-            if (autoMode != null) {
-                return autoMode;
-            }
-
-            String auto = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("Auto Selector")
-                    .getString(null);
-
-            if (auto == null) {
-                return null;
-            }
-
-            return getModeByName(auto);
-        }
-    }
-
-    /**
-     * Returns the selected mode (This method sets the auto mode as the network
-     * tables selected one if there is no udp selected mode)
+     * Returns the currently selected auto mode
      */
     public AluminatiAutoTask getSelected() {
         synchronized (this) {
@@ -125,8 +103,7 @@ public class AluminatiAutoSelector extends Thread {
                 return null;
             }
 
-            select(auto);
-            return autoMode;
+            return getModeByName(auto);
         }
     }
 

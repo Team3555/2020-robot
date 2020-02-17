@@ -40,6 +40,7 @@ public class AluminatiAutoTaskList implements AluminatiAutoTask {
     }
 
     public void start(double timestamp) {
+        taskIndex = 0;
         taskList.get(taskIndex).start(timestamp);
     }
 

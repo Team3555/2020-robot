@@ -260,8 +260,8 @@ public class Robot extends AluminatiRobot {
     Translation2d translation = position.getTranslation();
     Rotation2d rotation = position.getRotation();
 
-    AluminatiAutoTask auto = autoSelector.getEarlySelected();
-    String autoString = (auto == null) ? "null" : auto.toString();
+    AluminatiAutoTask auto = autoSelector.getSelected();
+    String autoString = (auto == null) ? "DoNothing" : auto.toString();
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
         autoString, robotFaults, limelight, shooterSystem.get());
