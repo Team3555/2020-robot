@@ -22,37 +22,33 @@
 
 package org.aluminati3555.frc2020.auto;
 
-import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 
 /**
- * This action runs a pure pursuit path
+ * This action executes code when the task runs
  * 
  * @author Caleb Heydon
  */
-public class ActionRunPath implements AluminatiAutoTask {
-    private DriveSystem driveSystem;
-    private PathContainer pathContainer;
+public class ActionRunCode implements AluminatiAutoTask {
+    private Runnable code;
 
     public void start(double timestamp) {
-        driveSystem.startPath(pathContainer, timestamp);
+        code.run();
     }
 
     public void update(double timestamp) {
-        
+
     }
 
     public void stop() {
-        driveSystem.stopPath();
+
     }
 
     public boolean isComplete() {
-        return driveSystem.isPathDone();
+        return true;
     }
 
-    public ActionRunPath(DriveSystem driveSystem, PathContainer pathContainer) {
-        this.driveSystem = driveSystem;
-        this.pathContainer = pathContainer;
+    public ActionRunCode(Runnable code) {
+
     }
 }
