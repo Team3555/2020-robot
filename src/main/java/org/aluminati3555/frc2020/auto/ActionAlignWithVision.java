@@ -24,7 +24,7 @@ package org.aluminati3555.frc2020.auto;
 
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
+import org.aluminati3555.lib.pid.AluminatiTuneablePIDController;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
@@ -33,13 +33,13 @@ import org.aluminati3555.lib.vision.AluminatiLimelight;
  * @author Caleb Heydon
  */
 public class ActionAlignWithVision implements AluminatiAutoTask {
-    private static AluminatiTunablePIDController controller;
+    private static AluminatiTuneablePIDController controller;
 
     /**
      * Initializes the PID controller
      */
     public static final void initialize() {
-        controller = new AluminatiTunablePIDController(5809, 0.1, 0, 0.1, 400, 1, 1, 0);
+        controller = new AluminatiTuneablePIDController(5809, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
 
     private DriveSystem driveSystem;

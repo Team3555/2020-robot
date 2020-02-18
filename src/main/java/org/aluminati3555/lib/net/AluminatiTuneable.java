@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj.Timer;
  * 
  * @author Caleb Heydon
  */
-public abstract class AluminatiTunable extends Thread {
+public abstract class AluminatiTuneable extends Thread {
     private static final int PACKET_LENGTH = 24;
 
     /**
@@ -87,7 +87,7 @@ public abstract class AluminatiTunable extends Thread {
         socket.close();
     }
 
-    public AluminatiTunable(int port) {
+    public AluminatiTuneable(int port) {
         System.out.println("Starting UDP listener for Tunable on port " + port + "...");
 
         this.port = port;

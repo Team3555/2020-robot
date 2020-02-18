@@ -26,7 +26,7 @@ import com.team254.lib.geometry.Rotation2d;
 
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
+import org.aluminati3555.lib.pid.AluminatiTuneablePIDController;
 
 /**
  * This action turns the robot to a heading
@@ -34,13 +34,13 @@ import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
  * @author Caleb Heydon
  */
 public class ActionTurnToHeading implements AluminatiAutoTask {
-    private static AluminatiTunablePIDController controller;
+    private static AluminatiTuneablePIDController controller;
 
     /**
      * Initializes the PID controller
      */
     public static final void initialize() {
-        controller = new AluminatiTunablePIDController(5805, 0.1, 0, 0.1, 400, 1, 1, 0);
+        controller = new AluminatiTuneablePIDController(5805, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
 
     private DriveSystem driveSystem;

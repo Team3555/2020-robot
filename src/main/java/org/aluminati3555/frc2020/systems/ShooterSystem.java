@@ -30,8 +30,8 @@ import org.aluminati3555.frc2020.util.ShooterUtil;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.drivers.AluminatiSpark;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
-import org.aluminati3555.lib.net.AluminatiTunable;
-import org.aluminati3555.lib.pid.AluminatiTunablePIDController;
+import org.aluminati3555.lib.net.AluminatiTuneable;
+import org.aluminati3555.lib.pid.AluminatiTuneablePIDController;
 import org.aluminati3555.lib.system.AluminatiSystem;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 
@@ -80,7 +80,7 @@ public class ShooterSystem implements AluminatiSystem {
     private boolean shooterEnabled;
     private double setpoint;
 
-    private AluminatiTunablePIDController turnController;
+    private AluminatiTuneablePIDController turnController;
 
     /**
      * Sets the target rpm
@@ -280,7 +280,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().config_IntegralZone(0, 400);
 
         // Setup tuning listener
-        new AluminatiTunable(5806) {
+        new AluminatiTuneable(5806) {
             protected void update(TuningData data) {
                 motorGroup.getMasterTalon().config_kP(0, data.kP);
                 motorGroup.getMasterTalon().config_kI(0, data.kI);
@@ -294,7 +294,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
         this.motorGroup.getMasterTalon().enableCurrentLimit(true);
 
-        this.turnController = new AluminatiTunablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
+        this.turnController = new AluminatiTuneablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
 
     private enum HoodState {

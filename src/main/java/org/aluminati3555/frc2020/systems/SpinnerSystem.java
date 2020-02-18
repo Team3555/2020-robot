@@ -29,7 +29,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
 import org.aluminati3555.lib.drivers.AluminatiXboxController;
-import org.aluminati3555.lib.net.AluminatiTunable;
+import org.aluminati3555.lib.net.AluminatiTuneable;
 import org.aluminati3555.lib.pneumatics.AluminatiSolenoid;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
@@ -155,7 +155,7 @@ public class SpinnerSystem implements AluminatiSystem {
         this.spinnerMotor.config_IntegralZone(0, 400);
 
         // Setup tuning listener
-        new AluminatiTunable(5807) {
+        new AluminatiTuneable(5807) {
             protected void update(TuningData data) {
                 spinnerMotor.config_kP(0, data.kP);
                 spinnerMotor.config_kI(0, data.kI);

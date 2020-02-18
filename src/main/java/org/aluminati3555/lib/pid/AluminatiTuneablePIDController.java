@@ -22,32 +22,32 @@
 
 package org.aluminati3555.lib.pid;
 
-import org.aluminati3555.lib.net.AluminatiTunable;
+import org.aluminati3555.lib.net.AluminatiTuneable;
 
-public class AluminatiTunablePIDController extends AluminatiPIDController {
+public class AluminatiTuneablePIDController extends AluminatiPIDController {
     @Override
     public String toString() {
         return "[TunablePIDController]";
     }
 
     private void startListener(int port) {
-        new AluminatiTunable(port) {
+        new AluminatiTuneable(port) {
             protected void update(TuningData data) {
                 setPID(data.kP, data.kI, data.kD);
             }
         };
     }
 
-    public AluminatiTunablePIDController(int port, double kP, double kI, double kD, double iZone, double allowableError,
+    public AluminatiTuneablePIDController(int port, double kP, double kI, double kD, double iZone, double allowableError,
             double maxOutput, double timestamp) {
         super(kP, kI, kD, iZone, allowableError, maxOutput, timestamp);
-
+        
         startListener(port);
     }
 
-    public AluminatiTunablePIDController(int port, double kP, double kI, double kD, double timestamp) {
+    public AluminatiTuneablePIDController(int port, double kP, double kI, double kD, double timestamp) {
         super(kP, kI, kD, timestamp);
-
+        
         startListener(port);
     }
 }
