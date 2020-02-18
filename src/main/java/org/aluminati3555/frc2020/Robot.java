@@ -246,7 +246,8 @@ public class Robot extends AluminatiRobot {
                 magazineSystem)),
         new Entry("GoForward", new ModeGoForward(robotState, driveSystem)),
         new Entry("3PowerCellGoForward", new Mode3PowerCellGoForward(robotState, limelight, driveSystem, intakeSystem,
-            shooterSystem, magazineSystem)));
+            shooterSystem, magazineSystem)),
+        new Entry("10PowerCell", null));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoDisplay", 3);
