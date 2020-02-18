@@ -169,7 +169,7 @@ public class Robot extends AluminatiRobot {
 
     // Set default robot state and mode
     robotState = new RobotState();
-    robotMode = RobotMode.OPERATOR_CONTROL;
+    robotMode = RobotMode.AUTONOMOUS;
 
     // Make it clear that matchStarted is false
     matchStarted = false;
@@ -265,7 +265,7 @@ public class Robot extends AluminatiRobot {
     String autoString = (auto == null) ? "DoNothing" : auto.toString();
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
-        autoString, robotFaults, limelight, shooterSystem.get());
+        autoString, robotFaults, limelight, shooterSystem.get(), robotMode);
   }
 
   @Override
@@ -365,7 +365,7 @@ public class Robot extends AluminatiRobot {
 
   @Override
   public void teleopPeriodic() {
-    SystemMode mode = (robotMode == RobotMode.OPERATOR_CONTROL) ? SystemMode.OPERATOR_CONTROLLED
+    SystemMode mode = (robotMode == RobotMode.OPERATOR_CONTROLLED) ? SystemMode.OPERATOR_CONTROLLED
         : SystemMode.AUTONOMOUS;
 
     // Set brake mode
@@ -468,14 +468,14 @@ public class Robot extends AluminatiRobot {
       if (autoTask != null) {
         autoTask.stop();
       }
-      robotMode = RobotMode.OPERATOR_CONTROL;
+      robotMode = RobotMode.OPERATOR_CONTROLLED;
     }
 
     if (robotMode == RobotMode.AUTONOMOUS && autoTask != null) {
       if (autoTask.isComplete()) {
         // Stop task and cleanup
         autoTask.stop();
-        robotMode = RobotMode.OPERATOR_CONTROL;
+        robotMode = RobotMode.OPERATOR_CONTROLLED;
       } else {
         autoTask.update(timestamp);
       }
@@ -531,8 +531,8 @@ public class Robot extends AluminatiRobot {
     }
   }
 
-  private enum RobotMode {
-    AUTONOMOUS, OPERATOR_CONTROL
+  public enum RobotMode {
+    AUTONOMOUS, OPERATOR_CONTROLLED
   }
 
   private enum DisplayMode {

@@ -23,6 +23,7 @@
 package org.aluminati3555.frc2020;
 
 import org.aluminati3555.frc2020.Robot.ControlPanelColor;
+import org.aluminati3555.frc2020.Robot.RobotMode;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -72,7 +73,8 @@ public class VideoDisplay {
      * Sends a new frame
      */
     public void update(ControlPanelColor controlPanelColor, double averageDT, double x, double y, double heading,
-            String auto, RobotFaults robotFaults, AluminatiLimelight limelight, double shooterSetpoint) {
+            String auto, RobotFaults robotFaults, AluminatiLimelight limelight, double shooterSetpoint,
+            RobotMode robotMode) {
         double currentTime = Timer.getFPGATimestamp();
         double delta = currentTime - lastTime;
         if (delta < targetTime) {
@@ -154,6 +156,12 @@ public class VideoDisplay {
 
         Imgproc.putText(frame, "shooterSetpoint: " + shooterSetpoint + " RPM", new Point(5, 300),
                 Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+
+        if (robotMode == RobotMode.AUTONOMOUS) {
+            Imgproc.putText(frame, "robotMode: AUTONOMOUS", new Point(5, 330), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        } else {
+            Imgproc.putText(frame, "robotMode: OPERATOR_CONTROLLED", new Point(5, 330), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+        }
 
         outputStream.putFrame(frame);
 

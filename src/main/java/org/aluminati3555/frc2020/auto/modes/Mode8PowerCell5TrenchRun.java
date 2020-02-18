@@ -92,13 +92,13 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
 
         // Set robot position
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));
-
+        
         // Turn on the limelight leds
         taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.ON));
-
+        
         // Set the limelight to the tracking pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
-
+        
         // Shoot three power cells
         taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));

@@ -95,11 +95,11 @@ public class Mode5PowerCell2OtherAllianceTrenchRun implements AluminatiAutoTask 
         
         // Actuate intake and spin motors
         taskList.add(new ActionExtendIntake(intakeSystem));
-        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0.5));
+        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 1));
         
         // Run path
         taskList.add(new ActionRunPath(driveSystem, path1));
-
+        
         // Stop intake and retract it
         taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0));
         taskList.add(new ActionRetractIntake(intakeSystem));
