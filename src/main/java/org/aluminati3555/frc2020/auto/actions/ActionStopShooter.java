@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,27 +20,25 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action causes the robot to wait
+ * This action stops the shooter's flywheel
  * 
  * @author Caleb Heydon
  */
-public class ActionWait implements AluminatiAutoTask {
-    private double waitTime;
-    private double stopTime;
-
-    private boolean complete;
+public class ActionStopShooter implements AluminatiAutoTask {
+    private ShooterSystem shooterSystem;
 
     public void start(double timestamp) {
-        stopTime = timestamp + waitTime;
+        shooterSystem.stop();
     }
 
     public void update(double timestamp) {
-        complete = (timestamp >= stopTime);
+
     }
 
     public void stop() {
@@ -48,10 +46,10 @@ public class ActionWait implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return complete;
+        return true;
     }
 
-    public ActionWait(double waitTime) {
-        this.waitTime = waitTime;
+    public ActionStopShooter(ShooterSystem shooterSystem) {
+        this.shooterSystem = shooterSystem;
     }
 }

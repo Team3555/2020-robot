@@ -20,21 +20,21 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.IntakeSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action extends the intake
+ * This action retracts's the shooter's hood
  * 
  * @author Caleb Heydon
  */
-public class ActionExtendIntake implements AluminatiAutoTask {
-    private IntakeSystem intakeSystem;
+public class ActionRetractHood implements AluminatiAutoTask {
+    private ShooterSystem shooterSystem;
 
     public void start(double timestamp) {
-        intakeSystem.extend();
+        shooterSystem.retractHood();
     }
 
     public void update(double timestamp) {
@@ -49,7 +49,7 @@ public class ActionExtendIntake implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionExtendIntake(IntakeSystem intakeSystem) {
-        this.intakeSystem = intakeSystem;
+    public ActionRetractHood(ShooterSystem shooterSystem) {
+        this.shooterSystem = shooterSystem;
     }
 }

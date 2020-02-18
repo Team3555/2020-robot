@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 Team 3555
+ * Copyright (c) 2019 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,26 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.util.ShooterUtil;
-import org.aluminati3555.frc2020.systems.ShooterSystem;
+import com.team254.lib.geometry.Pose2d;
+
+import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.vision.AluminatiLimelight;
+import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This action sets the shooter rpm using the limelight
+ * This class resets the robot's position for running a path
  * 
  * @author Caleb Heydon
  */
-public class ActionSetShooterSpeedWithVision implements AluminatiAutoTask {
-    private ShooterSystem shooterSystem;
-    private AluminatiLimelight limelight;
+public class ActionResetRobotPose implements AluminatiAutoTask {
+    private RobotState robotState;
+    private DriveSystem driveSystem;
+    private Pose2d robotPose;
 
     public void start(double timestamp) {
-        double targetHeight = limelight.getVertical();
-        shooterSystem.set(ShooterUtil.calculateRPM(targetHeight));
+        robotState.reset(timestamp, robotPose, driveSystem);
     }
 
     public void update(double timestamp) {
@@ -53,8 +54,9 @@ public class ActionSetShooterSpeedWithVision implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionSetShooterSpeedWithVision(ShooterSystem shooterSystem, AluminatiLimelight limelight) {
-        this.shooterSystem = shooterSystem;
-        this.limelight = limelight;
+    public ActionResetRobotPose(RobotState robotState, DriveSystem driveSystem, Pose2d robotPose) {
+        this.robotState = robotState;
+        this.driveSystem = driveSystem;
+        this.robotPose = robotPose;
     }
 }

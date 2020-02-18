@@ -20,39 +20,53 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
+import com.team254.lib.geometry.Rotation2d;
+
+import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.vision.AluminatiLimelight;
+import org.aluminati3555.lib.pid.AluminatiTuneablePIDController;
 
 /**
- * This action sets the limelight's pipeline
+ * This action turns the robot to a heading
  * 
  * @author Caleb Heydon
  */
-public class ActionSetLimelightPipeline implements AluminatiAutoTask {
-    private AluminatiLimelight limelight;
+public class ActionTurnToHeading implements AluminatiAutoTask {
+    private static AluminatiTuneablePIDController controller;
 
-    private int pipeline;
+    /**
+     * Initializes the PID controller
+     */
+    public static final void initialize() {
+        controller = new AluminatiTuneablePIDController(5805, 0.1, 0, 0.1, 400, 1, 1, 0);
+    }
+
+    private DriveSystem driveSystem;
+    private Rotation2d setpoint;
 
     public void start(double timestamp) {
-        limelight.setPipeline(pipeline);
+        controller.reset(timestamp);
     }
 
     public void update(double timestamp) {
+        double output = -controller.update(setpoint.getDegrees(), driveSystem.getGyro().getHeading().getDegrees(),
+                timestamp);
 
+        driveSystem.manualArcadeDrive(output, 0);
     }
 
     public void stop() {
-
+        driveSystem.manualArcadeDrive(0, 0);
     }
 
     public boolean isComplete() {
-        return true;
+        return controller.isComplete();
     }
 
-    public ActionSetLimelightPipeline(AluminatiLimelight limelight, int pipeline) {
-        this.limelight = limelight;
-        this.pipeline = pipeline;
+    public ActionTurnToHeading(DriveSystem driveSystem, Rotation2d setpoint) {
+        this.driveSystem = driveSystem;
+        this.setpoint = setpoint;
     }
 }

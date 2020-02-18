@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 Team 3555
+ * Copyright (c) 2019 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +20,20 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action sets the shooter rpm
+ * This action executes code when the task runs
  * 
  * @author Caleb Heydon
  */
-public class ActionSetShooterSpeed implements AluminatiAutoTask {
-    private ShooterSystem shooterSystem;
-
-    private double rpm;
+public class ActionRunCode implements AluminatiAutoTask {
+    private Runnable code;
 
     public void start(double timestamp) {
-        shooterSystem.set(rpm);
+        code.run();
     }
 
     public void update(double timestamp) {
@@ -51,8 +48,7 @@ public class ActionSetShooterSpeed implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionSetShooterSpeed(ShooterSystem shooterSystem, double rpm) {
-        this.shooterSystem = shooterSystem;
-        this.rpm = rpm;
+    public ActionRunCode(Runnable code) {
+        this.code = code;
     }
 }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
 import org.aluminati3555.frc2020.util.ShooterUtil;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
@@ -32,18 +32,13 @@ import org.aluminati3555.lib.vision.AluminatiLimelight;
  * 
  * @author Caleb Heydon
  */
-public class ActionSetShooterSpeedWithVisionAndWait implements AluminatiAutoTask {
+public class ActionSetShooterSpeedWithVision implements AluminatiAutoTask {
     private ShooterSystem shooterSystem;
     private AluminatiLimelight limelight;
 
-    private ActionWaitForShooterSpeed waitAction;
-
     public void start(double timestamp) {
         double targetHeight = limelight.getVertical();
-        double rpm = ShooterUtil.calculateRPM(targetHeight);
-
-        shooterSystem.set(rpm);
-        waitAction = new ActionWaitForShooterSpeed(shooterSystem, rpm);
+        shooterSystem.set(ShooterUtil.calculateRPM(targetHeight));
     }
 
     public void update(double timestamp) {
@@ -55,14 +50,10 @@ public class ActionSetShooterSpeedWithVisionAndWait implements AluminatiAutoTask
     }
 
     public boolean isComplete() {
-        if (waitAction == null) {
-            return false;
-        }
-
-        return waitAction.isComplete();
+        return true;
     }
 
-    public ActionSetShooterSpeedWithVisionAndWait(ShooterSystem shooterSystem, AluminatiLimelight limelight) {
+    public ActionSetShooterSpeedWithVision(ShooterSystem shooterSystem, AluminatiLimelight limelight) {
         this.shooterSystem = shooterSystem;
         this.limelight = limelight;
     }

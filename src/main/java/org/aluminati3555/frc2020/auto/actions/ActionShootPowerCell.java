@@ -20,53 +20,44 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import com.team254.lib.geometry.Rotation2d;
-
-import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.MagazineSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.pid.AluminatiTuneablePIDController;
+import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
- * This action turns the robot to a heading
+ * This action shoots a specified number of power cells.
  * 
  * @author Caleb Heydon
  */
-public class ActionTurnToHeading implements AluminatiAutoTask {
-    private static AluminatiTuneablePIDController controller;
-
-    /**
-     * Initializes the PID controller
-     */
-    public static final void initialize() {
-        controller = new AluminatiTuneablePIDController(5805, 0.1, 0, 0.1, 400, 1, 1, 0);
-    }
-
-    private DriveSystem driveSystem;
-    private Rotation2d setpoint;
+public class ActionShootPowerCell implements AluminatiAutoTask {
+    private AluminatiAutoTaskList taskList;
 
     public void start(double timestamp) {
-        controller.reset(timestamp);
+        taskList.start(timestamp);
     }
 
     public void update(double timestamp) {
-        double output = -controller.update(setpoint.getDegrees(), driveSystem.getGyro().getHeading().getDegrees(),
-                timestamp);
-
-        driveSystem.manualArcadeDrive(output, 0);
+        taskList.update(timestamp);
     }
 
     public void stop() {
-        driveSystem.manualArcadeDrive(0, 0);
+        taskList.stop();
     }
 
     public boolean isComplete() {
-        return controller.isComplete();
+        return taskList.isComplete();
     }
 
-    public ActionTurnToHeading(DriveSystem driveSystem, Rotation2d setpoint) {
-        this.driveSystem = driveSystem;
-        this.setpoint = setpoint;
+    public ActionShootPowerCell(AluminatiLimelight limelight, ShooterSystem shooterSystem, MagazineSystem feederSystem,
+            int numberOfPowerCells) {
+        taskList = new AluminatiAutoTaskList();
+
+        taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
+        taskList.add(new ActionFeedPowerCell(feederSystem, numberOfPowerCells));
+        taskList.add(new ActionStopShooter(shooterSystem));
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,24 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import com.team254.lib.geometry.Pose2d;
-
-import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
+import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 /**
- * This class resets the robot's position for running a path
+ * This action sets the limelight's led mode
  * 
  * @author Caleb Heydon
  */
-public class ActionResetRobotPose implements AluminatiAutoTask {
-    private RobotState robotState;
-    private DriveSystem driveSystem;
-    private Pose2d robotPose;
+public class ActionSetLimelightLEDMode implements AluminatiAutoTask {
+    private AluminatiLimelight limelight;
+
+    private LEDMode ledMode;
 
     public void start(double timestamp) {
-        robotState.reset(timestamp, robotPose, driveSystem);
+        limelight.setLEDMode(ledMode);
     }
 
     public void update(double timestamp) {
@@ -54,9 +52,8 @@ public class ActionResetRobotPose implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionResetRobotPose(RobotState robotState, DriveSystem driveSystem, Pose2d robotPose) {
-        this.robotState = robotState;
-        this.driveSystem = driveSystem;
-        this.robotPose = robotPose;
+    public ActionSetLimelightLEDMode(AluminatiLimelight limelight, LEDMode ledMode) {
+        this.limelight = limelight;
+        this.ledMode = ledMode;
     }
 }

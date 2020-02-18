@@ -20,37 +20,51 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.IntakeSystem;
+import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
+import org.aluminati3555.lib.pid.AluminatiTuneablePIDController;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
- * This action sets the speed of the intake
+ * This action aligns the robot with a vision target
  * 
  * @author Caleb Heydon
  */
-public class ActionSetIntakeSpeed implements AluminatiAutoTask {
-    private IntakeSystem intakeSystem;
-    private double speed;
+public class ActionAlignWithVision implements AluminatiAutoTask {
+    private static AluminatiTuneablePIDController controller;
+
+    /**
+     * Initializes the PID controller
+     */
+    public static final void initialize() {
+        controller = new AluminatiTuneablePIDController(5809, 0.1, 0, 0.1, 400, 1, 1, 0);
+    }
+
+    private DriveSystem driveSystem;
+    private AluminatiLimelight limelight;
 
     public void start(double timestamp) {
-        intakeSystem.setSpeed(speed);
+        controller.reset(timestamp);
     }
 
     public void update(double timestamp) {
+        double output = controller.update(0, limelight.getX(), timestamp);
 
+        driveSystem.manualArcadeDrive(output, 0);
     }
 
     public void stop() {
-
+        driveSystem.manualArcadeDrive(0, 0);
     }
 
     public boolean isComplete() {
-        return true;
+        return controller.isComplete() && limelight.hasTarget();
     }
 
-    public ActionSetIntakeSpeed(IntakeSystem intakeSystem, double speed) {
-        this.intakeSystem = intakeSystem;
+    public ActionAlignWithVision(DriveSystem driveSystem, AluminatiLimelight limelight) {
+        this.driveSystem = driveSystem;
+        this.limelight = limelight;
     }
 }

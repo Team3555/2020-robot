@@ -20,24 +20,21 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
+import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.vision.AluminatiLimelight;
-import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 /**
- * This action sets the limelight's led mode
+ * This action extends the intake
  * 
  * @author Caleb Heydon
  */
-public class ActionSetLimelightLEDMode implements AluminatiAutoTask {
-    private AluminatiLimelight limelight;
-
-    private LEDMode ledMode;
+public class ActionExtendIntake implements AluminatiAutoTask {
+    private IntakeSystem intakeSystem;
 
     public void start(double timestamp) {
-        limelight.setLEDMode(ledMode);
+        intakeSystem.extend();
     }
 
     public void update(double timestamp) {
@@ -52,8 +49,7 @@ public class ActionSetLimelightLEDMode implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionSetLimelightLEDMode(AluminatiLimelight limelight, LEDMode ledMode) {
-        this.limelight = limelight;
-        this.ledMode = ledMode;
+    public ActionExtendIntake(IntakeSystem intakeSystem) {
+        this.intakeSystem = intakeSystem;
     }
 }

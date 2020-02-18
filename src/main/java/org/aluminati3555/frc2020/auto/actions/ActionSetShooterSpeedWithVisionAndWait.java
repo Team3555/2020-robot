@@ -20,21 +20,30 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
+import org.aluminati3555.frc2020.util.ShooterUtil;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
- * This action stops the shooter's flywheel
+ * This action sets the shooter rpm using the limelight
  * 
  * @author Caleb Heydon
  */
-public class ActionStopShooter implements AluminatiAutoTask {
+public class ActionSetShooterSpeedWithVisionAndWait implements AluminatiAutoTask {
     private ShooterSystem shooterSystem;
+    private AluminatiLimelight limelight;
+
+    private ActionWaitForShooterSpeed waitAction;
 
     public void start(double timestamp) {
-        shooterSystem.stop();
+        double targetHeight = limelight.getVertical();
+        double rpm = ShooterUtil.calculateRPM(targetHeight);
+
+        shooterSystem.set(rpm);
+        waitAction = new ActionWaitForShooterSpeed(shooterSystem, rpm);
     }
 
     public void update(double timestamp) {
@@ -46,10 +55,15 @@ public class ActionStopShooter implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return true;
+        if (waitAction == null) {
+            return false;
+        }
+
+        return waitAction.isComplete();
     }
 
-    public ActionStopShooter(ShooterSystem shooterSystem) {
+    public ActionSetShooterSpeedWithVisionAndWait(ShooterSystem shooterSystem, AluminatiLimelight limelight) {
         this.shooterSystem = shooterSystem;
+        this.limelight = limelight;
     }
 }

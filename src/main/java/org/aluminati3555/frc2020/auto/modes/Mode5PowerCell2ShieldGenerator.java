@@ -20,10 +20,23 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.modes;
 
 import com.team254.lib.geometry.Rotation2d;
 
+import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
+import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
+import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
+import org.aluminati3555.frc2020.auto.actions.ActionOnPathMarkerPassed;
+import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
+import org.aluminati3555.frc2020.auto.actions.ActionRetractHood;
+import org.aluminati3555.frc2020.auto.actions.ActionRetractIntake;
+import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
+import org.aluminati3555.frc2020.auto.actions.ActionSetIntakeSpeed;
+import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightLEDMode;
+import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightPipeline;
+import org.aluminati3555.frc2020.auto.actions.ActionShootPowerCell;
+import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
 import org.aluminati3555.frc2020.paths.Path5PowerCell2ShieldGenerator1;
 import org.aluminati3555.frc2020.paths.Path5PowerCell2ShieldGenerator2;
 import org.aluminati3555.frc2020.systems.DriveSystem;
@@ -54,11 +67,11 @@ public class Mode5PowerCell2ShieldGenerator implements AluminatiAutoTask {
         return "5PowerCell2ShieldGenerator";
     }
 
-    public void start(double timestamp) {
+    public void start(final double timestamp) {
         taskList.start(timestamp);
     }
 
-    public void update(double timestamp) {
+    public void update(final double timestamp) {
         taskList.update(timestamp);
     }
 
@@ -70,12 +83,12 @@ public class Mode5PowerCell2ShieldGenerator implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public Mode5PowerCell2ShieldGenerator(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem magazineSystem) {
+    public Mode5PowerCell2ShieldGenerator(final RobotState robotState, final AluminatiLimelight limelight, final DriveSystem driveSystem,
+            final IntakeSystem intakeSystem, final ShooterSystem shooterSystem, final MagazineSystem magazineSystem) {
         taskList = new AluminatiAutoTaskList();
 
-        PathContainer path1 = new Path5PowerCell2ShieldGenerator1();
-        PathContainer path2 = new Path5PowerCell2ShieldGenerator2();
+        final PathContainer path1 = new Path5PowerCell2ShieldGenerator1();
+        final PathContainer path2 = new Path5PowerCell2ShieldGenerator2();
 
         // Set robot position
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));

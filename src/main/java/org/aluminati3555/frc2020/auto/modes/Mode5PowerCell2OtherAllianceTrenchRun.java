@@ -20,8 +20,19 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.modes;
 
+import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
+import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
+import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
+import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
+import org.aluminati3555.frc2020.auto.actions.ActionRetractHood;
+import org.aluminati3555.frc2020.auto.actions.ActionRetractIntake;
+import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
+import org.aluminati3555.frc2020.auto.actions.ActionSetIntakeSpeed;
+import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightLEDMode;
+import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightPipeline;
+import org.aluminati3555.frc2020.auto.actions.ActionShootPowerCell;
 import org.aluminati3555.frc2020.paths.Path5PowerCell2OtherAllianceTrenchRun1;
 import org.aluminati3555.frc2020.paths.Path5PowerCell2OtherAllianceTrenchRun2;
 import org.aluminati3555.frc2020.systems.DriveSystem;

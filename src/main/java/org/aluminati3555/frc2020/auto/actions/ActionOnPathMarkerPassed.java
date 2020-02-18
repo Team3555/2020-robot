@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 Team 3555
+ * Copyright (c) 2019 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,59 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.IntakeSystem;
+import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action retracts the intake
+ * This action waits for a path marker to be passed before starting the action
+ * (use with parallel action)
  * 
  * @author Caleb Heydon
  */
-public class ActionRetractIntake implements AluminatiAutoTask {
-    private IntakeSystem intakeSystem;
+public class ActionOnPathMarkerPassed implements AluminatiAutoTask {
+    private DriveSystem driveSystem;
+    private String marker;
+
+    private AluminatiAutoTask task;
+
+    private State state;
 
     public void start(double timestamp) {
-        intakeSystem.retract();
+        state = State.WAITING;
     }
 
     public void update(double timestamp) {
-
+        if (state == State.WAITING && driveSystem.hasPassedPathMarker(marker)) {
+            state = State.RUNNING;
+            task.start(timestamp);
+        } else if (state == State.RUNNING) {
+            if (task.isComplete()) {
+                state = State.COMPLETE;
+                return;
+            } else {
+                task.update(timestamp);
+            }
+        }
     }
 
     public void stop() {
-
+        task.stop();
+        state = State.COMPLETE;
     }
 
     public boolean isComplete() {
-        return true;
+        return (state == State.COMPLETE);
     }
 
-    public ActionRetractIntake(IntakeSystem intakeSystem) {
-        this.intakeSystem = intakeSystem;
+    public ActionOnPathMarkerPassed(DriveSystem driveSystem, String marker, AluminatiAutoTask task) {
+        this.driveSystem = driveSystem;
+        this.marker = marker;
+        this.task = task;
+    }
+
+    private enum State {
+        WAITING, RUNNING, COMPLETE
     }
 }

@@ -20,49 +20,36 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.paths.PathGoForward;
-import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
-import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
-import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This mode goes forward into the sector
+ * This action retracts the intake
  * 
  * @author Caleb Heydon
  */
-public class ModeGoForward implements AluminatiAutoTask {
-    private AluminatiAutoTaskList taskList;
-
-    @Override
-    public String toString() {
-        return "GoForward";
-    }
+public class ActionRetractIntake implements AluminatiAutoTask {
+    private IntakeSystem intakeSystem;
 
     public void start(double timestamp) {
-        taskList.start(timestamp);
+        intakeSystem.retract();
     }
 
     public void update(double timestamp) {
-        taskList.update(timestamp);
+
     }
 
     public void stop() {
-        taskList.stop();
+
     }
 
     public boolean isComplete() {
-        return taskList.isComplete();
+        return true;
     }
 
-    public ModeGoForward(RobotState robotState, DriveSystem driveSystem) {
-        taskList = new AluminatiAutoTaskList();
-        PathContainer pathContainer = new PathGoForward();
-
-        taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
-        taskList.add(new ActionRunPath(driveSystem, pathContainer));
+    public ActionRetractIntake(IntakeSystem intakeSystem) {
+        this.intakeSystem = intakeSystem;
     }
 }

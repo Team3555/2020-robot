@@ -20,59 +20,73 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.modes;
+
+import java.util.ArrayList;
+
+import com.team254.lib.physics.DriveCharacterization;
+import com.team254.lib.physics.DriveCharacterization.CharacterizationConstants;
+import com.team254.lib.physics.DriveCharacterization.DataPoint;
 
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
- * This action waits for a path marker to be passed before starting the action
- * (use with parallel action)
+ * This auto mode characterizes the drivetrain
  * 
  * @author Caleb Heydon
  */
-public class ActionOnPathMarkerPassed implements AluminatiAutoTask {
+public class ModeCharacterizeDrive implements AluminatiAutoTask {
     private DriveSystem driveSystem;
-    private String marker;
+    private ArrayList<DataPoint> points;
 
-    private AluminatiAutoTask task;
+    private boolean done;
+    private double startTime;
+    private double power;
 
-    private State state;
+    @Override
+    public String toString() {
+        return "CharacterizeDrive";
+    }
 
     public void start(double timestamp) {
-        state = State.WAITING;
+        done = false;
+        startTime = timestamp;
+        power = 0;
     }
 
     public void update(double timestamp) {
-        if (state == State.WAITING && driveSystem.hasPassedPathMarker(marker)) {
-            state = State.RUNNING;
-            task.start(timestamp);
-        } else if (state == State.RUNNING) {
-            if (task.isComplete()) {
-                state = State.COMPLETE;
-                return;
-            } else {
-                task.update(timestamp);
-            }
+        if (power < 1) {
+            power += 0.005;
+        }
+        driveSystem.manualArcadeDrive(0, -power);
+
+        points.add(new DataPoint(
+                (driveSystem.getLeftVelocityInchesPerSecond() + driveSystem.getRightVelocityInchesPerSecond()) / 2,
+                power * 12, timestamp - startTime));
+
+        if (power >= 1) {
+            done = true;
         }
     }
 
     public void stop() {
-        task.stop();
-        state = State.COMPLETE;
+        driveSystem.manualArcadeDrive(0, 0);
+
+        CharacterizationConstants output = DriveCharacterization.characterizeDrive(points, points);
+        SmartDashboard.putNumber("kV", output.kv);
+        SmartDashboard.putNumber("kS", output.ks);
     }
 
     public boolean isComplete() {
-        return (state == State.COMPLETE);
+        return done;
     }
 
-    public ActionOnPathMarkerPassed(DriveSystem driveSystem, String marker, AluminatiAutoTask task) {
+    public ModeCharacterizeDrive(DriveSystem driveSystem) {
         this.driveSystem = driveSystem;
-        this.marker = marker;
-        this.task = task;
-    }
 
-    private enum State {
-        WAITING, RUNNING, COMPLETE
+        this.points = new ArrayList<DataPoint>();
     }
 }

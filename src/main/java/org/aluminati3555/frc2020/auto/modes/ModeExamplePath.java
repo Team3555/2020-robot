@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,35 +20,51 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.modes;
 
+import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
+import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
+import org.aluminati3555.frc2020.paths.PathExample;
+import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
+import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
+import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
+import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This action executes code when the task runs
+ * This mode runs an example pure pursuit path
  * 
  * @author Caleb Heydon
  */
-public class ActionRunCode implements AluminatiAutoTask {
-    private Runnable code;
+public class ModeExamplePath implements AluminatiAutoTask {
+    private AluminatiAutoTaskList taskList;
+
+    @Override
+    public String toString() {
+        return "ExamplePath";
+    }
 
     public void start(double timestamp) {
-        code.run();
+        taskList.start(timestamp);
     }
 
     public void update(double timestamp) {
-
+        taskList.update(timestamp);
     }
 
     public void stop() {
-
+        taskList.stop();
     }
 
     public boolean isComplete() {
-        return true;
+        return taskList.isComplete();
     }
 
-    public ActionRunCode(Runnable code) {
-        this.code = code;
+    public ModeExamplePath(RobotState robotState, DriveSystem driveSystem) {
+        taskList = new AluminatiAutoTaskList();
+        PathContainer pathContainer = new PathExample();
+
+        taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
+        taskList.add(new ActionRunPath(driveSystem, pathContainer));
     }
 }

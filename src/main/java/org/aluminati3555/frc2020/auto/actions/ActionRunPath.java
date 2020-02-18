@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 Team 3555
+ * Copyright (c) 2019 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,44 +20,39 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.MagazineSystem;
-import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
-import org.aluminati3555.lib.vision.AluminatiLimelight;
+import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 
 /**
- * This action shoots a specified number of power cells.
+ * This action runs a pure pursuit path
  * 
  * @author Caleb Heydon
  */
-public class ActionShootPowerCell implements AluminatiAutoTask {
-    private AluminatiAutoTaskList taskList;
+public class ActionRunPath implements AluminatiAutoTask {
+    private DriveSystem driveSystem;
+    private PathContainer pathContainer;
 
     public void start(double timestamp) {
-        taskList.start(timestamp);
+        driveSystem.startPath(pathContainer, timestamp);
     }
 
     public void update(double timestamp) {
-        taskList.update(timestamp);
+        
     }
 
     public void stop() {
-        taskList.stop();
+        driveSystem.stopPath();
     }
 
     public boolean isComplete() {
-        return taskList.isComplete();
+        return driveSystem.isPathDone();
     }
 
-    public ActionShootPowerCell(AluminatiLimelight limelight, ShooterSystem shooterSystem, MagazineSystem feederSystem,
-            int numberOfPowerCells) {
-        taskList = new AluminatiAutoTaskList();
-
-        taskList.add(new ActionSetShooterSpeedWithVisionAndWait(shooterSystem, limelight));
-        taskList.add(new ActionFeedPowerCell(feederSystem, numberOfPowerCells));
-        taskList.add(new ActionStopShooter(shooterSystem));
+    public ActionRunPath(DriveSystem driveSystem, PathContainer pathContainer) {
+        this.driveSystem = driveSystem;
+        this.pathContainer = pathContainer;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,39 +20,41 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 
 /**
- * This action runs a pure pursuit path
+ * This action waits for the shooter to reach a certain rpm
  * 
  * @author Caleb Heydon
  */
-public class ActionRunPath implements AluminatiAutoTask {
-    private DriveSystem driveSystem;
-    private PathContainer pathContainer;
+public class ActionWaitForShooterSpeed implements AluminatiAutoTask {
+    private static final double ALLOWED_ERROR = 3;
+
+    private ShooterSystem shooterSystem;
+
+    private double rpm;
 
     public void start(double timestamp) {
-        driveSystem.startPath(pathContainer, timestamp);
-    }
-
-    public void update(double timestamp) {
         
     }
 
+    public void update(double timestamp) {
+
+    }
+
     public void stop() {
-        driveSystem.stopPath();
+
     }
 
     public boolean isComplete() {
-        return driveSystem.isPathDone();
+        return (Math.abs(rpm - shooterSystem.getVelocity()) <= ALLOWED_ERROR);
     }
 
-    public ActionRunPath(DriveSystem driveSystem, PathContainer pathContainer) {
-        this.driveSystem = driveSystem;
-        this.pathContainer = pathContainer;
+    public ActionWaitForShooterSpeed(ShooterSystem shooterSystem, double rpm) {
+        this.shooterSystem = shooterSystem;
+        this.rpm = rpm;
     }
 }

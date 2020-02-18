@@ -20,49 +20,39 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.paths.PathExample;
-import org.aluminati3555.frc2020.systems.DriveSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
-import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
-import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
-import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
- * This mode runs an example pure pursuit path
+ * This action sets the shooter rpm
  * 
  * @author Caleb Heydon
  */
-public class ModeExamplePath implements AluminatiAutoTask {
-    private AluminatiAutoTaskList taskList;
+public class ActionSetShooterSpeed implements AluminatiAutoTask {
+    private ShooterSystem shooterSystem;
 
-    @Override
-    public String toString() {
-        return "ExamplePath";
-    }
+    private double rpm;
 
     public void start(double timestamp) {
-        taskList.start(timestamp);
+        shooterSystem.set(rpm);
     }
 
     public void update(double timestamp) {
-        taskList.update(timestamp);
+
     }
 
     public void stop() {
-        taskList.stop();
+
     }
 
     public boolean isComplete() {
-        return taskList.isComplete();
+        return true;
     }
 
-    public ModeExamplePath(RobotState robotState, DriveSystem driveSystem) {
-        taskList = new AluminatiAutoTaskList();
-        PathContainer pathContainer = new PathExample();
-
-        taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
-        taskList.add(new ActionRunPath(driveSystem, pathContainer));
+    public ActionSetShooterSpeed(ShooterSystem shooterSystem, double rpm) {
+        this.shooterSystem = shooterSystem;
+        this.rpm = rpm;
     }
 }

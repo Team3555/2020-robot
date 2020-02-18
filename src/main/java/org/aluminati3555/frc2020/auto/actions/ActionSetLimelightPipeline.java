@@ -20,23 +20,23 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
-import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
+import org.aluminati3555.lib.vision.AluminatiLimelight;
 
 /**
- * This action feeds a specified number of power cells to the shooter
+ * This action sets the limelight's pipeline
  * 
  * @author Caleb Heydon
  */
-public class ActionFeedPowerCell implements AluminatiAutoTask {
-    private MagazineSystem feederSystem;
+public class ActionSetLimelightPipeline implements AluminatiAutoTask {
+    private AluminatiLimelight limelight;
 
-    private int numberOfPowerCells;
+    private int pipeline;
 
     public void start(double timestamp) {
-        feederSystem.feedPowerCell(numberOfPowerCells, timestamp);
+        limelight.setPipeline(pipeline);
     }
 
     public void update(double timestamp) {
@@ -51,8 +51,8 @@ public class ActionFeedPowerCell implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionFeedPowerCell(MagazineSystem feederSystem, int numberOfPowerCells) {
-        this.feederSystem = feederSystem;
-        this.numberOfPowerCells = numberOfPowerCells;
+    public ActionSetLimelightPipeline(AluminatiLimelight limelight, int pipeline) {
+        this.limelight = limelight;
+        this.pipeline = pipeline;
     }
 }

@@ -20,31 +20,28 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.modes;
 
+import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
+import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
 import org.aluminati3555.frc2020.paths.PathGoForward;
 import org.aluminati3555.frc2020.systems.DriveSystem;
-import org.aluminati3555.frc2020.systems.MagazineSystem;
-import org.aluminati3555.frc2020.systems.IntakeSystem;
-import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
-import org.aluminati3555.lib.vision.AluminatiLimelight;
-import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 /**
- * This mode shoots three power cells into the high goal and goes forward
+ * This mode goes forward into the sector
  * 
  * @author Caleb Heydon
  */
-public class Mode3PowerCellGoForward implements AluminatiAutoTask {
+public class ModeGoForward implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
     @Override
     public String toString() {
-        return "3PowerCellGoForward";
+        return "GoForward";
     }
 
     public void start(double timestamp) {
@@ -63,31 +60,11 @@ public class Mode3PowerCellGoForward implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public Mode3PowerCellGoForward(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
-            IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem magazineSystem) {
+    public ModeGoForward(RobotState robotState, DriveSystem driveSystem) {
         taskList = new AluminatiAutoTaskList();
+        PathContainer pathContainer = new PathGoForward();
 
-        PathContainer path = new PathGoForward();
-
-        // Set robot position
-        taskList.add(new ActionResetRobotPose(robotState, driveSystem, path.getStartPose()));
-
-        // Turn on the limelight leds
-        taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.ON));
-
-        // Set the limelight to the tracking pipeline
-        taskList.add(new ActionSetLimelightPipeline(limelight, 1));
-
-        // Shoot three power cells
-        taskList.add(new ActionExtendHood(shooterSystem));
-        taskList.add(new ActionAlignWithVision(driveSystem, limelight));
-        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 3));
-        taskList.add(new ActionRetractHood(shooterSystem));
-
-        // Set the limelight to the driver pipeline
-        taskList.add(new ActionSetLimelightPipeline(limelight, 0));
-
-        // Go forward
-        taskList.add(new ActionRunPath(driveSystem, path));
+        taskList.add(new ActionResetRobotPose(robotState, driveSystem, pathContainer.getStartPose()));
+        taskList.add(new ActionRunPath(driveSystem, pathContainer));
     }
 }

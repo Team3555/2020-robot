@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 Team 3555
+ * Copyright (c) 2019 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,23 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.modes;
 
-import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action waits for the shooter to reach a certain rpm
+ * This auto mode does absolutely nothing
  * 
  * @author Caleb Heydon
  */
-public class ActionWaitForShooterSpeed implements AluminatiAutoTask {
-    private static final double ALLOWED_ERROR = 3;
-
-    private ShooterSystem shooterSystem;
-
-    private double rpm;
+public class ModeDoNothing implements AluminatiAutoTask {
+    @Override
+    public String toString() {
+        return "DoNothing";
+    }
 
     public void start(double timestamp) {
-        
+
     }
 
     public void update(double timestamp) {
@@ -50,11 +48,6 @@ public class ActionWaitForShooterSpeed implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return (Math.abs(rpm - shooterSystem.getVelocity()) <= ALLOWED_ERROR);
-    }
-
-    public ActionWaitForShooterSpeed(ShooterSystem shooterSystem, double rpm) {
-        this.shooterSystem = shooterSystem;
-        this.rpm = rpm;
+        return false;
     }
 }

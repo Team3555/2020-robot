@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 Team 3555
+ * Copyright (c) 2020 Team 3555
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +20,23 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto;
+package org.aluminati3555.frc2020.auto.actions;
 
+import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This auto mode does absolutely nothing
+ * This action feeds a specified number of power cells to the shooter
  * 
  * @author Caleb Heydon
  */
-public class ModeDoNothing implements AluminatiAutoTask {
-    @Override
-    public String toString() {
-        return "DoNothing";
-    }
+public class ActionFeedPowerCell implements AluminatiAutoTask {
+    private MagazineSystem feederSystem;
+
+    private int numberOfPowerCells;
 
     public void start(double timestamp) {
-
+        feederSystem.feedPowerCell(numberOfPowerCells, timestamp);
     }
 
     public void update(double timestamp) {
@@ -48,6 +48,11 @@ public class ModeDoNothing implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return false;
+        return true;
+    }
+
+    public ActionFeedPowerCell(MagazineSystem feederSystem, int numberOfPowerCells) {
+        this.feederSystem = feederSystem;
+        this.numberOfPowerCells = numberOfPowerCells;
     }
 }
