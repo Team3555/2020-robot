@@ -60,7 +60,7 @@ public class ActionAlignWithVision implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return controller.isComplete();
+        return controller.isComplete() && limelight.hasTarget();
     }
 
     public ActionAlignWithVision(DriveSystem driveSystem, AluminatiLimelight limelight) {
