@@ -65,6 +65,7 @@ import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
 import org.aluminati3555.frc2020.auto.modes.Mode3PowerCellGoForward;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2OtherAllianceTrenchRun;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2ShieldGenerator;
+import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell3ShieldGenerator;
 import org.aluminati3555.frc2020.auto.modes.Mode8PowerCell5TrenchRun;
 import org.aluminati3555.frc2020.auto.modes.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.modes.ModeDoNothing;
@@ -238,9 +239,11 @@ public class Robot extends AluminatiRobot {
             new Mode8PowerCell5TrenchRun(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
                 magazineSystem)),
         new Entry("5PowerCell2ShieldGenerator",
-            new Mode5PowerCell2ShieldGenerator(
-                robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
-        new Entry("5PowerCell3ShieldGenerator", null),
+            new Mode5PowerCell2ShieldGenerator(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
+                magazineSystem)),
+        new Entry("5PowerCell3ShieldGenerator",
+            new Mode5PowerCell3ShieldGenerator(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
+                magazineSystem)),
         new Entry("5PowerCell2OtherAllianceTrenchRun",
             new Mode5PowerCell2OtherAllianceTrenchRun(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
                 magazineSystem)),
