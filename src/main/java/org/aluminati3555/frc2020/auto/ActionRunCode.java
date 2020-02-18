@@ -49,6 +49,6 @@ public class ActionRunCode implements AluminatiAutoTask {
     }
 
     public ActionRunCode(Runnable code) {
-
+        this.code = code;
     }
 }
