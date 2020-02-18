@@ -107,7 +107,7 @@ public class IntakeSystem implements AluminatiSystem {
 
             // Control intake speed
             if (operatorController.getRawButtonPressed(6) && isDown()) {
-                setSpeed(0.5);
+                setSpeed(1);
 
                 // Run the magazine as well
                 magazineSystem.startFeedingPowerCells();
@@ -121,7 +121,7 @@ public class IntakeSystem implements AluminatiSystem {
             // Check for button to eject power cells
             if (operatorController.getRawButtonPressed(2)) {
                 extend();
-                setSpeed(-0.5);
+                setSpeed(-1);
                 magazineSystem.startEjectingPowerCells();
             }
 

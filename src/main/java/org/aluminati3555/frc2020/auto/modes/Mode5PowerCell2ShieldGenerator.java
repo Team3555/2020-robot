@@ -99,7 +99,7 @@ public class Mode5PowerCell2ShieldGenerator implements AluminatiAutoTask {
                 new AluminatiParallelAutoTask(new ActionRunPath(driveSystem, path1),
                         new ActionOnPathMarkerPassed(driveSystem, "Path8PowerCell2ShieldGeneratorA",
                                 new AluminatiParallelAutoTask(new ActionExtendIntake(intakeSystem),
-                                        new ActionSetIntakeSpeed(intakeSystem, 0.5)))));
+                                        new ActionSetIntakeSpeed(intakeSystem, 1)))));
         taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0));
         taskList.add(new ActionRetractIntake(intakeSystem));
 
