@@ -47,6 +47,7 @@ public class AluminatiPIDController {
 
     private double integral;
     private double lastError;
+    private double currentError;
     private double lastTimestamp;
 
     /**
@@ -68,6 +69,7 @@ public class AluminatiPIDController {
     public void reset(double timestamp) {
         integral = 0;
         lastError = 0;
+        currentError = Double.POSITIVE_INFINITY;
         lastTimestamp = timestamp;
     }
 
@@ -78,9 +80,9 @@ public class AluminatiPIDController {
      */
     public boolean isComplete() {
         if (allowableErrorEnabled) {
-            return (Math.abs(lastError) <= allowableError);
+            return (Math.abs(currentError) <= allowableError);
         } else {
-            return (lastError == 0);
+            return (currentError == 0);
         }
     }
 
@@ -107,6 +109,7 @@ public class AluminatiPIDController {
             double i = kI * integral;
             double d = kD * (error - lastError) / dt;
             lastError = error;
+            currentError = error;
 
             double output = p + i + d;
             if (output < -maxOutput) {

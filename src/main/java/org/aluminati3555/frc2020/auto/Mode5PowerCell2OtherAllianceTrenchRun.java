@@ -75,17 +75,17 @@ public class Mode5PowerCell2OtherAllianceTrenchRun implements AluminatiAutoTask 
 
         // Set robot position
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));
-
+        
         // Turn on the limelight leds
         taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.ON));
-
+        
         // Retract hood if it is extended
         taskList.add(new ActionRetractHood(shooterSystem));
-
+        
         // Actuate intake and spin motors
         taskList.add(new ActionExtendIntake(intakeSystem));
         taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0.5));
-
+        
         // Run path
         taskList.add(new ActionRunPath(driveSystem, path1));
 
