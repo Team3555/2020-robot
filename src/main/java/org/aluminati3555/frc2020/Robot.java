@@ -170,7 +170,7 @@ public class Robot extends AluminatiRobot {
 
     // Set default robot state and mode
     robotState = new RobotState();
-    robotMode = RobotMode.AUTONOMOUS;
+    robotMode = RobotMode.OPERATOR_CONTROLLED;
 
     // Make it clear that matchStarted is false
     matchStarted = false;
@@ -466,12 +466,14 @@ public class Robot extends AluminatiRobot {
    * Controls the robot during auto
    */
   private void autoControl(double timestamp) {
-    if (getAutoKillSwitch()) {
-      // Stop task and cleanup
-      if (autoTask != null) {
-        autoTask.stop();
+    if (!DriverStation.getInstance().isAutonomous()) {
+      if (getAutoKillSwitch()) {
+        // Stop task if there is one
+        if (autoTask != null) {
+          autoTask.stop();
+        }
+        robotMode = RobotMode.OPERATOR_CONTROLLED;
       }
-      robotMode = RobotMode.OPERATOR_CONTROLLED;
     }
 
     if (robotMode == RobotMode.AUTONOMOUS && autoTask != null) {
