@@ -25,6 +25,7 @@ package org.aluminati3555.frc2020.auto.modes;
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
 import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
+import org.aluminati3555.frc2020.auto.actions.ActionOnPathMarkerPassed;
 import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
 import org.aluminati3555.frc2020.auto.actions.ActionRetractHood;
 import org.aluminati3555.frc2020.auto.actions.ActionRetractIntake;
@@ -45,6 +46,7 @@ import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
+import org.aluminati3555.lib.auto.AluminatiParallelAutoTask;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
@@ -113,6 +115,44 @@ public class Mode10PowerCell implements AluminatiAutoTask {
 
         // Run path two
         taskList.add(new ActionRunPath(driveSystem, path2));
+
+        // Set the limelight to the tracking pipeline
+        taskList.add(new ActionSetLimelightPipeline(limelight, 1));
+
+        // Shoot five power cells
+        taskList.add(new ActionExtendHood(shooterSystem));
+        taskList.add(new ActionAlignWithVision(driveSystem, limelight));
+        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 5));
+        taskList.add(new ActionRetractHood(shooterSystem));
+
+        // Set the limelight to the driver pipeline
+        taskList.add(new ActionSetLimelightPipeline(limelight, 0));
+
+        // Reset the limelight leds
+        taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.CURRENT_PIPELINE));
+
+        // Go get two more power cells from generator switch
+        taskList.add(
+                new AluminatiParallelAutoTask(new ActionRunPath(driveSystem, path3),
+                        new ActionOnPathMarkerPassed(driveSystem, "Path10PowerCell3A",
+                                new AluminatiParallelAutoTask(new ActionExtendIntake(intakeSystem),
+                                        new ActionSetIntakeSpeed(intakeSystem, 1)))));
+        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0));
+        taskList.add(new ActionRetractIntake(intakeSystem));
+
+        // Go get three more power cells from trench run
+        taskList.add(new ActionRunPath(driveSystem, path4));
+
+        taskList.add(new ActionExtendIntake(intakeSystem));
+        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 1));
+
+        taskList.add(new ActionRunPath(driveSystem, path5));
+
+        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 0));
+        taskList.add(new ActionRetractIntake(intakeSystem));
+
+        // Go back and shoot five power cells
+        taskList.add(new ActionRunPath(driveSystem, path6));
 
         // Set the limelight to the tracking pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));

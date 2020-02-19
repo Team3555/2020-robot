@@ -38,7 +38,7 @@ public class Path10PowerCell3 implements PathContainer {
         waypoints.add(new Waypoint(510, 95, 0, 0));
         waypoints.add(new Waypoint(485, 95, 15, 120));
         waypoints.add(new Waypoint(470, 95, 15, 120));
-        waypoints.add(new Waypoint(445, 81, 15, 120));
+        waypoints.add(new Waypoint(445, 81, 15, 120, "Path10PowerCell3A"));
         waypoints.add(new Waypoint(405, 81, 15, 120));
         waypoints.add(new Waypoint(394, 100, 0, 120));
 
