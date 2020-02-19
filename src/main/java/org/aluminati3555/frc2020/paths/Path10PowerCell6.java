@@ -32,19 +32,19 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.PathBuilder;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathBuilder.Waypoint;
 
-public class Path10PowerCell4 implements PathContainer {
+public class Path10PowerCell6 implements PathContainer {
     public Path buildPath() {
         ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
-        waypoints.add(new Waypoint(394, 100, 0, 0));
-        waypoints.add(new Waypoint(405, 81, 15, 120));
-        waypoints.add(new Waypoint(429, 27, 15, 120));
-        waypoints.add(new Waypoint(460, 27, 0, 120));
+        waypoints.add(new Waypoint(320, 27, 0, 0));
+        waypoints.add(new Waypoint(340, 27, 15, 120));
+        waypoints.add(new Waypoint(460, 95, 15, 120));
+        waypoints.add(new Waypoint(510, 95, 0, 120));
 
         return PathBuilder.buildPathFromWaypoints(waypoints);
     }
     
     public Pose2d getStartPose() {
-        return new Pose2d(394, 100, Rotation2d.fromDegrees(0)); 
+        return new Pose2d(320, 27, Rotation2d.fromDegrees(0)); 
     }
 
     public boolean isReversed() {

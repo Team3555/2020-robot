@@ -62,6 +62,7 @@ import com.team254.lib.geometry.Translation2d;
 
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
+import org.aluminati3555.frc2020.auto.modes.Mode10PowerCell;
 import org.aluminati3555.frc2020.auto.modes.Mode3PowerCellGoForward;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2OtherAllianceTrenchRun;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2ShieldGenerator;
@@ -245,12 +246,14 @@ public class Robot extends AluminatiRobot {
             new Mode5PowerCell3ShieldGenerator(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
                 magazineSystem)),
         new Entry("5PowerCell2OtherAllianceTrenchRun",
-            new Mode5PowerCell2OtherAllianceTrenchRun(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
-                magazineSystem)),
+            new Mode5PowerCell2OtherAllianceTrenchRun(
+                robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
         new Entry("GoForward", new ModeGoForward(robotState, driveSystem)),
-        new Entry("3PowerCellGoForward", new Mode3PowerCellGoForward(robotState, limelight, driveSystem, intakeSystem,
-            shooterSystem, magazineSystem)),
-        new Entry("10PowerCell", null));
+        new Entry("3PowerCellGoForward",
+            new Mode3PowerCellGoForward(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
+                magazineSystem)),
+        new Entry("10PowerCell",
+            new Mode10PowerCell(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoDisplay", 3);
