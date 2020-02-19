@@ -189,7 +189,7 @@ public class ShooterSystem implements AluminatiSystem {
                 } else {
                     magazineSystem.stopFeedingPowerCells();
                 }
-            } else if (driverController.getRawButton(5) || operatorController.getRawButton(5)) {
+            } else if (driverController.getRawButton(5)) {
                 // Driver wants the robot to align with vision target and flywheel to get up to
                 // speed
 
@@ -204,8 +204,7 @@ public class ShooterSystem implements AluminatiSystem {
                 // Set flywheel speed
                 set(SHORT_SHOT_RPM);
 
-                if ((driverController.getRawButton(6) || operatorController.getRawButton(6))
-                        && Math.abs(SHORT_SHOT_RPM - getVelocity()) <= ALLOWED_ERROR) {
+                if ((driverController.getRawButton(6)) && Math.abs(SHORT_SHOT_RPM - getVelocity()) <= ALLOWED_ERROR) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
                 } else {
@@ -231,7 +230,7 @@ public class ShooterSystem implements AluminatiSystem {
             }
         }
 
-        if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
+        if (mode != SystemMode.DISABLED) {
             // Set flywheel rpm
             if (shooterEnabled) {
                 motorGroup.getMasterTalon().set(ControlMode.Velocity, setpoint);
