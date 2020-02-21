@@ -73,6 +73,22 @@ public class MagazineSystem implements AluminatiSystem {
     }
 
     /**
+     * Starts intaking power cells
+     */
+    public void startIntakingPowerCells() {
+        state = State.INTAKE;
+    }
+
+    /**
+     * Stops intaking power cells
+     */
+    public void stopIntakingPowerCells() {
+        if (state == State.INTAKE) {
+            state = State.SENSOR;
+        }
+    }
+
+    /**
      * Starts continuously feeding power cells to the shooter
      */
     public void startFeedingPowerCells() {
@@ -83,7 +99,9 @@ public class MagazineSystem implements AluminatiSystem {
      * Stops continuously feeding power cells to the shooter
      */
     public void stopFeedingPowerCells() {
-        state = State.SENSOR;
+        if (state == State.CONTINUOUS_FORWARD) {
+            state = State.SENSOR;
+        }
     }
 
     /**
@@ -97,7 +115,9 @@ public class MagazineSystem implements AluminatiSystem {
      * Stops continuously ejecting power cells
      */
     public void stopEjectingPowerCells() {
-        state = State.SENSOR;
+        if (state == State.CONTINUOUS_REVERSE) {
+            state = State.SENSOR;
+        }
     }
 
     public void update(double timestamp, SystemMode mode) {
@@ -114,9 +134,12 @@ public class MagazineSystem implements AluminatiSystem {
         if (state == State.TIMING && timestamp >= stopTime) {
             state = State.SENSOR;
         }
-
+        
         if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
             switch (state) {
+                case INTAKE:
+                    motor.set(ControlMode.PercentOutput, 1);
+                    feederMotor.set(ControlMode.PercentOutput, 0);
                 case CONTINUOUS_FORWARD:
                     motor.set(ControlMode.PercentOutput, 1);
                     feederMotor.set(ControlMode.PercentOutput, 0);
@@ -185,6 +208,6 @@ public class MagazineSystem implements AluminatiSystem {
     }
 
     private enum State {
-        CONTINUOUS_FORWARD, CONTINUOUS_REVERSE, SENSOR, TIMING
+        INTAKE, CONTINUOUS_FORWARD, CONTINUOUS_REVERSE, SENSOR, TIMING
     }
 }

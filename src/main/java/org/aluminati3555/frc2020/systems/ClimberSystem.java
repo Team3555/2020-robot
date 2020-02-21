@@ -101,11 +101,11 @@ public class ClimberSystem implements AluminatiSystem {
                 intakeSystem.extend();
             }
 
-            if (leftJoystick > ARM_DEADBAND && !operatorController.getRawButton(9)) {
-                // Lift arms
-                armMotor.set(ControlMode.PercentOutput, leftJoystick);
-            } else if (leftJoystick < ARM_DEADBAND && !operatorController.getRawButton(9)) {
+            if (leftJoystick < ARM_DEADBAND && !operatorController.getRawButton(9)) {
                 // Lower arms
+                armMotor.set(ControlMode.PercentOutput, leftJoystick);
+            } else if (leftJoystick > ARM_DEADBAND && !operatorController.getRawButton(9)) {
+                // Lift arms
                 armMotor.set(ControlMode.PercentOutput, leftJoystick);
             } else {
                 armMotor.set(ControlMode.PercentOutput, 0);
