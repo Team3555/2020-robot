@@ -28,8 +28,6 @@ import org.aluminati3555.lib.auto.AluminatiAutoSelector.Entry;
 import org.aluminati3555.lib.data.AluminatiData;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.drivers.AluminatiDisplay;
-import org.aluminati3555.lib.drivers.AluminatiDisplay.Button;
-import org.aluminati3555.lib.drivers.AluminatiDualGyro;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
 import org.aluminati3555.lib.drivers.AluminatiSpark;
 import org.aluminati3555.lib.loops.Loop;
@@ -105,7 +103,6 @@ public class Robot extends AluminatiRobot {
   private PowerDistributionPanel pdp;
 
   // Digit display
-  private DisplayMode displayMode;
   private AluminatiDisplay display;
 
   // Joysticks
@@ -190,7 +187,6 @@ public class Robot extends AluminatiRobot {
     pdp.clearStickyFaults();
 
     // Setup digit display
-    displayMode = DisplayMode.BATTERY_VOLTAGE;
     display = new AluminatiDisplay();
 
     // Setup joysticks
@@ -423,16 +419,15 @@ public class Robot extends AluminatiRobot {
     AluminatiMotorGroup right = new AluminatiMotorGroup(true, new AluminatiTalonSRX(50), new AluminatiVictorSPX(51),
         new AluminatiVictorSPX(1));
 
+    left.getMasterTalon().setSensorPhase(true);
+    right.getMasterTalon().setSensorPhase(true);
+
     AluminatiTalonSRX climberArm = new AluminatiTalonSRX(43);
     AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(42);
 
-    AluminatiPigeon gyro1 = new AluminatiPigeon(climberArm);
-    AluminatiPigeon gyro2 = new AluminatiPigeon(climberSpool);
-    AluminatiDualGyro dualGyro = new AluminatiDualGyro(gyro1, gyro2);
-
-    left.getMasterTalon().setSensorPhase(true);
-    right.getMasterTalon().setSensorPhase(true);
-    driveSystem = new DriveSystem(looper, robotState, left, right, dualGyro, driverController, robotFaults);
+    AluminatiPigeon gyro = new AluminatiPigeon(climberArm);
+    
+    driveSystem = new DriveSystem(looper, robotState, left, right, gyro, driverController, robotFaults);
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), operatorController,
         robotFaults);
@@ -441,7 +436,7 @@ public class Robot extends AluminatiRobot {
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
         new AluminatiSpark(0), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
-    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(79), new AluminatiSolenoid(2), operatorController,
+    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(23), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);
     climberSystem = new ClimberSystem(climberArm, climberSpool, new AluminatiSolenoid(3), intakeSystem,
         operatorController, robotFaults);
@@ -526,25 +521,11 @@ public class Robot extends AluminatiRobot {
    * Updates the digit display
    */
   private void updateDisplay() {
-    if (display.getButton(Button.BUTTON_A)) {
-      displayMode = DisplayMode.BATTERY_VOLTAGE;
-    } else if (display.getButton(Button.BUTTON_B)) {
-      displayMode = DisplayMode.LOOP_TIME;
-    }
-
-    if (displayMode == DisplayMode.BATTERY_VOLTAGE) {
-      display.display(pdp.getVoltage());
-    } else {
-      display.display(this.getLastDT() * 100);
-    }
+    display.display(pdp.getVoltage());
   }
 
   public enum RobotMode {
     AUTONOMOUS, OPERATOR_CONTROLLED
-  }
-
-  private enum DisplayMode {
-    BATTERY_VOLTAGE, LOOP_TIME
   }
 
   public enum ControlPanelColor {

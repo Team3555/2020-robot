@@ -126,7 +126,7 @@ public class MagazineSystem implements AluminatiSystem {
                     feederMotor.set(ControlMode.PercentOutput, -1);
                     break;
                 case SENSOR:
-                    if (!photoelectricSensor.get()) {
+                    if (photoelectricSensor.get()) {
                         motor.set(ControlMode.PercentOutput, 0.5);
                     }
                     feederMotor.set(ControlMode.PercentOutput, 0);
