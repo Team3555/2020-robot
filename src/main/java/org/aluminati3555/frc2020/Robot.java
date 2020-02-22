@@ -210,8 +210,6 @@ public class Robot extends AluminatiRobot {
     // Load neural network
     if (!Robot.isSimulation()) {
       ShooterUtil.load(Filesystem.getDeployDirectory() + "/shooter.ml");
-    } else {
-      ShooterUtil.load(Filesystem.getDeployDirectory() + "/../src/main/deploy/shooter.ml");
     }
 
     // Setup compressor
