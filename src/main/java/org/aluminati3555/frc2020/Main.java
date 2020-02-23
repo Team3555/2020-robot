@@ -22,8 +22,6 @@
 
 package org.aluminati3555.frc2020;
 
-import org.aluminati3555.frc2020.Robot;
-
 import edu.wpi.first.wpilibj.RobotBase;
 
 public class Main {
