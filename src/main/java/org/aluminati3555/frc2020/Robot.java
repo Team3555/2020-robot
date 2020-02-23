@@ -69,6 +69,7 @@ import org.aluminati3555.frc2020.auto.modes.Mode8PowerCell5TrenchRun;
 import org.aluminati3555.frc2020.auto.modes.ModeCharacterizeDrive;
 import org.aluminati3555.frc2020.auto.modes.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.modes.ModeExamplePath;
+import org.aluminati3555.frc2020.auto.modes.ModeExampleTurn;
 import org.aluminati3555.frc2020.auto.modes.ModeGoForward;
 import org.aluminati3555.frc2020.systems.ClimberSystem;
 import org.aluminati3555.frc2020.systems.DriveSystem;
@@ -247,7 +248,8 @@ public class Robot extends AluminatiRobot {
             new Mode3PowerCellGoForward(robotState, limelight, driveSystem, intakeSystem, shooterSystem,
                 magazineSystem)),
         new Entry("10PowerCell",
-            new Mode10PowerCell(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)));
+            new Mode10PowerCell(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
+        new Entry("ExampleTurn", new ModeExampleTurn(driveSystem)));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoDisplay", 3);
@@ -427,13 +429,12 @@ public class Robot extends AluminatiRobot {
 
     AluminatiTalonSRX feederMotor = new AluminatiTalonSRX(46);
     feederMotor.setSensorPhase(true);
-    
+
     driveSystem = new DriveSystem(looper, robotState, left, right, gyro, driverController, robotFaults);
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), operatorController,
         robotFaults);
-    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, new DigitalInput(0),
-        robotFaults);
+    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, new DigitalInput(0), robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
         new AluminatiSpark(0), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
@@ -500,21 +501,21 @@ public class Robot extends AluminatiRobot {
     char color = dataString.charAt(0);
 
     switch (color) {
-    case 'B':
-      controlPanelColor = ControlPanelColor.BLUE;
-      break;
-    case 'G':
-      controlPanelColor = ControlPanelColor.GREEN;
-      break;
-    case 'R':
-      controlPanelColor = ControlPanelColor.RED;
-      break;
-    case 'Y':
-      controlPanelColor = ControlPanelColor.YELLOW;
-      break;
-    default:
-      controlPanelColor = ControlPanelColor.UNKOWN;
-      break;
+      case 'B':
+        controlPanelColor = ControlPanelColor.BLUE;
+        break;
+      case 'G':
+        controlPanelColor = ControlPanelColor.GREEN;
+        break;
+      case 'R':
+        controlPanelColor = ControlPanelColor.RED;
+        break;
+      case 'Y':
+        controlPanelColor = ControlPanelColor.YELLOW;
+        break;
+      default:
+        controlPanelColor = ControlPanelColor.UNKOWN;
+        break;
     }
   }
 
