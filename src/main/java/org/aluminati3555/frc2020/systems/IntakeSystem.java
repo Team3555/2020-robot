@@ -108,13 +108,17 @@ public class IntakeSystem implements AluminatiSystem {
             // Control intake speed
             if (operatorController.getRawButtonPressed(6) && isDown()) {
                 setSpeed(-1);
-
-                // Run the magazine as well
-                magazineSystem.startIntakingPowerCells();
             }
             
             if (operatorController.getRawButtonReleased(6)) {
                 setSpeed(0);
+            }
+
+            if (operatorController.getRawButtonPressed(1)) {
+                magazineSystem.startIntakingPowerCells();
+            }
+
+            if (operatorController.getRawButtonReleased(1)) {
                 magazineSystem.stopIntakingPowerCells();
             }
 
