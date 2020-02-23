@@ -54,6 +54,13 @@ public class MagazineSystem implements AluminatiSystem {
         return (int) (rpm * ENCODER_TICKS_PER_ROTATION / 600.0);
     }
 
+    /**
+     * Converts native units to rpm
+     */
+    private static int convertNativeUnitsToRPM(double nativeUnits) {
+        return (int) (nativeUnits / ENCODER_TICKS_PER_ROTATION * 600.0);
+    }
+
     private AluminatiVictorSPX motor;
     private AluminatiTalonSRX feederMotor;
     @SuppressWarnings("unused")
@@ -119,6 +126,13 @@ public class MagazineSystem implements AluminatiSystem {
         if (state == State.CONTINUOUS_REVERSE) {
             state = State.OFF;
         }
+    }
+
+    /**
+     * Returns the velocity of the feeder wheel
+     */
+    public double getFeederVelocity() {
+        return convertNativeUnitsToRPM(feederMotor.getSelectedSensorVelocity());
     }
 
     public void update(double timestamp, SystemMode mode) {

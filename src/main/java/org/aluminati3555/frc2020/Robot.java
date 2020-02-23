@@ -267,7 +267,8 @@ public class Robot extends AluminatiRobot {
     String autoString = (auto == null) ? "DoNothing" : auto.toString();
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
-        autoString, robotFaults, limelight, shooterSystem.get(), shooterSystem.getVelocity(), robotMode);
+        autoString, robotFaults, limelight, shooterSystem.get(), shooterSystem.getVelocity(),
+        magazineSystem.getFeederVelocity(), robotMode);
   }
 
   @Override
