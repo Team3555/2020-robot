@@ -45,7 +45,6 @@ import org.aluminati3555.lib.util.AluminatiUtil;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -435,7 +434,7 @@ public class Robot extends AluminatiRobot {
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), operatorController,
         robotFaults);
-    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, new DigitalInput(0), robotFaults);
+    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
         new AluminatiSpark(0), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);

@@ -32,8 +32,6 @@ import org.aluminati3555.lib.drivers.AluminatiVictorSPX;
 import org.aluminati3555.lib.net.AluminatiTuneable;
 import org.aluminati3555.lib.system.AluminatiSystem;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 /**
  * This class controls the mechanism that feeds the power cells to the shooter
  * 
@@ -63,8 +61,6 @@ public class MagazineSystem implements AluminatiSystem {
 
     private AluminatiVictorSPX motor;
     private AluminatiTalonSRX feederMotor;
-    @SuppressWarnings("unused")
-    private DigitalInput photoelectricSensor;
 
     private RobotFaults robotFaults;
 
@@ -179,11 +175,9 @@ public class MagazineSystem implements AluminatiSystem {
         }
     }
 
-    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, DigitalInput photoelectricSensor,
-            RobotFaults robotFaults) {
+    public MagazineSystem(AluminatiVictorSPX motor, AluminatiTalonSRX feederMotor, RobotFaults robotFaults) {
         this.motor = motor;
         this.feederMotor = feederMotor;
-        this.photoelectricSensor = photoelectricSensor;
 
         this.robotFaults = robotFaults;
 
