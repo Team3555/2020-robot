@@ -21,7 +21,7 @@ desired_contour_region:0
 dilation_steps:1
 direction_filter:0
 erosion_steps:0
-exposure:2
+exposure:15
 hue_max:85
 hue_min:52
 image_flip:0
