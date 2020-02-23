@@ -22,12 +22,15 @@
 
 package org.aluminati3555.frc2020.auto.modes;
 
+import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
 
+import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
 import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
+import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 
 /**
  * This mode turns 90 degrees
@@ -58,9 +61,10 @@ public class ModeExampleTurn implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public ModeExampleTurn(DriveSystem driveSystem) {
+    public ModeExampleTurn(RobotState robotState, DriveSystem driveSystem) {
         taskList = new AluminatiAutoTaskList();
-        
+
+        taskList.add(new ActionResetRobotPose(robotState, driveSystem, new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
         taskList.add(new ActionTurnToHeading(driveSystem, Rotation2d.fromDegrees(90)));
     }
 }
