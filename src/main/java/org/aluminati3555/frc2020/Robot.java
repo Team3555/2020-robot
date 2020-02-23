@@ -420,21 +420,24 @@ public class Robot extends AluminatiRobot {
     left.getMasterTalon().setSensorPhase(true);
     right.getMasterTalon().setSensorPhase(true);
 
-    AluminatiTalonSRX climberArm = new AluminatiTalonSRX(43);
-    AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(42);
+    AluminatiTalonSRX climberArm = new AluminatiTalonSRX(42);
+    AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(43);
 
-    AluminatiPigeon gyro = new AluminatiPigeon(climberArm);
+    AluminatiPigeon gyro = new AluminatiPigeon(climberSpool);
+
+    AluminatiTalonSRX feederMotor = new AluminatiTalonSRX(46);
+    feederMotor.setSensorPhase(true);
     
     driveSystem = new DriveSystem(looper, robotState, left, right, gyro, driverController, robotFaults);
 
     spinnerSystem = new SpinnerSystem(new AluminatiTalonSRX(60), new AluminatiSolenoid(0), operatorController,
         robotFaults);
-    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), new AluminatiTalonSRX(46), new DigitalInput(0),
+    magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, new DigitalInput(0),
         robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
         new AluminatiSpark(0), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
-    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(23), new AluminatiSolenoid(2), operatorController,
+    intakeSystem = new IntakeSystem(new AluminatiTalonSRX(44), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);
     climberSystem = new ClimberSystem(climberArm, climberSpool, new AluminatiSolenoid(3), intakeSystem,
         operatorController, robotFaults);

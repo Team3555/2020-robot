@@ -204,7 +204,7 @@ public class ShooterSystem implements AluminatiSystem {
                 // Set flywheel speed
                 set(SHORT_SHOT_RPM);
 
-                if ((driverController.getRawButton(6)) && Math.abs(SHORT_SHOT_RPM - getVelocity()) <= ALLOWED_ERROR) {
+                if ((driverController.getRawButton(6)) /*&& Math.abs(SHORT_SHOT_RPM - getVelocity()) <= ALLOWED_ERROR*/) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
                 } else {

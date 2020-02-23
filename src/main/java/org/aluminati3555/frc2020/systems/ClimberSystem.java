@@ -121,7 +121,7 @@ public class ClimberSystem implements AluminatiSystem {
                 }
 
                 if (timestamp >= startLoweringTime + LOWERING_DELAY) {
-                    spoolMotor.set(ControlMode.PercentOutput, -1);
+                    spoolMotor.set(ControlMode.PercentOutput, 1);
                 } else {
                     spoolMotor.set(ControlMode.PercentOutput, 0);
                 }
@@ -129,7 +129,7 @@ public class ClimberSystem implements AluminatiSystem {
                 isLowering = false;
                 lockRatchet();
 
-                spoolMotor.set(ControlMode.PercentOutput, 1);
+                spoolMotor.set(ControlMode.PercentOutput, -1);
             } else if (getRatchetRelease()) {
                 isLowering = false;
                 unlockRatchet();

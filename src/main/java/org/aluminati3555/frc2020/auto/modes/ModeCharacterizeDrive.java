@@ -61,7 +61,7 @@ public class ModeCharacterizeDrive implements AluminatiAutoTask {
         if (power < 1) {
             power += 0.005;
         }
-        driveSystem.manualArcadeDrive(0, -power);
+        driveSystem.manualArcadeDrive(0, power);
 
         points.add(new DataPoint(
                 (driveSystem.getLeftVelocityInchesPerSecond() + driveSystem.getRightVelocityInchesPerSecond()) / 2,
@@ -76,8 +76,12 @@ public class ModeCharacterizeDrive implements AluminatiAutoTask {
         driveSystem.manualArcadeDrive(0, 0);
 
         CharacterizationConstants output = DriveCharacterization.characterizeDrive(points, points);
+        
         SmartDashboard.putNumber("kV", output.kv);
         SmartDashboard.putNumber("kS", output.ks);
+
+        System.out.println("kV: " + output.kv);
+        System.out.println("kS: " + output.ks);
     }
 
     public boolean isComplete() {

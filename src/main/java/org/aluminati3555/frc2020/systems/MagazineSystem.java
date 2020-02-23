@@ -84,7 +84,7 @@ public class MagazineSystem implements AluminatiSystem {
      */
     public void stopIntakingPowerCells() {
         if (state == State.INTAKE) {
-            state = State.SENSOR;
+            state = State.OFF;
         }
     }
 
@@ -100,7 +100,7 @@ public class MagazineSystem implements AluminatiSystem {
      */
     public void stopFeedingPowerCells() {
         if (state == State.CONTINUOUS_FORWARD) {
-            state = State.SENSOR;
+            state = State.OFF;
         }
     }
 
@@ -116,7 +116,7 @@ public class MagazineSystem implements AluminatiSystem {
      */
     public void stopEjectingPowerCells() {
         if (state == State.CONTINUOUS_REVERSE) {
-            state = State.SENSOR;
+            state = State.OFF;
         }
     }
 
@@ -132,34 +132,34 @@ public class MagazineSystem implements AluminatiSystem {
 
         // Update states
         if (state == State.TIMING && timestamp >= stopTime) {
-            state = State.SENSOR;
+            state = State.OFF;
         }
 
         if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
             switch (state) {
-            case INTAKE:
-            case CONTINUOUS_FORWARD:
-                motor.set(ControlMode.PercentOutput, 1);
-                feederMotor.set(ControlMode.PercentOutput, 0);
-                break;
-            case CONTINUOUS_REVERSE:
-                motor.set(ControlMode.PercentOutput, -1);
-                feederMotor.set(ControlMode.PercentOutput, -1);
-                break;
-            case SENSOR:
-                if (photoelectricSensor.get()) {
+                case INTAKE:
                     motor.set(ControlMode.PercentOutput, 0.5);
-                }
-                feederMotor.set(ControlMode.PercentOutput, 0);
-                break;
-            case TIMING:
-                motor.set(ControlMode.PercentOutput, 0.5);
-                feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
-                break;
-            default:
-                motor.set(ControlMode.PercentOutput, 0);
-                feederMotor.set(ControlMode.PercentOutput, 0);
-                break;
+                    feederMotor.set(ControlMode.PercentOutput, 0);
+                case CONTINUOUS_FORWARD:
+                    motor.set(ControlMode.PercentOutput, 1);
+                    feederMotor.set(ControlMode.PercentOutput, convertRPMToNativeUnits(FEEDER_RPM));
+                    break;
+                case CONTINUOUS_REVERSE:
+                    motor.set(ControlMode.PercentOutput, -1);
+                    feederMotor.set(ControlMode.PercentOutput, -1);
+                    break;
+                case OFF:
+                    motor.set(ControlMode.PercentOutput, 0);
+                    feederMotor.set(ControlMode.PercentOutput, 0);
+                    break;
+                case TIMING:
+                    motor.set(ControlMode.PercentOutput, 0.5);
+                    feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
+                    break;
+                default:
+                    motor.set(ControlMode.PercentOutput, 0);
+                    feederMotor.set(ControlMode.PercentOutput, 0);
+                    break;
             }
         }
     }
@@ -177,6 +177,8 @@ public class MagazineSystem implements AluminatiSystem {
 
         // Configure encoder
         this.feederMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
+        this.feederMotor.setInverted(true);
 
         // Configure PID
         this.feederMotor.config_kP(0, 0.1);
@@ -202,10 +204,10 @@ public class MagazineSystem implements AluminatiSystem {
         // Set brake mode
         this.feederMotor.setNeutralMode(NeutralMode.Brake);
 
-        state = State.SENSOR;
+        state = State.OFF;
     }
 
     private enum State {
-        INTAKE, CONTINUOUS_FORWARD, CONTINUOUS_REVERSE, SENSOR, TIMING
+        INTAKE, CONTINUOUS_FORWARD, CONTINUOUS_REVERSE, OFF, TIMING
     }
 }
