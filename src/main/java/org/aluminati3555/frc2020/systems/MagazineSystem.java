@@ -56,6 +56,7 @@ public class MagazineSystem implements AluminatiSystem {
 
     private AluminatiVictorSPX motor;
     private AluminatiTalonSRX feederMotor;
+    @SuppressWarnings("unused")
     private DigitalInput photoelectricSensor;
 
     private RobotFaults robotFaults;
