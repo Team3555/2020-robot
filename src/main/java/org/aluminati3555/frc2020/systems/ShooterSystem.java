@@ -22,6 +22,8 @@
 
 package org.aluminati3555.frc2020.systems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -48,6 +50,8 @@ public class ShooterSystem implements AluminatiSystem {
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
     private static final double ALLOWED_ERROR = 5;
     private static final int SHORT_SHOT_RPM = 1000;
+    private static final double HOOD_STOP_CURRENT = 20;
+    private static final double HOOD_UP_TIME = 2.5;
 
     /**
      * Converts rpm to native units
@@ -73,7 +77,10 @@ public class ShooterSystem implements AluminatiSystem {
 
     private RobotFaults robotFaults;
 
-    private HoodState hoodState;
+    private double hoodStartTime;
+    private HoodPosition hoodPosition;
+    private HoodAction hoodAction;
+    private ArrayList<HoodAction> hoodActionList;
 
     private boolean wasTracking;
 
@@ -127,21 +134,30 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood
      */
     public void extendHood() {
-        hoodState = HoodState.UP;
+        if (hoodPosition == HoodPosition.UP
+                || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.EXTEND)) {
+            // The hood is either up on its way up
+            return;
+        }
+
+        if (hoodActionList.size() < 2) {
+            hoodActionList.add(HoodAction.EXTEND);
+        }
     }
 
     /**
      * Retracts the hood
      */
     public void retractHood() {
-        hoodState = HoodState.DOWN;
-    }
+        if (hoodPosition == HoodPosition.DOWN
+                || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.RETRACT)) {
+            // The hood is either down or on its way down
+            return;
+        }
 
-    /**
-     * Returns the hood's state
-     */
-    public HoodState getHoodState() {
-        return hoodState;
+        if (hoodActionList.size() < 2) {
+            hoodActionList.add(HoodAction.RETRACT);
+        }
     }
 
     public void update(double timestamp, SystemMode mode) {
@@ -241,11 +257,48 @@ public class ShooterSystem implements AluminatiSystem {
                 motorGroup.getMasterTalon().set(ControlMode.PercentOutput, 0);
             }
 
-            // Update hood
-            if (hoodState == HoodState.DOWN) {
-                hoodMotor.set(1);
-            } else {
-                hoodMotor.set(-1);
+            // Update hood action
+            if ((hoodAction == HoodAction.NONE || hoodAction == HoodAction.EXTEND) && hoodActionList.size() > 0) {
+                hoodAction = hoodActionList.get(0);
+                hoodActionList.remove(0);
+
+                hoodPosition = HoodPosition.UNKNOWN;
+
+                if (hoodAction == HoodAction.EXTEND) {
+                    hoodStartTime = timestamp;
+                }
+            }
+
+            // Update extend action
+            if (hoodAction == HoodAction.EXTEND) {
+                // Check for completion
+                if (timestamp >= hoodStartTime + HOOD_UP_TIME) {
+                    hoodAction = HoodAction.NONE;
+                    hoodPosition = HoodPosition.UP;
+                }
+            }
+
+            // Update retract action
+            if (hoodAction == HoodAction.RETRACT) {
+                // Check for completion
+                if (hoodMotor.getOutputCurrent() >= HOOD_STOP_CURRENT) {
+                    hoodAction = HoodAction.NONE;
+                    hoodPosition = HoodPosition.DOWN;
+                }
+            }
+
+            // Update output to motor
+            switch (hoodAction) {
+                case EXTEND:
+                    hoodMotor.set(-1);
+                    break;
+                case RETRACT:
+                    hoodMotor.set(1);
+                    break;
+                case NONE:
+                default:
+                    hoodMotor.set(0);
+                    break;
             }
         }
     }
@@ -264,7 +317,10 @@ public class ShooterSystem implements AluminatiSystem {
 
         this.robotFaults = robotFaults;
 
-        this.hoodState = HoodState.DOWN;
+        this.hoodPosition = HoodPosition.UNKNOWN;
+        this.hoodAction = HoodAction.NONE;
+        this.hoodActionList = new ArrayList<HoodAction>();
+        this.hoodActionList.add(HoodAction.RETRACT);
 
         this.wasTracking = false;
 
@@ -299,7 +355,11 @@ public class ShooterSystem implements AluminatiSystem {
         this.turnController = new AluminatiTuneablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
     }
 
-    private enum HoodState {
-        UP, DOWN
+    private enum HoodPosition {
+        UP, DOWN, UNKNOWN
+    }
+
+    private enum HoodAction {
+        EXTEND, RETRACT, NONE
     }
 }

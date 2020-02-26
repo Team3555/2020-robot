@@ -427,7 +427,7 @@ public class Robot extends AluminatiRobot {
         robotFaults);
     magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
-        new AluminatiSpark(0), driverController, operatorController, limelight, driveSystem, magazineSystem,
+        new AluminatiSpark(0, 7), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
     intakeSystem = new IntakeSystem(new AluminatiTalonSRX(44), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);
