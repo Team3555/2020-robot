@@ -70,7 +70,6 @@ import org.aluminati3555.frc2020.auto.modes.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.modes.ModeExamplePath;
 import org.aluminati3555.frc2020.auto.modes.ModeExampleTurn;
 import org.aluminati3555.frc2020.auto.modes.ModeGoForward;
-import org.aluminati3555.frc2020.systems.ClimberSystem;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
@@ -121,7 +120,6 @@ public class Robot extends AluminatiRobot {
   private ShooterSystem shooterSystem;
   private IntakeSystem intakeSystem;
   private MagazineSystem magazineSystem;
-  private ClimberSystem climberSystem;
 
   // Pneumatics
   private AluminatiCompressor compressor;
@@ -302,7 +300,6 @@ public class Robot extends AluminatiRobot {
     spinnerSystem.update(timestamp, SystemMode.DISABLED);
     shooterSystem.update(timestamp, SystemMode.DISABLED);
     intakeSystem.update(timestamp, SystemMode.DISABLED);
-    climberSystem.update(timestamp, SystemMode.DISABLED);
     magazineSystem.update(timestamp, SystemMode.DISABLED);
   }
 
@@ -350,7 +347,6 @@ public class Robot extends AluminatiRobot {
     spinnerSystem.update(timestamp, SystemMode.AUTONOMOUS);
     shooterSystem.update(timestamp, SystemMode.AUTONOMOUS);
     intakeSystem.update(timestamp, SystemMode.AUTONOMOUS);
-    climberSystem.update(timestamp, SystemMode.AUTONOMOUS);
     magazineSystem.update(timestamp, SystemMode.AUTONOMOUS);
   }
 
@@ -390,7 +386,6 @@ public class Robot extends AluminatiRobot {
     spinnerSystem.update(timestamp, mode);
     shooterSystem.update(timestamp, mode);
     intakeSystem.update(timestamp, mode);
-    climberSystem.update(timestamp, mode);
     magazineSystem.update(timestamp, mode);
   }
 
@@ -422,10 +417,7 @@ public class Robot extends AluminatiRobot {
     left.getMasterTalon().setSensorPhase(true);
     right.getMasterTalon().setSensorPhase(true);
 
-    AluminatiTalonSRX climberArm = new AluminatiTalonSRX(42);
-    AluminatiTalonSRX climberSpool = new AluminatiTalonSRX(43);
-
-    AluminatiPigeon gyro = new AluminatiPigeon(climberSpool);
+    AluminatiPigeon gyro = new AluminatiPigeon(new AluminatiTalonSRX(43));
 
     AluminatiTalonSRX feederMotor = new AluminatiTalonSRX(46);
 
@@ -439,8 +431,6 @@ public class Robot extends AluminatiRobot {
         robotFaults);
     intakeSystem = new IntakeSystem(new AluminatiTalonSRX(44), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);
-    climberSystem = new ClimberSystem(climberArm, climberSpool, new AluminatiSolenoid(3), intakeSystem,
-        operatorController, robotFaults);
   }
 
   /**

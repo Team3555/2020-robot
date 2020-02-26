@@ -193,8 +193,6 @@ public class ShooterSystem implements AluminatiSystem {
                         && Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR && limelight.hasTarget()) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
-                } else {
-                    magazineSystem.stopFeedingPowerCells();
                 }
             } else if (driverController.getRawButton(5)) {
                 // Driver wants the robot to align with vision target and flywheel to get up to
@@ -214,8 +212,6 @@ public class ShooterSystem implements AluminatiSystem {
                 if ((driverController.getRawButton(6)) && Math.abs(SHORT_SHOT_RPM - getVelocity()) <= ALLOWED_ERROR) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
-                } else {
-                    magazineSystem.stopFeedingPowerCells();
                 }
             } else {
                 // Configure limelight for driver vision
@@ -279,7 +275,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.motorGroup.getMasterTalon().config_kP(0, 0.01);
+        this.motorGroup.getMasterTalon().config_kP(0, 0.015);
         this.motorGroup.getMasterTalon().config_kI(0, 0);
         this.motorGroup.getMasterTalon().config_kD(0, 0);
         this.motorGroup.getMasterTalon().config_kF(0, 0.0278);

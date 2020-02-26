@@ -110,12 +110,12 @@ public class SpinnerSystem implements AluminatiSystem {
 
             double rightJoystick = operatorController.getX(Hand.kRight);
 
-            if (operatorController.getRawButtonPressed(1) && isUp()) {
+            if (operatorController.getRawButtonPressed(3) && isUp()) {
                 spinnerMotor.setSelectedSensorPosition(0);
                 setpoint = rotationsToEncoderTicks(TARGET_ROTATIONS);
 
                 isClosedLoop = true;
-            } else if (operatorController.getRawButtonReleased(1)) {
+            } else if (operatorController.getRawButtonReleased(3)) {
                 isClosedLoop = false;
             } else if (Math.abs(rightJoystick) > SPINNER_DEADBAND && !operatorController.getRawButton(10) && isUp()
                     && !isClosedLoop) {
