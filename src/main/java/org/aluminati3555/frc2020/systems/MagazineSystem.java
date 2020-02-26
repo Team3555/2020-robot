@@ -69,6 +69,13 @@ public class MagazineSystem implements AluminatiSystem {
     private double stopTime;
 
     /**
+     * Returns the output of the feeder motor as a percent between 0 and 1
+     */
+    public double getFeederOutputPercent() {
+        return feederMotor.getMotorOutputPercent();
+    }
+
+    /**
      * Feeds a specified number of power cells to the shooter
      */
     public void feedPowerCell(int numberOfPowerCells, double timestamp) {
@@ -151,9 +158,10 @@ public class MagazineSystem implements AluminatiSystem {
                 case INTAKE:
                     motor.set(ControlMode.PercentOutput, 0.5);
                     feederMotor.set(ControlMode.PercentOutput, 0);
+                    break;
                 case CONTINUOUS_FORWARD:
                     motor.set(ControlMode.PercentOutput, 1);
-                    feederMotor.set(ControlMode.PercentOutput, convertRPMToNativeUnits(FEEDER_RPM));
+                    feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
                     break;
                 case CONTINUOUS_REVERSE:
                     motor.set(ControlMode.PercentOutput, -1);

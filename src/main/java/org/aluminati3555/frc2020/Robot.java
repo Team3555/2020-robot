@@ -428,7 +428,6 @@ public class Robot extends AluminatiRobot {
     AluminatiPigeon gyro = new AluminatiPigeon(climberSpool);
 
     AluminatiTalonSRX feederMotor = new AluminatiTalonSRX(46);
-    feederMotor.setSensorPhase(true);
 
     driveSystem = new DriveSystem(looper, robotState, left, right, gyro, driverController, robotFaults);
 
@@ -544,6 +543,8 @@ public class Robot extends AluminatiRobot {
       if (!DriverStation.getInstance().isFMSAttached()) {
         SmartDashboard.putNumber("leftPower", driveSystem.getLeftGroup().getMasterTalon().getMotorOutputPercent());
         SmartDashboard.putNumber("rightPower", driveSystem.getRightGroup().getMasterTalon().getMotorOutputPercent());
+        SmartDashboard.putNumber("shooterPower", shooterSystem.getOutputPercent());
+        SmartDashboard.putNumber("feederPower", magazineSystem.getFeederOutputPercent());
       }
     }
 

@@ -46,8 +46,8 @@ public class ShooterSystem implements AluminatiSystem {
     // Constants
     private static final int SHOOTER_CURRENT_LIMIT = 30;
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
-    private static final double ALLOWED_ERROR = 3;
-    private static final int SHORT_SHOT_RPM = 500;
+    private static final double ALLOWED_ERROR = 5;
+    private static final int SHORT_SHOT_RPM = 1000;
 
     /**
      * Converts rpm to native units
@@ -99,6 +99,13 @@ public class ShooterSystem implements AluminatiSystem {
         }
 
         return convertNativeUnitsToRPM(setpoint);
+    }
+
+    /**
+     * Returns the motor output as a percentage between 0 and 1
+     */
+    public double getOutputPercent() {
+        return motorGroup.getMasterTalon().getMotorOutputPercent();
     }
 
     /**
@@ -272,10 +279,10 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.motorGroup.getMasterTalon().config_kP(0, 0);
+        this.motorGroup.getMasterTalon().config_kP(0, 0.01);
         this.motorGroup.getMasterTalon().config_kI(0, 0);
         this.motorGroup.getMasterTalon().config_kD(0, 0);
-        this.motorGroup.getMasterTalon().config_kF(0, 0.0240406709559);
+        this.motorGroup.getMasterTalon().config_kF(0, 0.0278);
         this.motorGroup.getMasterTalon().config_IntegralZone(0, 400);
 
         // Setup tuning listener
