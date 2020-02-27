@@ -137,6 +137,15 @@ public class IntakeSystem implements AluminatiSystem {
                 setSpeed(0);
                 retract();
             }
+
+            // Run in reverse without intake
+            if (operatorController.getRawButtonPressed(4)) {
+                magazineSystem.startEjectingPowerCells();
+            }
+
+            if (operatorController.getRawButtonReleased(4)) {
+                magazineSystem.stopEjectingPowerCells();
+            }
         }
 
         intakeMotor.set(ControlMode.PercentOutput, speed);
