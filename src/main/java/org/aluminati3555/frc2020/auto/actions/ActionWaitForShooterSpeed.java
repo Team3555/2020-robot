@@ -31,7 +31,7 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
  * @author Caleb Heydon
  */
 public class ActionWaitForShooterSpeed implements AluminatiAutoTask {
-    private static final double ALLOWED_ERROR = 3;
+    private static final double ALLOWED_ERROR = 100;
 
     private ShooterSystem shooterSystem;
 

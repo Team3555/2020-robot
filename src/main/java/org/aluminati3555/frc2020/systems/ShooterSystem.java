@@ -48,7 +48,7 @@ public class ShooterSystem implements AluminatiSystem {
     // Constants
     private static final int SHOOTER_CURRENT_LIMIT = 30;
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
-    private static final double ALLOWED_ERROR = 50;
+    private static final double ALLOWED_ERROR = 100;
     private static final int SHORT_SHOT_RPM = 5000;
     private static final double HOOD_STOP_CURRENT = 20;
     private static final double HOOD_UP_TIME = 2.5;
