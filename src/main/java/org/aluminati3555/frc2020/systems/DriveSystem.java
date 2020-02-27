@@ -98,5 +98,7 @@ public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
         this.getRightGroup().getMasterTalon().configPeakCurrentLimit(DRIVE_CURRENT_LIMIT_1);
         this.getRightGroup().getMasterTalon().configContinuousCurrentLimit(DRIVE_CURRENT_LIMIT_1);
         this.getRightGroup().getMasterTalon().enableCurrentLimit(true);
+
+        this.coast();
     }
 }

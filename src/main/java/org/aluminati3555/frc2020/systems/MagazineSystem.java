@@ -197,6 +197,8 @@ public class MagazineSystem implements AluminatiSystem {
 
         this.feederMotor.setInverted(true);
 
+        this.feederMotor.setNeutralMode(NeutralMode.Coast);
+
         // Configure PID
         this.feederMotor.config_kP(0, 0.05);
         this.feederMotor.config_kI(0, 0);

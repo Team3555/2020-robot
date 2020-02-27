@@ -350,6 +350,8 @@ public class ShooterSystem implements AluminatiSystem {
 
         this.motorGroup.getMasterTalon().configClosedloopRamp(1);
 
+        this.motorGroup.coast();
+
         // Setup tuning listener
         new AluminatiTuneable(5806) {
             protected void update(TuningData data) {
@@ -365,7 +367,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
         this.motorGroup.getMasterTalon().enableCurrentLimit(true);
 
-        this.turnController = new AluminatiTuneablePIDController(5808, 0.1, 0, 0.1, 400, 1, 1, 0);
+        this.turnController = new AluminatiTuneablePIDController(5808, 0.02, 0, 0, 400, 1, 1, 0);
     }
 
     private enum HoodPosition {

@@ -39,7 +39,7 @@ public class ActionAlignWithVision implements AluminatiAutoTask {
      * Initializes the PID controller
      */
     public static final void initialize() {
-        controller = new AluminatiTuneablePIDController(5809, 0.1, 0, 0.1, 400, 1, 1, 0);
+        controller = new AluminatiTuneablePIDController(5809, 0.02, 0, 0, 400, 1, 1, 0);
     }
 
     private DriveSystem driveSystem;

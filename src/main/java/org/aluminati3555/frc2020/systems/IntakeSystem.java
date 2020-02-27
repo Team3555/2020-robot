@@ -23,6 +23,7 @@
 package org.aluminati3555.frc2020.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.aluminati3555.frc2020.RobotFaults;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
@@ -151,5 +152,7 @@ public class IntakeSystem implements AluminatiSystem {
         this.magazineSystem = magazineSystem;
 
         this.robotFaults = robotFaults;
+
+        this.intakeMotor.setNeutralMode(NeutralMode.Coast);
     }
 }
