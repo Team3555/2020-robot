@@ -48,8 +48,8 @@ public class ShooterSystem implements AluminatiSystem {
     // Constants
     private static final int SHOOTER_CURRENT_LIMIT = 30;
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
-    private static final double ALLOWED_ERROR = 5;
-    private static final int SHORT_SHOT_RPM = 1000;
+    private static final double ALLOWED_ERROR = 50;
+    private static final int SHORT_SHOT_RPM = 5000;
     private static final double HOOD_STOP_CURRENT = 20;
     private static final double HOOD_UP_TIME = 2.5;
 
@@ -140,6 +140,11 @@ public class ShooterSystem implements AluminatiSystem {
             return;
         }
 
+        // Prevent double action
+        if (hoodActionList.size() > 0 && hoodActionList.get(hoodActionList.size() - 1) == HoodAction.EXTEND) {
+            return;
+        }
+
         if (hoodActionList.size() < 2) {
             hoodActionList.add(HoodAction.EXTEND);
         }
@@ -152,6 +157,11 @@ public class ShooterSystem implements AluminatiSystem {
         if (hoodPosition == HoodPosition.DOWN
                 || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.RETRACT)) {
             // The hood is either down or on its way down
+            return;
+        }
+
+        // Prevent double action
+        if (hoodActionList.size() > 0 && hoodActionList.get(hoodActionList.size() - 1) == HoodAction.RETRACT) {
             return;
         }
 
@@ -258,7 +268,8 @@ public class ShooterSystem implements AluminatiSystem {
             }
 
             // Update hood action
-            if ((hoodAction == HoodAction.NONE || hoodAction == HoodAction.EXTEND) && hoodActionList.size() > 0) {
+            if ((hoodAction == HoodAction.NONE || (hoodAction == HoodAction.EXTEND && hoodActionList.size() > 0
+                    && hoodActionList.get(0) == HoodAction.RETRACT)) && hoodActionList.size() > 0) {
                 hoodAction = hoodActionList.get(0);
                 hoodActionList.remove(0);
 
@@ -331,11 +342,13 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.motorGroup.getMasterTalon().config_kP(0, 0.015);
+        this.motorGroup.getMasterTalon().config_kP(0, 0.05);
         this.motorGroup.getMasterTalon().config_kI(0, 0);
         this.motorGroup.getMasterTalon().config_kD(0, 0);
-        this.motorGroup.getMasterTalon().config_kF(0, 0.0278);
+        this.motorGroup.getMasterTalon().config_kF(0, 0.0245);
         this.motorGroup.getMasterTalon().config_IntegralZone(0, 400);
+
+        this.motorGroup.getMasterTalon().configClosedloopRamp(1);
 
         // Setup tuning listener
         new AluminatiTuneable(5806) {

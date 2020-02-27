@@ -156,7 +156,7 @@ public class MagazineSystem implements AluminatiSystem {
         if (mode == SystemMode.OPERATOR_CONTROLLED || mode == SystemMode.AUTONOMOUS) {
             switch (state) {
                 case INTAKE:
-                    motor.set(ControlMode.PercentOutput, 0.5);
+                    motor.set(ControlMode.PercentOutput, 1);
                     feederMotor.set(ControlMode.PercentOutput, 0);
                     break;
                 case CONTINUOUS_FORWARD:
@@ -198,9 +198,10 @@ public class MagazineSystem implements AluminatiSystem {
         this.feederMotor.setInverted(true);
 
         // Configure PID
-        this.feederMotor.config_kP(0, 0);
+        this.feederMotor.config_kP(0, 0.05);
         this.feederMotor.config_kI(0, 0);
         this.feederMotor.config_kD(0, 0);
+        this.feederMotor.config_kF(0, 0.08);
         this.feederMotor.config_IntegralZone(0, 400);
 
         // Setup tuning listener
