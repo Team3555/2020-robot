@@ -50,7 +50,7 @@ public class ActionAlignWithVision implements AluminatiAutoTask {
     }
 
     public void update(double timestamp) {
-        double output = controller.update(0, limelight.getX(), timestamp);
+        double output = -controller.update(0, limelight.getX(), timestamp);
 
         driveSystem.manualArcadeDrive(output, 0);
     }

@@ -59,6 +59,11 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
 
     public void start(double timestamp) {
         taskList.start(timestamp);
+
+        synchronized (LOCK) {
+            setpoint = DEFAULT_SETPOINT;
+            runShooter = false;
+        }
     }
 
     public void update(double timestamp) {
@@ -80,9 +85,8 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
         return taskList.isComplete();
     }
 
-    public ModeTuneLongShot(RobotState robotState, AluminatiLimelight limelight,
-            DriveSystem driveSystem, IntakeSystem intakeSystem, ShooterSystem shooterSystem,
-            MagazineSystem magazineSystem) {
+    public ModeTuneLongShot(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
+            IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem magazineSystem) {
         taskList = new AluminatiAutoTaskList();
 
         this.shooterSystem = shooterSystem;
@@ -99,7 +103,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
 
         // Extend hood
         taskList.add(new ActionExtendHood(shooterSystem));
-        
+
         // Actuate intake and spin motors
         taskList.add(new ActionExtendIntake(intakeSystem));
         taskList.add(new ActionSetIntakeSpeed(intakeSystem, 1));

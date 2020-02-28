@@ -492,21 +492,21 @@ public class Robot extends AluminatiRobot {
     char color = dataString.charAt(0);
 
     switch (color) {
-      case 'B':
-        controlPanelColor = ControlPanelColor.BLUE;
-        break;
-      case 'G':
-        controlPanelColor = ControlPanelColor.GREEN;
-        break;
-      case 'R':
-        controlPanelColor = ControlPanelColor.RED;
-        break;
-      case 'Y':
-        controlPanelColor = ControlPanelColor.YELLOW;
-        break;
-      default:
-        controlPanelColor = ControlPanelColor.UNKOWN;
-        break;
+    case 'B':
+      controlPanelColor = ControlPanelColor.BLUE;
+      break;
+    case 'G':
+      controlPanelColor = ControlPanelColor.GREEN;
+      break;
+    case 'R':
+      controlPanelColor = ControlPanelColor.RED;
+      break;
+    case 'Y':
+      controlPanelColor = ControlPanelColor.YELLOW;
+      break;
+    default:
+      controlPanelColor = ControlPanelColor.UNKOWN;
+      break;
     }
   }
 
