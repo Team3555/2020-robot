@@ -41,7 +41,7 @@ public class MagazineSystem implements AluminatiSystem {
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
     private static final double FEED_BASE_TIME = 1;
     private static final double FEED_TIME = 0.5;
-    private static final double FEEDER_RPM = 1000;
+    private static final double FEEDER_RPM = 2000;
 
     private static final int FEEDER_CURRENT_LIMIT = 30;
 
