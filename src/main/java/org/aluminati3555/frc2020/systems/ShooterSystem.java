@@ -343,7 +343,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.motorGroup.getMasterTalon().config_kP(0, 0.1);
+        this.motorGroup.getMasterTalon().config_kP(0, 0.2);
         this.motorGroup.getMasterTalon().config_kI(0, 0);
         this.motorGroup.getMasterTalon().config_kD(0, 0);
         this.motorGroup.getMasterTalon().config_kF(0, 0.027);
