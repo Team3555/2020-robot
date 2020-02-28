@@ -117,13 +117,13 @@ public class SpinnerSystem implements AluminatiSystem {
                 isClosedLoop = true;
             } else if (operatorController.getRawButtonReleased(3)) {
                 isClosedLoop = false;
-            } else if (Math.abs(rightJoystick) > SPINNER_DEADBAND && !operatorController.getRawButton(10) && isUp()
-                    && !isClosedLoop) {
-                spinnerMotor.set(ControlMode.PercentOutput, rightJoystick);
             }
 
             if (isClosedLoop) {
                 spinnerMotor.set(ControlMode.Position, setpoint);
+            } else if (Math.abs(rightJoystick) > SPINNER_DEADBAND && !operatorController.getRawButton(10) && isUp()
+                    && !isClosedLoop) {
+                spinnerMotor.set(ControlMode.PercentOutput, rightJoystick);
             } else {
                 spinnerMotor.set(ControlMode.PercentOutput, 0);
             }
