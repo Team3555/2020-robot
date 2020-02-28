@@ -48,10 +48,11 @@ public class ShooterSystem implements AluminatiSystem {
     // Constants
     private static final int SHOOTER_CURRENT_LIMIT = 30;
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
-    private static final double ALLOWED_ERROR = 100;
-    private static final int SHORT_SHOT_RPM = 5000;
-    private static final double HOOD_STOP_CURRENT = 20;
-    private static final double HOOD_UP_TIME = 2.5;
+    private static final double ALLOWED_ERROR = 2000;
+    private static final int SHORT_SHOT_RPM = 4000;
+    private static final double HOOD_STOP_CURRENT = 15;
+    private static final double HOOD_UP_TIME = 0.5;
+    private static final double HOOD_MID_TIME = 0.2;
 
     /**
      * Converts rpm to native units
@@ -197,7 +198,7 @@ public class ShooterSystem implements AluminatiSystem {
                     // Tell the drivetrain not to use controller for driving
                     driveSystem.setVisionTracking(true);
 
-                    double output = turnController.update(0, limelight.getX(), timestamp);
+                    double output = -turnController.update(0, limelight.getX(), timestamp);
                     driveSystem.manualArcadeDrive(output, -driverController.getSquaredLeftY());
 
                     // Mark pid controller as used
@@ -342,10 +343,10 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // Configure PID
-        this.motorGroup.getMasterTalon().config_kP(0, 0.05);
+        this.motorGroup.getMasterTalon().config_kP(0, 0.1);
         this.motorGroup.getMasterTalon().config_kI(0, 0);
         this.motorGroup.getMasterTalon().config_kD(0, 0);
-        this.motorGroup.getMasterTalon().config_kF(0, 0.0245);
+        this.motorGroup.getMasterTalon().config_kF(0, 0.027);
         this.motorGroup.getMasterTalon().config_IntegralZone(0, 400);
 
         this.motorGroup.getMasterTalon().configClosedloopRamp(1);

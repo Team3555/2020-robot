@@ -70,6 +70,7 @@ import org.aluminati3555.frc2020.auto.modes.ModeDoNothing;
 import org.aluminati3555.frc2020.auto.modes.ModeExamplePath;
 import org.aluminati3555.frc2020.auto.modes.ModeExampleTurn;
 import org.aluminati3555.frc2020.auto.modes.ModeGoForward;
+import org.aluminati3555.frc2020.auto.modes.ModeTuneLongShot;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
@@ -246,7 +247,8 @@ public class Robot extends AluminatiRobot {
                 magazineSystem)),
         new Entry("10PowerCell",
             new Mode10PowerCell(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
-        new Entry("ExampleTurn", new ModeExampleTurn(robotState, driveSystem)));
+        new Entry("ExampleTurn", new ModeExampleTurn(robotState, driveSystem)), new Entry("TuneLongShot",
+            new ModeTuneLongShot(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoDisplay", 3);
