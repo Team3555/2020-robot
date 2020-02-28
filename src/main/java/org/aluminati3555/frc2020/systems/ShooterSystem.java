@@ -135,7 +135,7 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood
      */
     public void extendHood() {
-        if (hoodPosition == HoodPosition.UP
+        if (hoodPosition == HoodPosition.UP || hoodPosition == HoodPosition.MID
                 || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.EXTEND)) {
             // The hood is either up on its way up
             return;
@@ -148,6 +148,26 @@ public class ShooterSystem implements AluminatiSystem {
 
         if (hoodActionList.size() < 2) {
             hoodActionList.add(HoodAction.EXTEND);
+        }
+    }
+
+    /**
+     * Extends the hood for the close shot
+     */
+    public void extendHoodMid() {
+        if (hoodPosition == HoodPosition.UP || hoodPosition == HoodPosition.MID
+                || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.EXTEND)) {
+            // The hood is either up on its way up
+            return;
+        }
+
+        // Prevent double action
+        if (hoodActionList.size() > 0 && hoodActionList.get(hoodActionList.size() - 1) == HoodAction.EXTEND_MID) {
+            return;
+        }
+
+        if (hoodActionList.size() < 2) {
+            hoodActionList.add(HoodAction.EXTEND_MID);
         }
     }
 
@@ -230,8 +250,8 @@ public class ShooterSystem implements AluminatiSystem {
 
                 wasTracking = false;
 
-                // Retract hood
-                retractHood();
+                // Extend hood to mid position
+                extendHoodMid();
 
                 // Set flywheel speed
                 set(SHORT_SHOT_RPM);
@@ -276,7 +296,7 @@ public class ShooterSystem implements AluminatiSystem {
 
                 hoodPosition = HoodPosition.UNKNOWN;
 
-                if (hoodAction == HoodAction.EXTEND) {
+                if (hoodAction == HoodAction.EXTEND || hoodAction == HoodAction.EXTEND_MID) {
                     hoodStartTime = timestamp;
                 }
             }
@@ -287,6 +307,14 @@ public class ShooterSystem implements AluminatiSystem {
                 if (timestamp >= hoodStartTime + HOOD_UP_TIME) {
                     hoodAction = HoodAction.NONE;
                     hoodPosition = HoodPosition.UP;
+                }
+            }
+
+            if (hoodAction == HoodAction.EXTEND_MID) {
+                // Check for completion
+                if (timestamp >= hoodStartTime + HOOD_MID_TIME) {
+                    hoodAction = HoodAction.NONE;
+                    hoodPosition = HoodPosition.MID;
                 }
             }
 
@@ -301,16 +329,16 @@ public class ShooterSystem implements AluminatiSystem {
 
             // Update output to motor
             switch (hoodAction) {
-                case EXTEND:
-                    hoodMotor.set(-1);
-                    break;
-                case RETRACT:
-                    hoodMotor.set(1);
-                    break;
-                case NONE:
-                default:
-                    hoodMotor.set(0);
-                    break;
+            case EXTEND:
+                hoodMotor.set(-1);
+                break;
+            case RETRACT:
+                hoodMotor.set(1);
+                break;
+            case NONE:
+            default:
+                hoodMotor.set(0);
+                break;
             }
         }
     }
@@ -372,10 +400,10 @@ public class ShooterSystem implements AluminatiSystem {
     }
 
     private enum HoodPosition {
-        UP, DOWN, UNKNOWN
+        UP, DOWN, UNKNOWN, MID
     }
 
     private enum HoodAction {
-        EXTEND, RETRACT, NONE
+        EXTEND, RETRACT, NONE, EXTEND_MID
     }
 }
