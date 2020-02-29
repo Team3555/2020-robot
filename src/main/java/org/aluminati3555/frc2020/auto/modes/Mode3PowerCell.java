@@ -22,96 +22,67 @@
 
 package org.aluminati3555.frc2020.auto.modes;
 
+import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
-import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
-import org.aluminati3555.frc2020.auto.actions.ActionRunCode;
-import org.aluminati3555.frc2020.auto.actions.ActionSetIntakeSpeed;
+import org.aluminati3555.frc2020.auto.actions.ActionRetractHood;
+import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightLEDMode;
+import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightPipeline;
+import org.aluminati3555.frc2020.auto.actions.ActionShootPowerCell;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
-import org.aluminati3555.lib.net.AluminatiTuneable;
-import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
+import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 /**
- * This auto mode helps with tuning the long shot
+ * This mode shoots three power cells into the high goal
  * 
  * @author Caleb Heydon
  */
-public class ModeTuneLongShot implements AluminatiAutoTask {
-    private static final Object LOCK = new Object();
-    private static final double DEFAULT_SETPOINT = 4800;
-
+public class Mode3PowerCell implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
-
-    private ShooterSystem shooterSystem;
-
-    private double setpoint;
-    private boolean runShooter;
 
     @Override
     public String toString() {
-        return "TuneLongShot";
+        return "3PowerCell";
     }
 
     public void start(double timestamp) {
         taskList.start(timestamp);
-
-        synchronized (LOCK) {
-            setpoint = DEFAULT_SETPOINT;
-            runShooter = false;
-        }
     }
 
     public void update(double timestamp) {
         taskList.update(timestamp);
-
-        synchronized (LOCK) {
-            if (runShooter) {
-                shooterSystem.set(setpoint);
-            }
-        }
     }
 
     public void stop() {
         taskList.stop();
-        shooterSystem.stop();
     }
 
     public boolean isComplete() {
         return taskList.isComplete();
     }
 
-    public ModeTuneLongShot(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
+    public Mode3PowerCell(AluminatiLimelight limelight, DriveSystem driveSystem,
             IntakeSystem intakeSystem, ShooterSystem shooterSystem, MagazineSystem magazineSystem) {
         taskList = new AluminatiAutoTaskList();
 
-        this.shooterSystem = shooterSystem;
-        setpoint = DEFAULT_SETPOINT;
-        runShooter = false;
+        // Turn on the limelight leds
+        taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.ON));
 
-        new AluminatiTuneable(5805) {
-            protected void update(TuningData data) {
-                synchronized (LOCK) {
-                    setpoint = data.kP;
-                }
-            }
-        };
+        // Set the limelight to the tracking pipeline
+        taskList.add(new ActionSetLimelightPipeline(limelight, 1));
 
-        // Extend hood
+        // Shoot three power cells
         taskList.add(new ActionExtendHood(shooterSystem));
+        taskList.add(new ActionAlignWithVision(driveSystem, limelight));
+        taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 3));
+        taskList.add(new ActionRetractHood(shooterSystem));
 
-        // Actuate intake and spin motors
-        taskList.add(new ActionExtendIntake(intakeSystem));
-        taskList.add(new ActionSetIntakeSpeed(intakeSystem, 1));
-
-        // Signal to start flywheel
-        taskList.add(new ActionRunCode(() -> runShooter = true));
-
-        // Never exit
-        taskList.add(new ModeDoNothing());
+        // Set the limelight to the driver pipeline
+        taskList.add(new ActionSetLimelightPipeline(limelight, 0));
     }
 }

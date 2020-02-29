@@ -46,13 +46,13 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class ShooterSystem implements AluminatiSystem {
     // Constants
-    private static final int SHOOTER_CURRENT_LIMIT = 30;
+    private static final int SHOOTER_CURRENT_LIMIT = 20;
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
     private static final double ALLOWED_ERROR = 2000;
     private static final int SHORT_SHOT_RPM = 4000;
-    private static final double HOOD_STOP_CURRENT = 15;
-    private static final double HOOD_UP_TIME = 0.5;
-    private static final double HOOD_MID_TIME = 0.2;
+    private static final double HOOD_STOP_CURRENT = 10;
+    private static final double HOOD_UP_TIME = 0.4;
+    private static final double HOOD_MID_TIME = 0.24;
 
     /**
      * Converts rpm to native units
@@ -132,11 +132,18 @@ public class ShooterSystem implements AluminatiSystem {
     }
 
     /**
+     * Returns the hood position
+     */
+    public HoodPosition getHoodPosition() {
+        return hoodPosition;
+    }
+
+    /**
      * Extends the hood
      */
     public void extendHood() {
-        if (hoodPosition == HoodPosition.UP || hoodPosition == HoodPosition.MID
-                || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.EXTEND)) {
+        if (hoodPosition == HoodPosition.UP || hoodPosition == HoodPosition.MID || (hoodPosition == HoodPosition.UNKNOWN
+                && (hoodAction == HoodAction.EXTEND || hoodAction == HoodAction.EXTEND_MID))) {
             // The hood is either up on its way up
             return;
         }
@@ -155,8 +162,8 @@ public class ShooterSystem implements AluminatiSystem {
      * Extends the hood for the close shot
      */
     public void extendHoodMid() {
-        if (hoodPosition == HoodPosition.UP || hoodPosition == HoodPosition.MID
-                || (hoodPosition == HoodPosition.UNKNOWN && hoodAction == HoodAction.EXTEND)) {
+        if (hoodPosition == HoodPosition.UP || hoodPosition == HoodPosition.MID || (hoodPosition == HoodPosition.UNKNOWN
+                && (hoodAction == HoodAction.EXTEND || hoodAction == HoodAction.EXTEND_MID))) {
             // The hood is either up on its way up
             return;
         }
@@ -232,7 +239,9 @@ public class ShooterSystem implements AluminatiSystem {
 
                 // Set flywheel speed
                 double targetHeight = limelight.getVertical();
-                double rpm = limelight.hasTarget() ? ShooterUtil.calculateRPM(targetHeight) : SHORT_SHOT_RPM;
+                // double rpm = limelight.hasTarget() ? ShooterUtil.calculateRPM(targetHeight) :
+                // SHORT_SHOT_RPM;
+                double rpm = 4800;
                 set(rpm);
 
                 if ((driverController.getTriggerAxis(Hand.kRight) >= 0.5
@@ -289,8 +298,10 @@ public class ShooterSystem implements AluminatiSystem {
             }
 
             // Update hood action
-            if ((hoodAction == HoodAction.NONE || (hoodAction == HoodAction.EXTEND && hoodActionList.size() > 0
-                    && hoodActionList.get(0) == HoodAction.RETRACT)) && hoodActionList.size() > 0) {
+            if ((hoodAction == HoodAction.NONE
+                    || ((hoodAction == HoodAction.EXTEND || hoodAction == HoodAction.EXTEND_MID)
+                            && hoodActionList.size() > 0 && hoodActionList.get(0) == HoodAction.RETRACT))
+                    && hoodActionList.size() > 0) {
                 hoodAction = hoodActionList.get(0);
                 hoodActionList.remove(0);
 
@@ -329,16 +340,17 @@ public class ShooterSystem implements AluminatiSystem {
 
             // Update output to motor
             switch (hoodAction) {
-            case EXTEND:
-                hoodMotor.set(-1);
-                break;
-            case RETRACT:
-                hoodMotor.set(1);
-                break;
-            case NONE:
-            default:
-                hoodMotor.set(0);
-                break;
+                case EXTEND:
+                case EXTEND_MID:
+                    hoodMotor.set(-1);
+                    break;
+                case RETRACT:
+                    hoodMotor.set(1);
+                    break;
+                case NONE:
+                default:
+                    hoodMotor.set(0);
+                    break;
             }
         }
     }
@@ -396,10 +408,10 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
         this.motorGroup.getMasterTalon().enableCurrentLimit(true);
 
-        this.turnController = new AluminatiTuneablePIDController(5808, 0.02, 0, 0, 400, 1, 1, 0);
+        this.turnController = new AluminatiTuneablePIDController(5808, 0.2, 0, 0, 400, 1, 1, 0);
     }
 
-    private enum HoodPosition {
+    public enum HoodPosition {
         UP, DOWN, UNKNOWN, MID
     }
 

@@ -40,7 +40,8 @@ public class ActionSetShooterSpeedWithVisionAndWait implements AluminatiAutoTask
 
     public void start(double timestamp) {
         double targetHeight = limelight.getVertical();
-        double rpm = ShooterUtil.calculateRPM(targetHeight);
+        //double rpm = ShooterUtil.calculateRPM(targetHeight);
+        double rpm = 4800;
 
         shooterSystem.set(rpm);
         waitAction = new ActionWaitForShooterSpeed(shooterSystem, rpm);

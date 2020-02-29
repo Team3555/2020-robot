@@ -48,7 +48,17 @@ import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
  * @author Caleb Heydon
  */
 public class Mode3PowerCellGoForward implements AluminatiAutoTask {
+    private static final double EMERGENCY_TIME = 12;
+
     private AluminatiAutoTaskList taskList;
+
+    private ShooterSystem shooterSystem;
+    private MagazineSystem magazineSystem;
+    
+    private AluminatiAutoTask driveTask;
+
+    private boolean emergency;
+    private double startTime;
 
     @Override
     public String toString() {
@@ -57,18 +67,38 @@ public class Mode3PowerCellGoForward implements AluminatiAutoTask {
 
     public void start(double timestamp) {
         taskList.start(timestamp);
+        emergency = false;
+        startTime = timestamp;
     }
 
     public void update(double timestamp) {
-        taskList.update(timestamp);
+        if (timestamp < startTime + EMERGENCY_TIME && !emergency) {
+            taskList.update(timestamp);
+        } else if (emergency) {
+            driveTask.update(timestamp);
+        } else if (!isComplete()) {
+            emergency = true;
+            taskList.stop();
+            magazineSystem.stop();
+            shooterSystem.stop();
+            driveTask.start(timestamp);
+        }
     }
 
     public void stop() {
         taskList.stop();
+
+        if (emergency) {
+            driveTask.stop();
+        }
     }
 
     public boolean isComplete() {
-        return taskList.isComplete();
+        if (!emergency) {
+            return taskList.isComplete();
+        } else {
+            return driveTask.isComplete();
+        }
     }
 
     public Mode3PowerCellGoForward(RobotState robotState, AluminatiLimelight limelight, DriveSystem driveSystem,
@@ -96,6 +126,12 @@ public class Mode3PowerCellGoForward implements AluminatiAutoTask {
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
 
         // Go forward
-        taskList.add(new ActionRunPath(driveSystem, path));
+        driveTask = new ActionRunPath(driveSystem, path);
+        taskList.add(driveTask);
+
+        this.shooterSystem = shooterSystem;
+        this.magazineSystem = magazineSystem;
+
+        this.emergency = false;
     }
 }

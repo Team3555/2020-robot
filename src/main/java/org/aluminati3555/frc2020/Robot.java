@@ -60,6 +60,7 @@ import com.team254.lib.geometry.Translation2d;
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
 import org.aluminati3555.frc2020.auto.modes.Mode10PowerCell;
+import org.aluminati3555.frc2020.auto.modes.Mode3PowerCell;
 import org.aluminati3555.frc2020.auto.modes.Mode3PowerCellGoForward;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2OtherAllianceTrenchRun;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2ShieldGenerator;
@@ -247,8 +248,11 @@ public class Robot extends AluminatiRobot {
                 magazineSystem)),
         new Entry("10PowerCell",
             new Mode10PowerCell(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
-        new Entry("ExampleTurn", new ModeExampleTurn(robotState, driveSystem)), new Entry("TuneLongShot",
-            new ModeTuneLongShot(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)));
+        new Entry("ExampleTurn", new ModeExampleTurn(robotState, driveSystem)),
+        new Entry("TuneLongShot",
+            new ModeTuneLongShot(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
+        new Entry("3PowerCell",
+            new Mode3PowerCell(limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoDisplay", 3);
@@ -267,7 +271,7 @@ public class Robot extends AluminatiRobot {
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
         autoString, robotFaults, limelight, shooterSystem.get(), shooterSystem.getVelocity(),
-        magazineSystem.getFeederVelocity(), robotMode);
+        magazineSystem.getFeederVelocity(), robotMode, shooterSystem.getHoodPosition());
   }
 
   @Override
@@ -492,21 +496,21 @@ public class Robot extends AluminatiRobot {
     char color = dataString.charAt(0);
 
     switch (color) {
-    case 'B':
-      controlPanelColor = ControlPanelColor.BLUE;
-      break;
-    case 'G':
-      controlPanelColor = ControlPanelColor.GREEN;
-      break;
-    case 'R':
-      controlPanelColor = ControlPanelColor.RED;
-      break;
-    case 'Y':
-      controlPanelColor = ControlPanelColor.YELLOW;
-      break;
-    default:
-      controlPanelColor = ControlPanelColor.UNKOWN;
-      break;
+      case 'B':
+        controlPanelColor = ControlPanelColor.BLUE;
+        break;
+      case 'G':
+        controlPanelColor = ControlPanelColor.GREEN;
+        break;
+      case 'R':
+        controlPanelColor = ControlPanelColor.RED;
+        break;
+      case 'Y':
+        controlPanelColor = ControlPanelColor.YELLOW;
+        break;
+      default:
+        controlPanelColor = ControlPanelColor.UNKOWN;
+        break;
     }
   }
 

@@ -39,7 +39,7 @@ public class ActionAlignWithVision implements AluminatiAutoTask {
      * Initializes the PID controller
      */
     public static final void initialize() {
-        controller = new AluminatiTuneablePIDController(5809, 0.02, 0, 0, 400, 1, 1, 0);
+        controller = new AluminatiTuneablePIDController(5809, 0.2, 0, 0, 400, 1, 0.65, 0);
     }
 
     private DriveSystem driveSystem;
@@ -50,9 +50,13 @@ public class ActionAlignWithVision implements AluminatiAutoTask {
     }
 
     public void update(double timestamp) {
-        double output = -controller.update(0, limelight.getX(), timestamp);
+        if (limelight.hasTarget()) {
+            double output = -controller.update(0, limelight.getX(), timestamp);
 
-        driveSystem.manualArcadeDrive(output, 0);
+            driveSystem.manualArcadeDrive(output, 0);
+        } else {
+            driveSystem.manualArcadeDrive(0, 0);
+        }
     }
 
     public void stop() {

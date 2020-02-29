@@ -38,7 +38,7 @@ import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
  */
 public class DriveSystem extends AluminatiDrive implements AluminatiSystem {
     // Constants
-    private static final int DRIVE_CURRENT_LIMIT_1 = 60;
+    private static final int DRIVE_CURRENT_LIMIT_1 = 40;
 
     private AluminatiXboxController driverController;
 

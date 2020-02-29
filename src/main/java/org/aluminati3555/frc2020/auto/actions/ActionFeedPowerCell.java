@@ -23,6 +23,7 @@
 package org.aluminati3555.frc2020.auto.actions;
 
 import org.aluminati3555.frc2020.systems.MagazineSystem;
+import org.aluminati3555.frc2020.systems.MagazineSystem.State;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
@@ -31,12 +32,12 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
  * @author Caleb Heydon
  */
 public class ActionFeedPowerCell implements AluminatiAutoTask {
-    private MagazineSystem feederSystem;
+    private MagazineSystem magazineSystem;
 
     private int numberOfPowerCells;
 
     public void start(double timestamp) {
-        feederSystem.feedPowerCell(numberOfPowerCells, timestamp);
+        magazineSystem.feedPowerCell(numberOfPowerCells, timestamp);
     }
 
     public void update(double timestamp) {
@@ -48,11 +49,11 @@ public class ActionFeedPowerCell implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return true;
+        return (magazineSystem.getState() != State.TIMING);
     }
 
     public ActionFeedPowerCell(MagazineSystem feederSystem, int numberOfPowerCells) {
-        this.feederSystem = feederSystem;
+        this.magazineSystem = feederSystem;
         this.numberOfPowerCells = numberOfPowerCells;
     }
 }

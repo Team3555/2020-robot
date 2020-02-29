@@ -24,6 +24,7 @@ package org.aluminati3555.frc2020;
 
 import org.aluminati3555.frc2020.Robot.ControlPanelColor;
 import org.aluminati3555.frc2020.Robot.RobotMode;
+import org.aluminati3555.frc2020.systems.ShooterSystem.HoodPosition;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -48,7 +49,7 @@ public class VideoDisplay {
 
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
-    private static final int HEADER_HEIGHT = 400;
+    private static final int HEADER_HEIGHT = 430;
 
     private static final Scalar BLACK = new Scalar(0, 0, 0);
     private static final Scalar BLUE = new Scalar(255, 0, 0);
@@ -74,7 +75,7 @@ public class VideoDisplay {
      */
     public void update(ControlPanelColor controlPanelColor, double averageDT, double x, double y, double heading,
             String auto, RobotFaults robotFaults, AluminatiLimelight limelight, double shooterSetpoint,
-            double shooterVelocity, double feederVelocity, RobotMode robotMode) {
+            double shooterVelocity, double feederVelocity, RobotMode robotMode, HoodPosition hoodPosition) {
         double currentTime = Timer.getFPGATimestamp();
         double delta = currentTime - lastTime;
         if (delta < targetTime) {
@@ -162,12 +163,9 @@ public class VideoDisplay {
         Imgproc.putText(frame, "feederVelocity: " + feederVelocity + " RPM", new Point(5, 345), Core.FONT_HERSHEY_PLAIN,
                 1, GREEN);
 
-        if (robotMode == RobotMode.AUTONOMOUS) {
-            Imgproc.putText(frame, "robotMode: AUTONOMOUS", new Point(5, 375), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
-        } else {
-            Imgproc.putText(frame, "robotMode: OPERATOR_CONTROLLED", new Point(5, 375), Core.FONT_HERSHEY_PLAIN, 1,
-                    GREEN);
-        }
+        Imgproc.putText(frame, "robotMode: " + robotMode, new Point(5, 375), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+
+        Imgproc.putText(frame, "hoodPosition: " + hoodPosition, new Point(5, 405), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
 
         outputStream.putFrame(frame);
 

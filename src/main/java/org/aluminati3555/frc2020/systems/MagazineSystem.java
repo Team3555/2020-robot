@@ -39,8 +39,8 @@ import org.aluminati3555.lib.system.AluminatiSystem;
  */
 public class MagazineSystem implements AluminatiSystem {
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
-    private static final double FEED_BASE_TIME = 1;
-    private static final double FEED_TIME = 0.5;
+    private static final double FEED_BASE_TIME = 1.5;
+    private static final double FEED_TIME = 1;
     private static final double FEEDER_RPM = 2000;
 
     private static final int FEEDER_CURRENT_LIMIT = 30;
@@ -132,10 +132,24 @@ public class MagazineSystem implements AluminatiSystem {
     }
 
     /**
+     * Stops the magazine no matter what
+     */
+    public void stop() {
+        state = State.OFF;
+    }
+
+    /**
      * Returns the velocity of the feeder wheel
      */
     public double getFeederVelocity() {
         return convertNativeUnitsToRPM(feederMotor.getSelectedSensorVelocity());
+    }
+
+    /**
+     * Returns the state of the magazine
+     */
+    public State getState() {
+        return state;
     }
 
     public void update(double timestamp, SystemMode mode) {
@@ -172,7 +186,7 @@ public class MagazineSystem implements AluminatiSystem {
                     feederMotor.set(ControlMode.PercentOutput, 0);
                     break;
                 case TIMING:
-                    motor.set(ControlMode.PercentOutput, 0.5);
+                    motor.set(ControlMode.PercentOutput, 1);
                     feederMotor.set(ControlMode.Velocity, convertRPMToNativeUnits(FEEDER_RPM));
                     break;
                 default:
@@ -227,7 +241,7 @@ public class MagazineSystem implements AluminatiSystem {
         state = State.OFF;
     }
 
-    private enum State {
+    public enum State {
         INTAKE, CONTINUOUS_FORWARD, CONTINUOUS_REVERSE, OFF, TIMING
     }
 }
