@@ -20,36 +20,35 @@
  * SOFTWARE.
  */
 
-package org.aluminati3555.frc2020.auto.actions;
+package org.aluminati3555.frc2020.paths;
 
-import org.aluminati3555.frc2020.systems.MagazineSystem;
-import org.aluminati3555.lib.auto.AluminatiAutoTask;
+import java.util.ArrayList;
 
-/**
- * This action starts feeding power cells to the shooter
- * 
- * @author Caleb Heydon
- */
-public class ActionStartFeeding implements AluminatiAutoTask {
-    private MagazineSystem magazineSystem;
+import com.team254.lib.control.Path;
+import com.team254.lib.geometry.Pose2d;
+import com.team254.lib.geometry.Rotation2d;
 
-    public void start(double timestamp) {
-        magazineSystem.startFeedingPowerCells();
+import org.aluminati3555.lib.trajectoryfollowingmotion.PathBuilder;
+import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
+import org.aluminati3555.lib.trajectoryfollowingmotion.PathBuilder.Waypoint;
+
+public class Path3PowerCellPositionTrenchRun implements PathContainer {
+    public Path buildPath() {
+        ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
+        waypoints.add(new Waypoint(510, 95, 0, 0));
+        waypoints.add(new Waypoint(486, 95, 15, 120));
+        waypoints.add(new Waypoint(457, 79, 15, 120));
+        waypoints.add(new Waypoint(430, 27, 15, 120));
+        waypoints.add(new Waypoint(410, 27, 0, 120));
+
+        return PathBuilder.buildPathFromWaypoints(waypoints);
+    }
+    
+    public Pose2d getStartPose() {
+        return new Pose2d(510, 95, Rotation2d.fromDegrees(0)); 
     }
 
-    public void update(double timestamp) {
-
-    }
-
-    public void stop() {
-
-    }
-
-    public boolean isComplete() {
-        return true;
-    }
-
-    public ActionStartFeeding(MagazineSystem magazineSystem) {
-        this.magazineSystem = magazineSystem;
+    public boolean isReversed() {
+        return true; 
     }
 }

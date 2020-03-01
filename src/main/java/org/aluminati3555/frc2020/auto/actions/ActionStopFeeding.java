@@ -31,10 +31,10 @@ import org.aluminati3555.lib.auto.AluminatiAutoTask;
  * @author Caleb Heydon
  */
 public class ActionStopFeeding implements AluminatiAutoTask {
-    private MagazineSystem feederSystem;
+    private MagazineSystem magazineSystem;
 
     public void start(double timestamp) {
-        feederSystem.stopFeedingPowerCells();
+        magazineSystem.stopFeedingPowerCells();
     }
 
     public void update(double timestamp) {
@@ -49,7 +49,7 @@ public class ActionStopFeeding implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionStopFeeding(MagazineSystem feederSystem) {
-        this.feederSystem = feederSystem;
+    public ActionStopFeeding(MagazineSystem magazineSystem) {
+        this.magazineSystem = magazineSystem;
     }
 }

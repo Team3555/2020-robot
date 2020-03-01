@@ -42,6 +42,7 @@ import org.aluminati3555.lib.system.AluminatiSystem.SystemMode;
 import org.aluminati3555.lib.trajectoryfollowingmotion.AluminatiRobotStateEstimator;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.util.AluminatiUtil;
+import org.aluminati3555.lib.vision.AluminatiCameraHelper;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
 import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
@@ -62,6 +63,7 @@ import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
 import org.aluminati3555.frc2020.auto.modes.Mode10PowerCell;
 import org.aluminati3555.frc2020.auto.modes.Mode3PowerCell;
 import org.aluminati3555.frc2020.auto.modes.Mode3PowerCellGoForward;
+import org.aluminati3555.frc2020.auto.modes.Mode3PowerCellPositionTrenchRun;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2OtherAllianceTrenchRun;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell2ShieldGenerator;
 import org.aluminati3555.frc2020.auto.modes.Mode5PowerCell3ShieldGenerator;
@@ -252,10 +254,15 @@ public class Robot extends AluminatiRobot {
         new Entry("TuneLongShot",
             new ModeTuneLongShot(robotState, limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
         new Entry("3PowerCell",
-            new Mode3PowerCell(limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)));
+            new Mode3PowerCell(limelight, driveSystem, intakeSystem, shooterSystem, magazineSystem)),
+        new Entry("3PowerCellPositionTrenchRun", new Mode3PowerCellPositionTrenchRun(robotState, limelight, driveSystem,
+            intakeSystem, shooterSystem, magazineSystem)));
 
     // Setup video display
     videoDisplay = new VideoDisplay("VideoDisplay", 3);
+
+    // Start camera
+    AluminatiCameraHelper.start(0);
   }
 
   @Override

@@ -26,15 +26,15 @@ import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action starts feeding power cells to the shooter
+ * Starts running the magazine in intake mode
  * 
  * @author Caleb Heydon
  */
-public class ActionStartFeeding implements AluminatiAutoTask {
+public class ActionStartMagazineIntake implements AluminatiAutoTask {
     private MagazineSystem magazineSystem;
 
     public void start(double timestamp) {
-        magazineSystem.startFeedingPowerCells();
+        magazineSystem.startIntakingPowerCells();
     }
 
     public void update(double timestamp) {
@@ -49,7 +49,7 @@ public class ActionStartFeeding implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionStartFeeding(MagazineSystem magazineSystem) {
+    public ActionStartMagazineIntake(MagazineSystem magazineSystem) {
         this.magazineSystem = magazineSystem;
     }
 }

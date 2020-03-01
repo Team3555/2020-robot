@@ -348,6 +348,12 @@ public class ShooterSystem implements AluminatiSystem {
                     hoodMotor.set(1);
                     break;
                 case NONE:
+                    if (hoodPosition == HoodPosition.DOWN) {
+                        hoodMotor.set(0.02);
+                    } else {
+                        hoodMotor.set(0);
+                    }
+                    break;
                 default:
                     hoodMotor.set(0);
                     break;
