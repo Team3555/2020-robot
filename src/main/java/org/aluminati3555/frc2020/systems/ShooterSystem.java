@@ -50,7 +50,7 @@ public class ShooterSystem implements AluminatiSystem {
     private static final int ENCODER_TICKS_PER_ROTATION = 4096;
     private static final double ALLOWED_ERROR = 2000;
     private static final int SHORT_SHOT_RPM = 4000;
-    private static final double HOOD_STOP_CURRENT = 10;
+    private static final double HOOD_STOP_CURRENT = 16;
     private static final double HOOD_UP_TIME = 0.4;
     private static final double HOOD_MID_TIME = 0.24;
 
@@ -246,7 +246,7 @@ public class ShooterSystem implements AluminatiSystem {
 
                 if ((driverController.getTriggerAxis(Hand.kRight) >= 0.5
                         || operatorController.getTriggerAxis(Hand.kRight) >= 0.5)
-                        && Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR && limelight.hasTarget()) {
+                        && (true || Math.abs(rpm - getVelocity()) <= ALLOWED_ERROR && limelight.hasTarget())) {
                     // Fire power cells
                     magazineSystem.startFeedingPowerCells();
                 }
