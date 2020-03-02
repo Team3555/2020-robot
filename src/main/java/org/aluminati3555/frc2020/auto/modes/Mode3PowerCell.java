@@ -77,10 +77,10 @@ public class Mode3PowerCell implements AluminatiAutoTask {
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
 
         // Shoot three power cells
-        taskList.add(new ActionExtendHood(shooterSystem));
+        //taskList.add(new ActionExtendHood(shooterSystem));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
         taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 3));
-        taskList.add(new ActionRetractHood(shooterSystem));
+        //taskList.add(new ActionRetractHood(shooterSystem));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));

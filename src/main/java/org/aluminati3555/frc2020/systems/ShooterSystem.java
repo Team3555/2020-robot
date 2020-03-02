@@ -208,6 +208,13 @@ public class ShooterSystem implements AluminatiSystem {
         }
 
         if (mode == SystemMode.OPERATOR_CONTROLLED) {
+            // Do hood control
+            if (operatorController.getY(Hand.kLeft) >= 0.5) {
+                retractHood();
+            } else {
+                extendHood();
+            }
+
             if (driverController.getTriggerAxis(Hand.kLeft) >= 0.5) {
                 // Driver wants the robot to align with vision target and flywheel to get up to
                 // speed
@@ -234,9 +241,6 @@ public class ShooterSystem implements AluminatiSystem {
                     driveSystem.setVisionTracking(false);
                 }
 
-                // Extend hood
-                extendHood();
-
                 // Set flywheel speed
                 double targetHeight = limelight.getVertical();
                 // double rpm = limelight.hasTarget() ? ShooterUtil.calculateRPM(targetHeight) :
@@ -259,9 +263,6 @@ public class ShooterSystem implements AluminatiSystem {
 
                 wasTracking = false;
 
-                // Extend hood to mid position
-                extendHoodMid();
-
                 // Set flywheel speed
                 set(SHORT_SHOT_RPM);
 
@@ -280,9 +281,6 @@ public class ShooterSystem implements AluminatiSystem {
 
                 // Stop feeding power cells
                 magazineSystem.stopFeedingPowerCells();
-
-                // Retract hood
-                retractHood();
 
                 // Disable flywheel
                 stop();
@@ -349,7 +347,7 @@ public class ShooterSystem implements AluminatiSystem {
                     break;
                 case NONE:
                     if (hoodPosition == HoodPosition.DOWN) {
-                        hoodMotor.set(0.02);
+                        hoodMotor.set(0.05);
                     } else {
                         hoodMotor.set(0);
                     }
@@ -375,10 +373,9 @@ public class ShooterSystem implements AluminatiSystem {
 
         this.robotFaults = robotFaults;
 
-        this.hoodPosition = HoodPosition.UNKNOWN;
+        this.hoodPosition = HoodPosition.UP;
         this.hoodAction = HoodAction.NONE;
         this.hoodActionList = new ArrayList<HoodAction>();
-        this.hoodActionList.add(HoodAction.RETRACT);
 
         this.wasTracking = false;
 
@@ -414,7 +411,7 @@ public class ShooterSystem implements AluminatiSystem {
         this.motorGroup.getMasterTalon().configContinuousCurrentLimit(SHOOTER_CURRENT_LIMIT);
         this.motorGroup.getMasterTalon().enableCurrentLimit(true);
 
-        this.turnController = new AluminatiTuneablePIDController(5808, 0.2, 0, 0, 400, 1, 1, 0);
+        this.turnController = new AluminatiTuneablePIDController(5808, 0.05, 0, 0, 400, 1, 0.6, 0);
     }
 
     public enum HoodPosition {

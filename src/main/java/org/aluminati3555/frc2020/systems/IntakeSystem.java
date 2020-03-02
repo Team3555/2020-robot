@@ -37,6 +37,8 @@ import org.aluminati3555.lib.system.AluminatiSystem;
  * @author Caleb Heydon
  */
 public class IntakeSystem implements AluminatiSystem {
+    private static final int INTAKE_CURRENT_LIMIT = 50;
+
     private AluminatiTalonSRX intakeMotor;
     private AluminatiSolenoid extenderSolenoid;
 
@@ -152,6 +154,15 @@ public class IntakeSystem implements AluminatiSystem {
     public IntakeSystem(AluminatiTalonSRX intakeMotor, AluminatiSolenoid extenderSolenoid,
             AluminatiXboxController operatorController, MagazineSystem magazineSystem, RobotFaults robotFaults) {
         this.intakeMotor = intakeMotor;
+
+        // Configure current limit
+        this.intakeMotor.configPeakCurrentDuration(500);
+        this.intakeMotor.configPeakCurrentLimit(INTAKE_CURRENT_LIMIT);
+        this.intakeMotor.configContinuousCurrentLimit(INTAKE_CURRENT_LIMIT);
+        this.intakeMotor.enableCurrentLimit(true);
+
+        this.intakeMotor.configOpenloopRamp(0.1);
+
         this.extenderSolenoid = extenderSolenoid;
 
         this.operatorController = operatorController;

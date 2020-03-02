@@ -40,7 +40,7 @@ public class ActionTurnToHeading implements AluminatiAutoTask {
      * Initializes the PID controller
      */
     public static final void initialize() {
-        controller = new AluminatiPIDController(0.2, 0, 0, 400, 1, 1, 0);
+        controller = new AluminatiPIDController(0.05, 0, 0, 400, 1, 0.6, 0);
     }
 
     private DriveSystem driveSystem;
