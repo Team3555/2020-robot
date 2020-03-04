@@ -74,6 +74,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
         synchronized (LOCK) {
             if (runShooter) {
                 shooterSystem.set(setpoint);
+                magazineSystem.startFeedingPowerCells();
             }
         }
     }
@@ -81,6 +82,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
     public void stop() {
         taskList.stop();
         shooterSystem.stop();
+        magazineSystem.stopFeedingPowerCells();
     }
 
     public boolean isComplete() {

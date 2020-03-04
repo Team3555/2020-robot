@@ -277,7 +277,7 @@ public class Robot extends AluminatiRobot {
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
         autoString, robotFaults, limelight, shooterSystem.get(), shooterSystem.getVelocity(),
-        magazineSystem.getFeederVelocity(), robotMode);
+        magazineSystem.getFeederVelocity(), robotMode, shooterSystem.getHoodPosition());
   }
 
   @Override

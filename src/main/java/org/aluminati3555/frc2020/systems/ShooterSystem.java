@@ -143,6 +143,13 @@ public class ShooterSystem implements AluminatiSystem {
         return hoodAction;
     }
 
+    /**
+     * Returns the hood position
+     */
+    public int getHoodPosition() {
+        return hoodMotor.getSelectedSensorPosition();
+    }
+
     public void update(double timestamp, SystemMode mode) {
         if (!motorGroup.getMasterTalon().isOK()) {
             robotFaults.setShooterFault(true);
@@ -234,7 +241,7 @@ public class ShooterSystem implements AluminatiSystem {
             // Update hood
             switch (hoodAction) {
             case HOME:
-                hoodMotor.set(ControlMode.PercentOutput, 1);
+                hoodMotor.set(ControlMode.PercentOutput, -1);
                 if (hoodMotor.getStatorCurrent() >= HOOD_STOP_CURRENT) {
                     hoodAction = HoodAction.OFF;
                     hoodMotor.setSelectedSensorPosition(0);

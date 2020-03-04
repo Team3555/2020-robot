@@ -74,7 +74,7 @@ public class VideoDisplay {
      */
     public void update(ControlPanelColor controlPanelColor, double averageDT, double x, double y, double heading,
             String auto, RobotFaults robotFaults, AluminatiLimelight limelight, double shooterSetpoint,
-            double shooterVelocity, double feederVelocity, RobotMode robotMode) {
+            double shooterVelocity, double feederVelocity, RobotMode robotMode, int hoodPosition) {
         double currentTime = Timer.getFPGATimestamp();
         double delta = currentTime - lastTime;
         if (delta < targetTime) {
@@ -163,6 +163,8 @@ public class VideoDisplay {
                 1, GREEN);
 
         Imgproc.putText(frame, "robotMode: " + robotMode, new Point(5, 375), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
+
+        Imgproc.putText(frame, "hoodPosition: " + hoodPosition, new Point(5, 405), Core.FONT_HERSHEY_PLAIN, 1, GREEN);
 
         outputStream.putFrame(frame);
 

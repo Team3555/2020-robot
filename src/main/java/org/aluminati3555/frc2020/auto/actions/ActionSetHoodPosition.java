@@ -36,12 +36,21 @@ public class ActionSetHoodPosition implements AluminatiAutoTask {
 
     private int hoodPosition;
 
+    /**
+     * Updates the hood position
+     */
+    private void updatePosition() {
+        if (shooterSystem.getHoodAction() != HoodAction.HOME) {
+            shooterSystem.setHoodAction(HoodAction.POSITION, hoodPosition);
+        }
+    }
+
     public void start(double timestamp) {
-        shooterSystem.setHoodAction(HoodAction.POSITION, hoodPosition);
+        updatePosition();
     }
 
     public void update(double timestamp) {
-
+        updatePosition();
     }
 
     public void stop() {
@@ -49,7 +58,7 @@ public class ActionSetHoodPosition implements AluminatiAutoTask {
     }
 
     public boolean isComplete() {
-        return true;
+        return (shooterSystem.getHoodAction() == HoodAction.POSITION);
     }
 
     public ActionSetHoodPosition(ShooterSystem shooterSystem, int hoodPosition) {
