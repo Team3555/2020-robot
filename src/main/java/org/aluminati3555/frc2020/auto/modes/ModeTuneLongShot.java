@@ -106,7 +106,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
             }
         };
 
-        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.UP));
 
         // Actuate intake and spin motors
         taskList.add(new ActionExtendIntake(intakeSystem));
