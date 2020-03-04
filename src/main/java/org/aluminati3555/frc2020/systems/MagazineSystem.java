@@ -214,10 +214,10 @@ public class MagazineSystem implements AluminatiSystem {
         this.feederMotor.setNeutralMode(NeutralMode.Coast);
 
         // Configure PID
-        this.feederMotor.config_kP(0, 0.05);
+        this.feederMotor.config_kP(0, 0.095);
         this.feederMotor.config_kI(0, 0);
-        this.feederMotor.config_kD(0, 0);
-        this.feederMotor.config_kF(0, 0.08);
+        this.feederMotor.config_kD(0, 0.005);
+        this.feederMotor.config_kF(0, 0.075);
         this.feederMotor.config_IntegralZone(0, 400);
 
         // Setup tuning listener
