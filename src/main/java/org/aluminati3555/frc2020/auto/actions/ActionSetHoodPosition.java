@@ -23,18 +23,21 @@
 package org.aluminati3555.frc2020.auto.actions;
 
 import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem.HoodAction;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action retracts's the shooter's hood
+ * This action sets the hood position
  * 
  * @author Caleb Heydon
  */
-public class ActionRetractHood implements AluminatiAutoTask {
+public class ActionSetHoodPosition implements AluminatiAutoTask {
     private ShooterSystem shooterSystem;
 
+    private int hoodPosition;
+
     public void start(double timestamp) {
-        shooterSystem.retractHood();
+        shooterSystem.setHoodAction(HoodAction.POSITION, hoodPosition);
     }
 
     public void update(double timestamp) {
@@ -49,7 +52,9 @@ public class ActionRetractHood implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionRetractHood(ShooterSystem shooterSystem) {
+    public ActionSetHoodPosition(ShooterSystem shooterSystem, int hoodPosition) {
         this.shooterSystem = shooterSystem;
+
+        this.hoodPosition = hoodPosition;
     }
 }

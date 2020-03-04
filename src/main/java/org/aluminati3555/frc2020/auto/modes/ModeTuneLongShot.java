@@ -22,14 +22,15 @@
 
 package org.aluminati3555.frc2020.auto.modes;
 
-import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
 import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
 import org.aluminati3555.frc2020.auto.actions.ActionRunCode;
+import org.aluminati3555.frc2020.auto.actions.ActionSetHoodPosition;
 import org.aluminati3555.frc2020.auto.actions.ActionSetIntakeSpeed;
 import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem.HoodPosition;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
 import org.aluminati3555.lib.net.AluminatiTuneable;
@@ -48,6 +49,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
     private AluminatiAutoTaskList taskList;
 
     private ShooterSystem shooterSystem;
+    private MagazineSystem magazineSystem;
 
     private double setpoint;
     private boolean runShooter;
@@ -90,6 +92,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
         taskList = new AluminatiAutoTaskList();
 
         this.shooterSystem = shooterSystem;
+        this.magazineSystem = magazineSystem;
         setpoint = DEFAULT_SETPOINT;
         runShooter = false;
 
@@ -101,8 +104,7 @@ public class ModeTuneLongShot implements AluminatiAutoTask {
             }
         };
 
-        // Extend hood
-        taskList.add(new ActionExtendHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
 
         // Actuate intake and spin motors
         taskList.add(new ActionExtendIntake(intakeSystem));

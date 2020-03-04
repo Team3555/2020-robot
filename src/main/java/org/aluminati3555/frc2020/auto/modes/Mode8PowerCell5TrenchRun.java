@@ -25,15 +25,13 @@ package org.aluminati3555.frc2020.auto.modes;
 import com.team254.lib.geometry.Rotation2d;
 
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
-import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
 import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
 import org.aluminati3555.frc2020.auto.actions.ActionOnPathMarkerPassed;
 import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
-import org.aluminati3555.frc2020.auto.actions.ActionRetractHood;
 import org.aluminati3555.frc2020.auto.actions.ActionRetractIntake;
 import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
+import org.aluminati3555.frc2020.auto.actions.ActionSetHoodPosition;
 import org.aluminati3555.frc2020.auto.actions.ActionSetIntakeSpeed;
-import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightLEDMode;
 import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightPipeline;
 import org.aluminati3555.frc2020.auto.actions.ActionShootPowerCell;
 import org.aluminati3555.frc2020.auto.actions.ActionTurnToHeading;
@@ -43,13 +41,13 @@ import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem.HoodPosition;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
 import org.aluminati3555.lib.auto.AluminatiParallelAutoTask;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
 import org.aluminati3555.lib.trajectoryfollowingmotion.RobotState;
 import org.aluminati3555.lib.vision.AluminatiLimelight;
-import org.aluminati3555.lib.vision.AluminatiLimelight.LEDMode;
 
 /**
  * This mode shoots three power cells into the high goal, gets five more from
@@ -93,18 +91,18 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         // Set robot position
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));
         
-        // Turn on the limelight leds
-        taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.ON));
+        // Lower hood
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
         
         // Set the limelight to the tracking pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
         
         // Shoot three power cells
-        taskList.add(new ActionExtendHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.UP));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
         taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 3));
-        taskList.add(new ActionRetractHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
@@ -126,16 +124,13 @@ public class Mode8PowerCell5TrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
 
         // Shoot five power cells
-        taskList.add(new ActionExtendHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.UP));
         taskList.add(new ActionTurnToHeading(driveSystem, TARGET_ZONE_HEADING));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
         taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 5));
-        taskList.add(new ActionRetractHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
-
-        // Reset the limelight leds
-        taskList.add(new ActionSetLimelightLEDMode(limelight, LEDMode.CURRENT_PIPELINE));
     }
 }

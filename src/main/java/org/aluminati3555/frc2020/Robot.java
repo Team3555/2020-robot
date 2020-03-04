@@ -29,7 +29,6 @@ import org.aluminati3555.lib.data.AluminatiData;
 import org.aluminati3555.lib.drivers.AluminatiMotorGroup;
 import org.aluminati3555.lib.drivers.AluminatiDisplay;
 import org.aluminati3555.lib.drivers.AluminatiPigeon;
-import org.aluminati3555.lib.drivers.AluminatiSpark;
 import org.aluminati3555.lib.loops.Loop;
 import org.aluminati3555.lib.loops.Looper;
 import org.aluminati3555.lib.drivers.AluminatiTalonSRX;
@@ -278,7 +277,7 @@ public class Robot extends AluminatiRobot {
 
     videoDisplay.update(controlPanelColor, this.getAverageDT(), translation.x(), translation.y(), rotation.getDegrees(),
         autoString, robotFaults, limelight, shooterSystem.get(), shooterSystem.getVelocity(),
-        magazineSystem.getFeederVelocity(), robotMode, shooterSystem.getHoodPosition());
+        magazineSystem.getFeederVelocity(), robotMode);
   }
 
   @Override
@@ -440,7 +439,7 @@ public class Robot extends AluminatiRobot {
         robotFaults);
     magazineSystem = new MagazineSystem(new AluminatiVictorSPX(7), feederMotor, robotFaults);
     shooterSystem = new ShooterSystem(new AluminatiMotorGroup(new AluminatiTalonSRX(23), new AluminatiTalonSRX(45)),
-        new AluminatiSpark(0, 7), driverController, operatorController, limelight, driveSystem, magazineSystem,
+        new AluminatiTalonSRX(43), driverController, operatorController, limelight, driveSystem, magazineSystem,
         robotFaults);
     intakeSystem = new IntakeSystem(new AluminatiTalonSRX(44), new AluminatiSolenoid(2), operatorController,
         magazineSystem, robotFaults);
@@ -503,21 +502,21 @@ public class Robot extends AluminatiRobot {
     char color = dataString.charAt(0);
 
     switch (color) {
-      case 'B':
-        controlPanelColor = ControlPanelColor.BLUE;
-        break;
-      case 'G':
-        controlPanelColor = ControlPanelColor.GREEN;
-        break;
-      case 'R':
-        controlPanelColor = ControlPanelColor.RED;
-        break;
-      case 'Y':
-        controlPanelColor = ControlPanelColor.YELLOW;
-        break;
-      default:
-        controlPanelColor = ControlPanelColor.UNKOWN;
-        break;
+    case 'B':
+      controlPanelColor = ControlPanelColor.BLUE;
+      break;
+    case 'G':
+      controlPanelColor = ControlPanelColor.GREEN;
+      break;
+    case 'R':
+      controlPanelColor = ControlPanelColor.RED;
+      break;
+    case 'Y':
+      controlPanelColor = ControlPanelColor.YELLOW;
+      break;
+    default:
+      controlPanelColor = ControlPanelColor.UNKOWN;
+      break;
     }
   }
 

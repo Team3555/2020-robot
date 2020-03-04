@@ -23,18 +23,19 @@
 package org.aluminati3555.frc2020.auto.actions;
 
 import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem.HoodAction;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 
 /**
- * This action extend's the shooter's hood
+ * This action stops the hood
  * 
  * @author Caleb Heydon
  */
-public class ActionExtendHood implements AluminatiAutoTask {
+public class ActionStopHood implements AluminatiAutoTask {
     private ShooterSystem shooterSystem;
 
     public void start(double timestamp) {
-        shooterSystem.extendHood();
+        shooterSystem.setHoodAction(HoodAction.OFF, 0);
     }
 
     public void update(double timestamp) {
@@ -49,7 +50,7 @@ public class ActionExtendHood implements AluminatiAutoTask {
         return true;
     }
 
-    public ActionExtendHood(ShooterSystem shooterSystem) {
+    public ActionStopHood(ShooterSystem shooterSystem) {
         this.shooterSystem = shooterSystem;
     }
 }

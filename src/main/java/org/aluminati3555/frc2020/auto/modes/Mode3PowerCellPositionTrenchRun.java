@@ -25,6 +25,7 @@ package org.aluminati3555.frc2020.auto.modes;
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
 import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
+import org.aluminati3555.frc2020.auto.actions.ActionSetHoodPosition;
 import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightLEDMode;
 import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightPipeline;
 import org.aluminati3555.frc2020.auto.actions.ActionShootPowerCell;
@@ -33,6 +34,7 @@ import org.aluminati3555.frc2020.systems.DriveSystem;
 import org.aluminati3555.frc2020.systems.MagazineSystem;
 import org.aluminati3555.frc2020.systems.IntakeSystem;
 import org.aluminati3555.frc2020.systems.ShooterSystem;
+import org.aluminati3555.frc2020.systems.ShooterSystem.HoodPosition;
 import org.aluminati3555.lib.auto.AluminatiAutoTask;
 import org.aluminati3555.lib.auto.AluminatiAutoTaskList;
 import org.aluminati3555.lib.trajectoryfollowingmotion.PathContainer;
@@ -115,10 +117,10 @@ public class Mode3PowerCellPositionTrenchRun implements AluminatiAutoTask {
         taskList.add(new ActionSetLimelightPipeline(limelight, 1));
 
         // Shoot three power cells
-        //taskList.add(new ActionExtendHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.UP));
         taskList.add(new ActionAlignWithVision(driveSystem, limelight));
         taskList.add(new ActionShootPowerCell(limelight, shooterSystem, magazineSystem, 3));
-        //taskList.add(new ActionRetractHood(shooterSystem));
+        taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
 
         // Set the limelight to the driver pipeline
         taskList.add(new ActionSetLimelightPipeline(limelight, 0));
