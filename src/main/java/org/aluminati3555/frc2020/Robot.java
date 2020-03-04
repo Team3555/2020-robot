@@ -430,7 +430,7 @@ public class Robot extends AluminatiRobot {
     left.getMasterTalon().setSensorPhase(true);
     right.getMasterTalon().setSensorPhase(true);
 
-    AluminatiPigeon gyro = new AluminatiPigeon(new AluminatiTalonSRX(43));
+    AluminatiPigeon gyro = new AluminatiPigeon(new AluminatiTalonSRX(42));
 
     AluminatiTalonSRX feederMotor = new AluminatiTalonSRX(46);
 

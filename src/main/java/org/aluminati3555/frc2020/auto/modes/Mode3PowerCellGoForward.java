@@ -23,9 +23,7 @@
 package org.aluminati3555.frc2020.auto.modes;
 
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
-import org.aluminati3555.frc2020.auto.actions.ActionExtendHood;
 import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
-import org.aluminati3555.frc2020.auto.actions.ActionRetractHood;
 import org.aluminati3555.frc2020.auto.actions.ActionRunPath;
 import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightLEDMode;
 import org.aluminati3555.frc2020.auto.actions.ActionSetLimelightPipeline;
