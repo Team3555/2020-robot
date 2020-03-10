@@ -50,7 +50,6 @@ public class ShooterSystem implements AluminatiSystem {
     private static final double ALLOWED_ERROR = 200;
     private static final int SHORT_SHOT_RPM = 4000;
     private static final int WINDUP_RPM = 4000;
-    private static final double HOOD_STOP_CURRENT = 16;
     private static final int HOOD_CURRENT_LIMIT = 20;
 
     /**
@@ -186,6 +185,9 @@ public class ShooterSystem implements AluminatiSystem {
                     driveSystem.setVisionTracking(false);
                 }
 
+                // Extend hood
+                setHoodAction(HoodAction.POSITION, HoodPosition.UP);
+
                 // Set flywheel speed
                 double targetHeight = limelight.getVertical();
                 double rpm = limelight.hasTarget() ? ShooterUtil.calculateRPM(targetHeight) : WINDUP_RPM;
@@ -206,6 +208,9 @@ public class ShooterSystem implements AluminatiSystem {
 
                 wasTracking = false;
 
+                // Extend hood
+                setHoodAction(HoodAction.POSITION, HoodPosition.MID);
+
                 // Set flywheel speed
                 set(SHORT_SHOT_RPM);
 
@@ -221,6 +226,9 @@ public class ShooterSystem implements AluminatiSystem {
                 driveSystem.setVisionTracking(false);
 
                 wasTracking = false;
+
+                // Lower hood
+                setHoodAction(HoodAction.POSITION, HoodPosition.DOWN);
 
                 // Stop feeding power cells
                 magazineSystem.stopFeedingPowerCells();
@@ -240,13 +248,6 @@ public class ShooterSystem implements AluminatiSystem {
 
             // Update hood
             switch (hoodAction) {
-            case HOME:
-                hoodMotor.set(ControlMode.PercentOutput, -1);
-                if (hoodMotor.getStatorCurrent() >= HOOD_STOP_CURRENT) {
-                    hoodAction = HoodAction.OFF;
-                    hoodMotor.setSelectedSensorPosition(0);
-                }
-                break;
             case POSITION:
                 hoodMotor.set(ControlMode.Position, hoodPosition);
                 break;
@@ -328,12 +329,12 @@ public class ShooterSystem implements AluminatiSystem {
         // Put in brake mode
         this.hoodMotor.setNeutralMode(NeutralMode.Brake);
 
-        this.hoodAction = HoodAction.HOME;
-        this.hoodPosition = 0;
+        this.hoodAction = HoodAction.POSITION;
+        this.hoodPosition = HoodPosition.DOWN;
     }
 
     public enum HoodAction {
-        OFF, HOME, POSITION
+        OFF, POSITION
     }
 
     public class HoodPosition {

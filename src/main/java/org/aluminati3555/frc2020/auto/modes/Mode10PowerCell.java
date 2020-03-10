@@ -24,7 +24,6 @@ package org.aluminati3555.frc2020.auto.modes;
 
 import org.aluminati3555.frc2020.auto.actions.ActionAlignWithVision;
 import org.aluminati3555.frc2020.auto.actions.ActionExtendIntake;
-import org.aluminati3555.frc2020.auto.actions.ActionHomeHood;
 import org.aluminati3555.frc2020.auto.actions.ActionOnPathMarkerPassed;
 import org.aluminati3555.frc2020.auto.actions.ActionResetRobotPose;
 import org.aluminati3555.frc2020.auto.actions.ActionRetractIntake;
@@ -97,8 +96,7 @@ public class Mode10PowerCell implements AluminatiAutoTask {
         // Set robot position
         taskList.add(new ActionResetRobotPose(robotState, driveSystem, path1.getStartPose()));
         
-        // Home hood and lower it
-        taskList.add(new ActionHomeHood(shooterSystem));
+        // Lower hood
         taskList.add(new ActionSetHoodPosition(shooterSystem, HoodPosition.DOWN));
         
         // Actuate intake and spin motors

@@ -40,9 +40,7 @@ public class ActionSetHoodPosition implements AluminatiAutoTask {
      * Updates the hood position
      */
     private void updatePosition() {
-        if (shooterSystem.getHoodAction() != HoodAction.HOME) {
-            shooterSystem.setHoodAction(HoodAction.POSITION, hoodPosition);
-        }
+        shooterSystem.setHoodAction(HoodAction.POSITION, hoodPosition);
     }
 
     public void start(double timestamp) {
